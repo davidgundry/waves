@@ -9,17 +9,9 @@ module Waves {
             return this._milesRemaining;
         }
 
-        private _triggers: Trigger[] = new Array<Trigger>();
+      
 
-        private get triggers(): Trigger[] {
-            return this._triggers;
-        }
-
-        private _thingsInView: ThingPosition[] = new Array <ThingPosition>();
-
-        public get thingsInView(): ThingPosition[] {
-            return this._thingsInView;
-        }
+      
 
         constructor() {
             this.triggers.push(new ThingTrigger(40, new Thing("paddle")));
@@ -31,7 +23,7 @@ module Waves {
             this.CheckTriggers(this.milesRemaining);
         }
 
-        private _triggers: Trigger[];
+        private _triggers: Trigger[]= new Array<Trigger>();
         
         private get triggers(): Trigger[] {
             return this._triggers;
