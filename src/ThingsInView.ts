@@ -5,6 +5,7 @@ module Waves {
         private _game: Game;
         private _boatSide: Phaser.Point;
         private static THING_ORIGIIN: Phaser.Point = new Phaser.Point(800, 300)
+        private _dropHandler: Function;
 
         private thingsInView: ThingPosition[] = new Array<ThingPosition>();
 
@@ -16,9 +17,10 @@ module Waves {
             return this._boatSide;
         }
 
-        constructor(game: Game, boatSide: Phaser.Point) {
+        constructor(game: Game, dropHandler: Function, boatSide: Phaser.Point) {
             this._game = game;
             this._boatSide = boatSide;
+            this._dropHandler = dropHandler;
 
             (<Game>this.game).model.world.thingEventCallback = this.thingEventCallback.bind(this);
         }   
@@ -34,7 +36,7 @@ module Waves {
 
         addThingInView(thing: Thing, position: number) {
             var screenPosition: Phaser.Point = this.screenPosition(position);
-            var item: InventoryItem = new InventoryItem(this.game, screenPosition.x, screenPosition.y, "thing");
+            var item: InventoryItem = new InventoryItem(this.game, screenPosition.x, screenPosition.y, this._dropHandler, "thing");
             item.setDrag(false);
             this.thingsInView.push(new ThingPosition(thing, position, item));
         }
