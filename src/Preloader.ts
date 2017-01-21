@@ -21,6 +21,7 @@
 
             //  Load our actual games assets
 
+            this.game.load.image("person", "assets/placeholderMan.png");
             //this.game.load.image('particle', 'assets/particle.png');
            // this.game.load.text('mainText', 'text/NorwoodBuilder.txt');
 
