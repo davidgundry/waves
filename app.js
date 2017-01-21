@@ -233,7 +233,7 @@ var Waves;
             this.inventory = new Waves.Inventory(this.game, 10, 280);
             this.person = new Waves.InventoryItem(this.game, 100, 100, this.onDrop.bind(this), 'person');
             this.oar = new Waves.InventoryItem(this.game, 200, 100, this.onDrop.bind(this), 'oar');
-            this.thingsInView = new Waves.ThingsInView(this.game, this.onDrop.bind(this), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y + this.boat.height));
+            this.thingsInView = new Waves.ThingsInView(this.game, this.onDrop.bind(this), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y + this.boat.height), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y));
         };
         MainGame.prototype.onPress = function () {
             //alert("pressed");
@@ -634,10 +634,11 @@ var Waves;
 var Waves;
 (function (Waves) {
     var ThingsInView = (function () {
-        function ThingsInView(game, dropHandler, boatSide) {
+        function ThingsInView(game, dropHandler, boatSide, boatFrontSide) {
             this.thingsInView = new Array();
             this._game = game;
             this._boatSide = boatSide;
+            this._boatFrontSide = boatFrontSide;
             this._dropHandler = dropHandler;
             this.game.model.world.thingEventCallback = this.thingEventCallback.bind(this);
         }
@@ -651,6 +652,13 @@ var Waves;
         Object.defineProperty(ThingsInView.prototype, "boatSide", {
             get: function () {
                 return this._boatSide;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ThingsInView.prototype, "boatFrontSide", {
+            get: function () {
+                return this._boatFrontSide;
             },
             enumerable: true,
             configurable: true
@@ -673,26 +681,29 @@ var Waves;
             if (relativePosition <= 0) {
                 relativePosition = 0;
             }
-            return (Math.pow(10, (relativePosition / Waves.WorldState.LEAD_DISTANCE)) - 1) / 10;
+            var rPos = (relativePosition / Waves.WorldState.LEAD_DISTANCE);
+            return 1 - (Math.pow(100, 1 - rPos) - 1) / 100;
         };
         ThingsInView.prototype.screenPosition = function (position) {
             var proportion = this.proportionalDistance(position);
-            return new Phaser.Point(proportion * (ThingsInView.THING_ORIGIIN.x - this.boatSide.x) + this.boatSide.x, proportion * (ThingsInView.THING_ORIGIIN.y - this.boatSide.y) + this.boatSide.y);
+            return new Phaser.Point(proportion * (ThingsInView.THING_ORIGIIN.x - this.boatFrontSide.x) + this.boatFrontSide.x, proportion * (ThingsInView.THING_ORIGIIN.y - this.boatFrontSide.y) + this.boatFrontSide.y);
         };
         ThingsInView.prototype.isAlongside = function (thingPosition) {
             var relativePosition = thingPosition.position - this.game.model.world.position;
             return (relativePosition <= 0);
         };
         ThingsInView.prototype.updateThingInView = function (thingPosition) {
-            if (this.isAlongside(thingPosition)) {
-                thingPosition.inventoryItem.setDrag(true);
-                this.removeThingInView(thingPosition);
-            }
             var screenPosition = this.screenPosition(thingPosition.position);
             thingPosition.inventoryItem.position.x = screenPosition.x;
             thingPosition.inventoryItem.position.y = screenPosition.y;
             var proportionalDistance = this.proportionalDistance(thingPosition.position);
             thingPosition.inventoryItem.scale = new Phaser.Point(1 - proportionalDistance, 1 - proportionalDistance);
+            if (this.isAlongside(thingPosition)) {
+                thingPosition.inventoryItem.setDrag(true);
+                thingPosition.inventoryItem.position.x = this.boatSide.x;
+                thingPosition.inventoryItem.position.y = this.boatSide.y;
+                this.removeThingInView(thingPosition);
+            }
         };
         ThingsInView.prototype.removeThingInView = function (thingPosition) {
             if (this.thingsInView.indexOf(thingPosition) >= 0)
