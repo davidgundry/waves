@@ -16,7 +16,7 @@ var Waves;
             this.state.start('Boot');
         }
         return Game;
-    }(Phaser.Game));
+    })(Phaser.Game);
     Waves.Game = Game;
 })(Waves || (Waves = {}));
 window.onload = function () {
@@ -54,7 +54,7 @@ var Waves;
             this.game.state.start('Preloader', true, false);
         };
         return Boot;
-    }(Phaser.State));
+    })(Phaser.State);
     Waves.Boot = Boot;
     ;
 })(Waves || (Waves = {}));
@@ -92,7 +92,7 @@ var Waves;
             this.pressed.dispatch();
         };
         return Button;
-    }(Phaser.Group));
+    })(Phaser.Group);
     Waves.Button = Button;
 })(Waves || (Waves = {}));
 var Waves;
@@ -113,17 +113,8 @@ var Waves;
         MainGame.prototype.update = function () {
         };
         return MainGame;
-    }(Phaser.State));
+    })(Phaser.State);
     Waves.MainGame = MainGame;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
-    var Model = (function () {
-        function Model() {
-        }
-        return Model;
-    }());
-    Waves.Model = Model;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
@@ -137,9 +128,46 @@ var Waves;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(InventoryState.prototype, "totalSpace", {
+            get: function () {
+                return this._totalSpace;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        InventoryState.prototype.SpaceRemaining = function () {
+            return (this.totalSpace - this.things.length > 0);
+        };
+        InventoryState.prototype.ContainsItem = function (thing) {
+            return (this.things.indexOf(thing) >= 0);
+        };
+        InventoryState.prototype.AddItem = function (newThing) {
+            if (this.SpaceRemaining)
+                this.things.push(newThing);
+            else
+                throw new Error("Inventory full");
+        };
+        InventoryState.prototype.DiscardItem = function (thing) {
+            if (this.ContainsItem(thing))
+                this.things.splice(this.things.indexOf(thing));
+            else
+                throw new Error("Thing not in inventory");
+        };
         return InventoryState;
-    }());
+    })();
     Waves.InventoryState = InventoryState;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var Model = (function () {
+        function Model() {
+            this.world = new Waves.WorldState();
+            this.inventory = new Waves.InventoryState();
+            this.resource = new Waves.ResourceState();
+        }
+        return Model;
+    })();
+    Waves.Model = Model;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
@@ -147,7 +175,7 @@ var Waves;
         function ResourceState() {
         }
         return ResourceState;
-    }());
+    })();
     Waves.ResourceState = ResourceState;
 })(Waves || (Waves = {}));
 var Waves;
@@ -156,7 +184,7 @@ var Waves;
         function Thing() {
         }
         return Thing;
-    }());
+    })();
     Waves.Thing = Thing;
 })(Waves || (Waves = {}));
 var Waves;
@@ -177,7 +205,7 @@ var Waves;
         };
         WorldState.STARTING_MILES = 50;
         return WorldState;
-    }());
+    })();
     Waves.WorldState = WorldState;
 })(Waves || (Waves = {}));
 var Waves;
@@ -206,7 +234,7 @@ var Waves;
             this.game.state.start('MainGame', true, false);
         };
         return Preloader;
-    }(Phaser.State));
+    })(Phaser.State);
     Waves.Preloader = Preloader;
 })(Waves || (Waves = {}));
 //# sourceMappingURL=app.js.map

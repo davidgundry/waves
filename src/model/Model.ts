@@ -2,9 +2,9 @@ module Waves {
 
     export class Model {
 
-        world: WorldState;
-        inventory: InventoryState;
-        resource: ResourceState;
+        world: WorldState = new WorldState();
+        inventory: InventoryState = new InventoryState();
+        resource: ResourceState = new ResourceState();
 
     }
 
