@@ -42,7 +42,12 @@
         onDrop(dropData: Object) {
             var item: InventoryItem = <InventoryItem>dropData["dropItem"]
             if (!this.inventory.acceptItem(item)) {
-               item.returnToPlace();
+                if (this.sea.thrownIntheSea(item)) {
+                    this.inventory.removeItem(item);
+                    item.sink()
+                } else {
+                    item.returnToPlace();
+                }
             }
         }
         updateMiles() {

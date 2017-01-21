@@ -32,6 +32,10 @@
             }
             return false;
         }
+        removeItem(item: InventoryItem) {
+            this.slots[item.inventorySlot] = null;
+            item.inventorySlot = null;
+        }
         getSlot(x: number, y: number): number {
             var slotX: number = Math.floor((x - this.position.x) / this.slotWidth);
             var slotY: number = Math.floor((y - this.position.y) / this.slotHeight);
