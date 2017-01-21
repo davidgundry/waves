@@ -2,13 +2,16 @@ module Waves {
 
     export class InventoryState {
 
+        static STARTING_TOTAL_SPACE = 10;
+
         private _things: Thing[];
 
         public get things(): Thing[] {
             return this._things;
         }
 
-        private _totalSpace: number;
+        private _totalSpace: number = InventoryState.STARTING_TOTAL_SPACE;
+
         public get totalSpace(): number {
             return this._totalSpace;
         }
@@ -27,6 +30,7 @@ module Waves {
             else
                 throw new Error("Inventory full");
         }
+
         public DiscardItem(thing: Thing) {
             if (this.ContainsItem(thing))
                 this.things.splice(this.things.indexOf(thing));

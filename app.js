@@ -129,6 +129,7 @@ var Waves;
 (function (Waves) {
     var InventoryState = (function () {
         function InventoryState() {
+            this._totalSpace = InventoryState.STARTING_TOTAL_SPACE;
         }
         Object.defineProperty(InventoryState.prototype, "things", {
             get: function () {
@@ -162,6 +163,7 @@ var Waves;
             else
                 throw new Error("Thing not in inventory");
         };
+        InventoryState.STARTING_TOTAL_SPACE = 10;
         return InventoryState;
     })();
     Waves.InventoryState = InventoryState;
