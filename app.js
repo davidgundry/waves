@@ -7,9 +7,7 @@ var __extends = (this && this.__extends) || function (d, b) {
 var Game = (function (_super) {
     __extends(Game, _super);
     function Game() {
-        this.SAFE_ZONE_WIDTH = 800;
-        this.SAFE_ZONE_HEIGHT = 480;
-        _super.call(this, this.SAFE_ZONE_WIDTH, this.SAFE_ZONE_HEIGHT, Phaser.CANVAS, 'game');
+        _super.call(this, 800, 480, Phaser.CANVAS, 'game');
         this.state.add('Boot', Boot, false);
         this.state.add('Preloader', Preloader, false);
         this.state.add('MainGame', MainGame, false);
