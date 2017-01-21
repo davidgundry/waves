@@ -142,9 +142,8 @@ var Waves;
             this.mainButton.pressed.add(this.onPress.bind(this));
             this.milesDisplay = this.game.add.text(300, 10, "Testing 12 12", { font: "30px Arial", fill: '#00f', align: 'right' });
             this.updateMiles();
-            // this.game.add.sprite(100, 100, 'person');
             this.person = new Waves.InventoryItem(this.game, 100, 100, 'person');
-            // this.person.create(100, 100, "person");
+            this.sea = new Waves.Sea(this.game, 320, 640);
         };
         MainGame.prototype.onPress = function () {
             //alert("pressed");
@@ -235,7 +234,6 @@ var Waves;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
-<<<<<<< HEAD
     var ThingPosition = (function () {
         function ThingPosition(thing, distance) {
             this._thing = thing;
@@ -294,8 +292,6 @@ var Waves;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
-=======
->>>>>>> 5f7a9d13a41209a71e0f3ed2f2dc549f90211621
     var WorldState = (function () {
         function WorldState() {
             this._milesRemaining = WorldState.STARTING_MILES;
@@ -319,7 +315,7 @@ var Waves;
             configurable: true
         });
         WorldState.prototype.CheckTriggers = function (position) {
-            // this.triggers.forEach((value: Trigger, index: number, array: Trigger[]) => void { this.CheckTrigger(value, position); });
+            this.triggers.forEach(function (value, index, array) { return void { this: .CheckTrigger(value, position) }; });
         };
         Object.defineProperty(WorldState.prototype, "thingsInView", {
             get: function () {
@@ -336,38 +332,7 @@ var Waves;
                     this.TriggerThing(trigger);
             }
         };
-<<<<<<< HEAD
         WorldState.prototype.TriggerEvent = function (trigger) {
-=======
-        return Boot;
-    }(Phaser.State));
-    Waves.Boot = Boot;
-    ;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
-    var MainGame = (function (_super) {
-        __extends(MainGame, _super);
-        function MainGame() {
-            _super.apply(this, arguments);
-        }
-        MainGame.prototype.create = function () {
-            _super.prototype.create.call(this);
-            this.mainButton = new Waves.Button(this.game, "Paddle with your hands");
-            this.mainButton.pressed.add(this.onPress.bind(this));
-            this.milesDisplay = this.game.add.text(300, 10, "Testing 12 12", { font: "30px Arial", fill: '#00f', align: 'right' });
-            this.updateMiles();
-            this.person = new Waves.InventoryItem(this.game, 100, 100, 'person');
-            this.sea = new Waves.Sea(this.game, 320, 640);
-        };
-        MainGame.prototype.onPress = function () {
-            //alert("pressed");
-            this.game.model.world.MoveDistance(1);
-            this.updateMiles();
-        };
-        MainGame.prototype.updateMiles = function () {
-            this.milesDisplay.text = "You are " + this.game.model.world.milesRemaining + " miles from land";
->>>>>>> 5f7a9d13a41209a71e0f3ed2f2dc549f90211621
         };
         WorldState.prototype.TriggerThing = function (trigger) {
             //this.thingsInView.push(trigger.thing);
@@ -444,7 +409,7 @@ var Waves;
             this.mask = mask;
         };
         return Sea;
-    }(Phaser.Group));
+    })(Phaser.Group);
     Waves.Sea = Sea;
 })(Waves || (Waves = {}));
 //# sourceMappingURL=app.js.map
