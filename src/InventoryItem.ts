@@ -42,6 +42,9 @@
         returnToPlace() {
             this.game.add.tween(this.position).to({ x: this.lastPos.x, y: this.lastPos.y }, 1000, "Sine.easeIn",true);
         }
+        sink() {
+            this.game.add.tween(this.position).to({ y: 1000 }, 2000, "Sine.easeIn", true);
+        }
 
 
 

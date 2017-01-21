@@ -15,6 +15,7 @@
             
             this.addSeaStrips();
             this.createMask();
+            this.boundsRect = new Phaser.Rectangle(this.position.x, this.position.y, this.width, this.height);
         }
         addSeaStrips() {
           
@@ -44,8 +45,10 @@
             //  And apply it to the Group itself
             this.mask = mask;
         }
-        thrownIntheSea(item: InventoryItem) {
-
+        thrownIntheSea(item: InventoryItem):boolean {
+            var x: number = item.position.x;
+            var y: number = item.position.y;
+            return this.boundsRect.contains(x, y);
         }
         update() {
            
