@@ -4,6 +4,7 @@ module Waves {
 
         private _game: Game;
         private _boatSide: Phaser.Point;
+        private _boatFrontSide: Phaser.Point;
         private static THING_ORIGIIN: Phaser.Point = new Phaser.Point(800, 300)
         private _dropHandler: Function;
 
@@ -17,9 +18,15 @@ module Waves {
             return this._boatSide;
         }
 
-        constructor(game: Game, dropHandler: Function, boatSide: Phaser.Point) {
+        private get boatFrontSide(): Phaser.Point {
+            return this._boatFrontSide;
+        }
+
+
+        constructor(game: Game, dropHandler: Function, boatSide: Phaser.Point, boatFrontSide: Phaser.Point) {
             this._game = game;
             this._boatSide = boatSide;
+            this._boatFrontSide = boatFrontSide;
             this._dropHandler = dropHandler;
 
             (<Game>this.game).model.world.thingEventCallback = this.thingEventCallback.bind(this);
@@ -47,12 +54,13 @@ module Waves {
                 relativePosition = 0;
             }
 
-            return (Math.pow(10, (relativePosition / WorldState.LEAD_DISTANCE)) - 1) / 10;
+            var rPos : number = (relativePosition / WorldState.LEAD_DISTANCE);
+            return 1-(Math.pow(100, 1-rPos) - 1) / 100;
         }
 
         screenPosition(position: number): Phaser.Point{
             var proportion: number = this.proportionalDistance(position);
-            return new Phaser.Point(proportion * (ThingsInView.THING_ORIGIIN.x - this.boatSide.x) + this.boatSide.x, proportion * (ThingsInView.THING_ORIGIIN.y - this.boatSide.y) + this.boatSide.y);
+            return new Phaser.Point(proportion * (ThingsInView.THING_ORIGIIN.x - this.boatFrontSide.x) + this.boatFrontSide.x, proportion * (ThingsInView.THING_ORIGIIN.y - this.boatFrontSide.y) + this.boatFrontSide.y);
         }
 
         isAlongside(thingPosition: ThingPosition) : boolean {
@@ -61,17 +69,19 @@ module Waves {
         }
 
         updateThingInView(thingPosition: ThingPosition) {
-            if (this.isAlongside(thingPosition)) {
-
-                thingPosition.inventoryItem.setDrag(true);
-                this.removeThingInView(thingPosition);
-            }
-
             var screenPosition: Phaser.Point = this.screenPosition(thingPosition.position);
             thingPosition.inventoryItem.position.x = screenPosition.x;
             thingPosition.inventoryItem.position.y = screenPosition.y;
             var proportionalDistance: number = this.proportionalDistance(thingPosition.position);
             thingPosition.inventoryItem.scale = new Phaser.Point(1 - proportionalDistance, 1 - proportionalDistance);
+
+            if (this.isAlongside(thingPosition)) {
+
+                thingPosition.inventoryItem.setDrag(true);
+                thingPosition.inventoryItem.position.x = this.boatSide.x;
+                thingPosition.inventoryItem.position.y = this.boatSide.y;
+                this.removeThingInView(thingPosition);
+            }
         }
 
         removeThingInView(thingPosition: ThingPosition) {
