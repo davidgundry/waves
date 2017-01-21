@@ -19,7 +19,6 @@
             this.updateMiles();
             
             this.sea = new Sea(this.game, 320, 280);
-            this.boat = new Boat(this.game, 550, 500);
             (<Game>this.game).model.world.thingEventCallback = this.thingEventCallback.bind(this);
             this.boat = new Boat(this.game, 550, 400);
             this.inventory = new Inventory(this.game,10, 280);
