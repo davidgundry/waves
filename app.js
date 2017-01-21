@@ -628,12 +628,15 @@ var Waves;
             item.setDrag(false);
             this.thingsInView.push(new Waves.ThingPosition(thing, position, item));
         };
-        ThingsInView.prototype.screenPosition = function (position) {
+        ThingsInView.prototype.proportionalDistance = function (position) {
             var relativePosition = position - this.game.model.world.position;
             if (relativePosition <= 0) {
                 relativePosition = 0;
             }
-            var proportion = (relativePosition / Waves.WorldState.LEAD_DISTANCE);
+            return (relativePosition / Waves.WorldState.LEAD_DISTANCE);
+        };
+        ThingsInView.prototype.screenPosition = function (position) {
+            var proportion = this.proportionalDistance(position);
             return new Phaser.Point(proportion * (ThingsInView.THING_ORIGIIN.x - this.boatSide.x) + this.boatSide.x, proportion * (ThingsInView.THING_ORIGIIN.y - this.boatSide.y) + this.boatSide.y);
         };
         ThingsInView.prototype.isAlongside = function (thingPosition) {
@@ -646,6 +649,7 @@ var Waves;
             var screenPosition = this.screenPosition(thingPosition.position);
             thingPosition.inventoryItem.position.x = screenPosition.x;
             thingPosition.inventoryItem.position.y = screenPosition.y;
+            //thingPosition.inventoryItem.scale
         };
         ThingsInView.prototype.removeThingInView = function (thingPosition) {
             if (this.thingsInView.indexOf(thingPosition) >= 0)
