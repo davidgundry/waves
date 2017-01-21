@@ -17,7 +17,7 @@ module Waves {
 
         constructor(game: Game, boatSide: Phaser.Point) {
             this._game = game;
-            this.boatSide = boatSide;
+            this._boatSide = boatSide;
 
             (<Game>this.game).model.world.thingEventCallback = this.thingEventCallback.bind(this);
         }   

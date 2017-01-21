@@ -598,7 +598,7 @@ var Waves;
         function ThingsInView(game, boatSide) {
             this.thingsInView = new Array();
             this._game = game;
-            this.boatSide = boatSide;
+            this._boatSide = boatSide;
             this.game.model.world.thingEventCallback = this.thingEventCallback.bind(this);
         }
         Object.defineProperty(ThingsInView.prototype, "game", {
