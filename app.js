@@ -24,13 +24,12 @@ window.onload = function () {
 };
 var Waves;
 (function (Waves) {
-    var Boat = (function (_super) {
-        __extends(Boat, _super);
-        function Boat(game, newX, newY) {
-            _super.call(this, game);
-            this.position.x = newX;
-            this.position.y = newY;
-            this.create(0, 0, "boat");
+<<<<<<< HEAD
+    var Boot = (function (_super) {
+        __extends(Boot, _super);
+        function Boot() {
+            _super.apply(this, arguments);
+            this.orientated = false;
         }
         return Boat;
     }(Phaser.Group));
@@ -173,76 +172,63 @@ var Waves;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
-    var Thing = (function () {
-        function Thing() {
+    var StoryEvent = (function () {
+        function StoryEvent(name, description) {
+            this._name = name;
+            this._description = description;
         }
+        Object.defineProperty(StoryEvent.prototype, "name", {
+            get: function () {
+                return this._name;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(StoryEvent.prototype, "description", {
+            get: function () {
+                return this._description;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return StoryEvent;
+    })();
+    Waves.StoryEvent = StoryEvent;
+    var FlyingFishStoryEvent = (function (_super) {
+        __extends(FlyingFishStoryEvent, _super);
+        function FlyingFishStoryEvent() {
+            _super.call(this, "Flying Fish", "You see some totally sweet flying fish.");
+        }
+        return FlyingFishStoryEvent;
+    })(StoryEvent);
+    Waves.FlyingFishStoryEvent = FlyingFishStoryEvent;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var Thing = (function () {
+        function Thing(name) {
+            this._name = name;
+        }
+        Object.defineProperty(Thing.prototype, "name", {
+            get: function () {
+                return this._name;
+            },
+            enumerable: true,
+            configurable: true
+        });
         return Thing;
     }());
     Waves.Thing = Thing;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
-    var ThingPosition = (function () {
-        function ThingPosition(thing, distance) {
-            this._thing = thing;
-            this._distance = distance;
-        }
-        Object.defineProperty(ThingPosition.prototype, "thing", {
-            get: function () {
-                return this.thing;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(ThingPosition.prototype, "distance", {
-            get: function () {
-                return this._distance;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return ThingPosition;
-    }());
-    Waves.ThingPosition = ThingPosition;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
-    var Trigger = (function () {
-        function Trigger() {
-        }
-        return Trigger;
-    }());
-    Waves.Trigger = Trigger;
-    var TriggerEvent = (function (_super) {
-        __extends(TriggerEvent, _super);
-        function TriggerEvent() {
-            _super.apply(this, arguments);
-        }
-        return TriggerEvent;
-    }(Trigger));
-    Waves.TriggerEvent = TriggerEvent;
-    var TriggerThing = (function (_super) {
-        __extends(TriggerThing, _super);
-        function TriggerThing(thing) {
-            _super.call(this);
-            this.thing = thing;
-        }
-        Object.defineProperty(TriggerThing.prototype, "thing", {
-            get: function () {
-                return this._thing;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return TriggerThing;
-    }(Trigger));
-    Waves.TriggerThing = TriggerThing;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
     var WorldState = (function () {
         function WorldState() {
             this._milesRemaining = WorldState.STARTING_MILES;
+            this._triggers = new Array();
+            this._thingsInView = new Array();
+            this.triggers.push(new Waves.ThingTrigger(40, new Waves.Thing("paddle")));
+            this.triggers.push(new Waves.EventTrigger(45, new Waves.FlyingFishStoryEvent()));
         }
         Object.defineProperty(WorldState.prototype, "milesRemaining", {
             get: function () {
@@ -251,10 +237,6 @@ var Waves;
             enumerable: true,
             configurable: true
         });
-        WorldState.prototype.MoveDistance = function (miles) {
-            this._milesRemaining -= miles;
-            this.CheckTriggers(this.milesRemaining);
-        };
         Object.defineProperty(WorldState.prototype, "triggers", {
             get: function () {
                 return this._triggers;
@@ -263,32 +245,47 @@ var Waves;
             configurable: true
         });
         WorldState.prototype.CheckTriggers = function (position) {
-            // this.triggers.forEach((value: Trigger, index: number, array: Trigger[]) => void { this.CheckTrigger(value, position); });
+            this.triggers.forEach(function (value, index, array) { return void { this: .CheckTrigger(value, position) }; });
         };
         Object.defineProperty(WorldState.prototype, "thingsInView", {
             get: function () {
-                return this.thingsInView;
+                return this._thingsInView;
             },
             enumerable: true,
             configurable: true
         });
+        WorldState.prototype.MoveDistance = function (miles) {
+            this._milesRemaining -= miles;
+            this.CheckTriggers(this.milesRemaining);
+        };
+        WorldState.prototype.PickedUpThing = function (thingPosition) {
+            if (this.thingsInView.indexOf(thingPosition) >= 0)
+                this.thingsInView.splice(this.thingsInView.indexOf(thingPosition));
+            else
+                throw new Error("Thing not found");
+        };
+        WorldState.prototype.CheckTriggers = function (position) {
+            var _this = this;
+            this.triggers.forEach(function (value, index, array) { return void _this.CheckTrigger(value, position); });
+        };
         WorldState.prototype.CheckTrigger = function (trigger, position) {
-            if (trigger.position <= position) {
-                if (trigger instanceof Waves.TriggerEvent)
+            if (trigger.position >= position) {
+                if (trigger instanceof Waves.EventTrigger)
                     this.TriggerEvent(trigger);
-                else if (trigger instanceof Waves.TriggerThing)
+                else if (trigger instanceof Waves.ThingTrigger)
                     this.TriggerThing(trigger);
             }
-        };
-        WorldState.prototype.TriggerEvent = function (trigger) {
-        };
-        WorldState.prototype.TriggerThing = function (trigger) {
-            //this.thingsInView.push(trigger.thing);
         };
         WorldState.STARTING_MILES = 50;
         return WorldState;
     }());
     Waves.WorldState = WorldState;
+<<<<<<< HEAD
+=======
+    ThingsInView();
+    ThingPosition;
+    {
+    }
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
@@ -319,7 +316,6 @@ var Waves;
                 var gameElement = document.getElementById('game');
                 gameElement.style.overflow = "visible";
             }
-            this.game.state.start('Preloader', true, false);
         };
         return Boot;
     }(Phaser.State));
@@ -339,23 +335,22 @@ var Waves;
             this.mainButton.pressed.add(this.onPress.bind(this));
             this.milesDisplay = this.game.add.text(300, 10, "Testing 12 12", { font: "30px Arial", fill: '#00f', align: 'right' });
             this.updateMiles();
-            // this.person = new InventoryItem(this.game, 100, 100, 'person');
-            this.sea = new Waves.Sea(this.game, 320, 280);
+            this.person = new Waves.InventoryItem(this.game, 100, 100, 'person');
+            this.sea = new Waves.Sea(this.game, 320, 640);
         };
         MainGame.prototype.onPress = function () {
             //alert("pressed");
             this.game.model.world.MoveDistance(1);
             this.updateMiles();
+>>>>>>> 5f7a9d13a41209a71e0f3ed2f2dc549f90211621
         };
-        MainGame.prototype.updateMiles = function () {
-            this.milesDisplay.text = "You are " + this.game.model.world.milesRemaining + " miles from land";
-        };
-        MainGame.prototype.update = function () {
-            this.sea.update();
+        WorldState.prototype.TriggerThing = function (trigger) {
+            //this.thingsInView.push(trigger.thing);
         };
         return MainGame;
     }(Phaser.State));
     Waves.MainGame = MainGame;
+>>>>>>> 2fcec0cf72895cada2a59b3dac465f86fb14fbec
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
@@ -433,7 +428,11 @@ var Waves;
             }
         };
         return Sea;
+<<<<<<< HEAD
+    })(Phaser.Group);
+=======
     }(Phaser.Group));
+>>>>>>> 5f7a9d13a41209a71e0f3ed2f2dc549f90211621
     Waves.Sea = Sea;
 })(Waves || (Waves = {}));
 //# sourceMappingURL=app.js.map
