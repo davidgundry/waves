@@ -211,7 +211,7 @@ var Waves;
             this.inventory = new Waves.Inventory(this.game, 10, 280);
             this.person = new Waves.InventoryItem(this.game, 100, 100, 'person');
             this.person.dropped.add(this.onDrop.bind(this));
-            this.thingsInView = new Waves.ThingsInView(this.game, new Phaser.Point(this.boat.x + this.boat.width, this.boat.y + this.boat.height));
+            this.thingsInView = new Waves.ThingsInView(this.game, new Phaser.Point(800, 300), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y + this.boat.height));
         };
         MainGame.prototype.onPress = function () {
             //alert("pressed");
@@ -595,10 +595,11 @@ var Waves;
 var Waves;
 (function (Waves) {
     var ThingsInView = (function () {
-        function ThingsInView(game, boatSide) {
+        function ThingsInView(game, thingOrigin, boatSide) {
             this.thingsInView = new Array();
             this._game = game;
             this._boatSide = boatSide;
+            this._thingOrigin = thingOrigin;
             this.game.model.world.thingEventCallback = this.thingEventCallback.bind(this);
         }
         Object.defineProperty(ThingsInView.prototype, "game", {
@@ -633,7 +634,8 @@ var Waves;
             if (relativePosition <= 0) {
                 relativePosition = 0;
             }
-            return new Phaser.Point(this.boatSide.x + relativePosition, this.boatSide.y - relativePosition);
+            var proportion = (relativePosition / Waves.WorldState.LEAD_DISTANCE);
+            return new Phaser.Point(proportion * (this._thingOrigin.x - this.boatSide.x) + this.boatSide.x, proportion * (this._thingOrigin.y - this.boatSide.y) + this.boatSide.y);
         };
         ThingsInView.prototype.isAlongside = function (thingPosition) {
             var relativePosition = thingPosition.position - this.game.model.world.position;

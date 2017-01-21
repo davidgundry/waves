@@ -4,6 +4,7 @@ module Waves {
 
         private _game: Game;
         private _boatSide: Phaser.Point;
+        private _thingOrigin: Phaser.Point;
 
         private thingsInView: ThingPosition[] = new Array<ThingPosition>();
 
@@ -15,9 +16,10 @@ module Waves {
             return this._boatSide;
         }
 
-        constructor(game: Game, boatSide: Phaser.Point) {
+        constructor(game: Game, thingOrigin: Phaser.Point, boatSide: Phaser.Point) {
             this._game = game;
             this._boatSide = boatSide;
+            this._thingOrigin = thingOrigin;
 
             (<Game>this.game).model.world.thingEventCallback = this.thingEventCallback.bind(this);
         }   
@@ -43,7 +45,10 @@ module Waves {
             if (relativePosition <= 0) {
                 relativePosition = 0;
             }
-            return new Phaser.Point(this.boatSide.x + relativePosition, this.boatSide.y - relativePosition);
+
+            var proportion: number = (relativePosition / WorldState.LEAD_DISTANCE);
+
+            return new Phaser.Point(proportion * (this._thingOrigin.x - this.boatSide.x) + this.boatSide.x, proportion * (this._thingOrigin.y - this.boatSide.y) + this.boatSide.y);
         }
 
         isAlongside(thingPosition: ThingPosition) : boolean {
