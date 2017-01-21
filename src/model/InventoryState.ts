@@ -5,7 +5,7 @@ module Waves {
         private _things: Thing[];
 
         public get things(): Thing[] {
-            return this.things;
+            return this._things;
         }
 
 

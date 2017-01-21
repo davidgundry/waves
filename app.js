@@ -9,13 +9,14 @@ var Waves;
         __extends(Game, _super);
         function Game() {
             _super.call(this, 800, 480, Phaser.CANVAS, 'game');
+            this.gameState = new Waves.Model();
             this.state.add('Boot', Waves.Boot, false);
             this.state.add('Preloader', Waves.Preloader, false);
             this.state.add('MainGame', Waves.MainGame, false);
             this.state.start('Boot');
         }
         return Game;
-    })(Phaser.Game);
+    }(Phaser.Game));
     Waves.Game = Game;
 })(Waves || (Waves = {}));
 window.onload = function () {
@@ -53,7 +54,7 @@ var Waves;
             this.game.state.start('Preloader', true, false);
         };
         return Boot;
-    })(Phaser.State);
+    }(Phaser.State));
     Waves.Boot = Boot;
     ;
 })(Waves || (Waves = {}));
@@ -91,7 +92,7 @@ var Waves;
             this.pressed.dispatch();
         };
         return Button;
-    })(Phaser.Group);
+    }(Phaser.Group));
     Waves.Button = Button;
 })(Waves || (Waves = {}));
 var Waves;
@@ -112,17 +113,17 @@ var Waves;
         MainGame.prototype.update = function () {
         };
         return MainGame;
-    })(Phaser.State);
+    }(Phaser.State));
     Waves.MainGame = MainGame;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
-    var GameState = (function () {
-        function GameState() {
+    var Model = (function () {
+        function Model() {
         }
-        return GameState;
-    })();
-    Waves.GameState = GameState;
+        return Model;
+    }());
+    Waves.Model = Model;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
@@ -131,13 +132,13 @@ var Waves;
         }
         Object.defineProperty(InventoryState.prototype, "things", {
             get: function () {
-                return this.things;
+                return this._things;
             },
             enumerable: true,
             configurable: true
         });
         return InventoryState;
-    })();
+    }());
     Waves.InventoryState = InventoryState;
 })(Waves || (Waves = {}));
 var Waves;
@@ -146,7 +147,7 @@ var Waves;
         function ResourceState() {
         }
         return ResourceState;
-    })();
+    }());
     Waves.ResourceState = ResourceState;
 })(Waves || (Waves = {}));
 var Waves;
@@ -155,7 +156,7 @@ var Waves;
         function Thing() {
         }
         return Thing;
-    })();
+    }());
     Waves.Thing = Thing;
 })(Waves || (Waves = {}));
 var Waves;
@@ -176,7 +177,7 @@ var Waves;
         };
         WorldState.STARTING_MILES = 50;
         return WorldState;
-    })();
+    }());
     Waves.WorldState = WorldState;
 })(Waves || (Waves = {}));
 var Waves;
@@ -205,7 +206,7 @@ var Waves;
             this.game.state.start('MainGame', true, false);
         };
         return Preloader;
-    })(Phaser.State);
+    }(Phaser.State));
     Waves.Preloader = Preloader;
 })(Waves || (Waves = {}));
 //# sourceMappingURL=app.js.map
