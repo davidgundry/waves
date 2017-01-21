@@ -1,0 +1,18 @@
+﻿Set a proper list of items and places in the world. Can be useful or useless (depending on graphics). Place them
+- Popup box mechanism
+-Events - with and without consequences and pictures. Events and items in the world use the same mechanism.
+
+
+
+
+Instructions - pop up box for adding to inventory. How to remove?
+Graphics
+
+End game - could be an event
+
+
+
+-More items of use (food attractive, find food, find fishing rods, barrels of water)
+-Food and or water (consequences?)
+-Multiple people
+-Two things active at the same (not necessary to have multiple people)
