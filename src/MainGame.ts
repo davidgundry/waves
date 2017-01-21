@@ -26,8 +26,8 @@
             this.boat = new Boat(this.game, 550, 400);
             this.inventory = new Inventory(this.game,10, 280);
             this.person = new InventoryItem(this.game, 100, 100, this.onDrop.bind(this), new Thing("person"));
-            this.oar = new InventoryItem(this.game, 200, 100, this.onDrop.bind(this), new Thing("oar"));
-            this.sail = new InventoryItem(this.game, 300, 100, this.onDrop.bind(this), new Thing("sail"));
+            this.oar = new InventoryItem(this.game, 200, 100, this.onDrop.bind(this), new RowThing("oar",100));
+            this.sail = new InventoryItem(this.game, 300, 100, this.onDrop.bind(this), new SailThing("sail",5));
 
           
             this.thingsInView = new ThingsInView((<Game>this.game), this.onDrop.bind(this), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y + this.boat.height), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y));
@@ -59,7 +59,6 @@
         }
 
         rowTheBoat() {
-            (<Game>this.game).model.world.MoveMeters(100);
             if ((<Game>this.game).model.inventory.hasPlayerRowThing())
                 (<Game>this.game).model.world.MoveMeters((<Game>this.game).model.inventory.playerRowThing.speed);
         }

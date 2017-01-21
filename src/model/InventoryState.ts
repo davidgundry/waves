@@ -51,19 +51,19 @@ module Waves {
         }
 
         public hasPlayerRowThing(): boolean {
-            return false;
+            return (this.thingUsed instanceof RowThing)
         }
 
         public hasSailThing(): boolean {
-            return false;
+            return (this.thingUsed instanceof SailThing)
         }
 
         public get playerRowThing(): RowThing {
-            return null;
+            return this.thingUsed as RowThing;
         }
 
         public get sailThing(): SailThing {
-            return null;
+            return this.thingUsed as SailThing;
         }
 
     }
