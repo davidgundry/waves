@@ -9,19 +9,10 @@ module Waves {
             return this._milesRemaining;
         }
 
-        public MoveDistance(miles: number) {
-            this._milesRemaining -= miles;
-            this.CheckTriggers(this.milesRemaining);
-        }
+        private _triggers: Trigger[] = new Array<Trigger>();
 
-        private _triggers: Trigger[];
-        
         private get triggers(): Trigger[] {
             return this._triggers;
-        }
-        
-        private CheckTriggers(position: number) {
-           this.triggers.forEach((value: Trigger, index: number, array: Trigger[]) => void this.CheckTrigger(value, position));
         }
 
         private _thingsInView: ThingPosition[];
@@ -30,22 +21,49 @@ module Waves {
             return this.thingsInView;
         }
 
+        constructor() {
+            this.triggers.push(new ThingTrigger(40, new Thing("paddle")));
+        }
+
+        public MoveDistance(miles: number) {
+            this._milesRemaining -= miles;
+            this.CheckTriggers(this.milesRemaining);
+        }
+
+        public PickedUpThing(thingPosition: ThingPosition) {
+            if (this.thingsInView.indexOf(thingPosition) >=0)
+                this.thingsInView.splice(this.thingsInView.indexOf(thingPosition));
+            else
+                throw new Error("Thing not found");
+        }
+        
+        private CheckTriggers(position: number) {
+           this.triggers.forEach((value: Trigger, index: number, array: Trigger[]) => void this.CheckTrigger(value, position));
+        }
+
         private CheckTrigger(trigger: Trigger, position: number) {
             if (trigger.position <= position) {
-                if (trigger instanceof TriggerEvent)
-                    this.TriggerEvent(trigger as TriggerEvent);
-                else if (trigger instanceof TriggerThing)
-                    this.TriggerThing(trigger as TriggerThing);
+                if (trigger instanceof EventTrigger)
+                    this.TriggerEvent(trigger as EventTrigger);
+                else if (trigger instanceof ThingTrigger)
+                    this.TriggerThing(trigger as ThingTrigger);
+                this.RemoveTrigger(trigger);
             }
         }
 
-        private TriggerEvent(trigger: TriggerEvent) {
+        private RemoveTrigger(trigger: Trigger) {
+            this.triggers.splice(this.triggers.indexOf(trigger));
+        }
+
+        private TriggerEvent(trigger: EventTrigger) {
 
         }
 
-        private TriggerThing(trigger: TriggerThing) {
-            //this.thingsInView.push(trigger.thing);
+        private TriggerThing(trigger: ThingTrigger) {
+            this.thingsInView.push(new ThingPosition(trigger.thing, trigger.position));
         }
+
+
 
 
 

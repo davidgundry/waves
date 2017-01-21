@@ -2,8 +2,14 @@ module Waves {
 
     export class Thing {
 
-        name: string;
-        iconName: string;
+        constructor(name: string) {
+            this._name = name;
+        }
+
+        private _name: string;
+        public get name() : string {
+            return this._name;
+        }
 
     }
 }

@@ -2,22 +2,32 @@ module Waves {
 
     export class Trigger {
 
-        position: number;
+        private _position: number;
+
+        constructor(position: number) {
+            this._position = position;
+        }
+        public get position(): number {
+            return this._position;
+        }
 
     }
 
-    export class TriggerEvent extends Trigger{
+    export class EventTrigger extends Trigger{
 
+        constructor(position: number) {
+            super(position);
+        }
 
     }
 
-    export class TriggerThing extends Trigger {
+    export class ThingTrigger extends Trigger {
 
         private _thing: Thing;
 
-        constructor(thing: Thing) {
-            super();
-            this.thing = thing;
+        constructor(position: number, thing: Thing) {
+            super(position);
+            this._thing = thing;
         }
 
         public get thing(): Thing {
