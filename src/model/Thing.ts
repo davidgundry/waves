@@ -35,8 +35,8 @@ module Waves {
             return this._speed;
         }
 
-        private _buttonLabel: number;
-        public get buttonLabel(): number {
+        private _buttonLabel: string;
+        public get buttonLabel(): string {
             return this._buttonLabel;
         }
 
