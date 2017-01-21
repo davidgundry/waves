@@ -251,6 +251,5 @@ paket-files/
 .idea/
 *.sln.iml
 
-*.config
 *.map
 desktop.ini
