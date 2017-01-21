@@ -39,14 +39,17 @@ module Waves {
             this.thingsInView.push(new ThingPosition(thing, position, item));
         }
 
-        screenPosition(position: number): Phaser.Point{
+        proportionalDistance(position: number): number {
             var relativePosition: number = position - (<Game>this.game).model.world.position;
             if (relativePosition <= 0) {
                 relativePosition = 0;
             }
 
-            var proportion: number = (relativePosition / WorldState.LEAD_DISTANCE);
+            return (relativePosition / WorldState.LEAD_DISTANCE);
+        }
 
+        screenPosition(position: number): Phaser.Point{
+            var proportion: number = this.proportionalDistance(position);
             return new Phaser.Point(proportion * (ThingsInView.THING_ORIGIIN.x - this.boatSide.x) + this.boatSide.x, proportion * (ThingsInView.THING_ORIGIIN.y - this.boatSide.y) + this.boatSide.y);
         }
 
@@ -56,12 +59,17 @@ module Waves {
         }
 
         updateThingInView(thingPosition: ThingPosition) {
-            if (this.isAlongside(thingPosition))
+            if (this.isAlongside(thingPosition)) {
+
                 thingPosition.inventoryItem.setDrag(true);
+                this.removeThingInView(thingPosition);
+            }
 
             var screenPosition: Phaser.Point = this.screenPosition(thingPosition.position);
             thingPosition.inventoryItem.position.x = screenPosition.x;
             thingPosition.inventoryItem.position.y = screenPosition.y;
+            var proportionalDistance: number = this.proportionalDistance(thingPosition.position);
+            thingPosition.inventoryItem.scale = new Phaser.Point(1 - proportionalDistance, 1 - proportionalDistance);
         }
 
         removeThingInView(thingPosition: ThingPosition) {

@@ -192,21 +192,41 @@ var Waves;
         function FlyingFishStoryEvent() {
             _super.call(this, "Flying Fish", "You see some totally sweet flying fish.");
         }
-        return FlyingFishStoryEvent;
-    }(StoryEvent));
-    Waves.FlyingFishStoryEvent = FlyingFishStoryEvent;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
-    var Model = (function () {
-        function Model() {
-            this.world = new Waves.WorldState();
-            this.inventory = new Waves.InventoryState();
-            this.resource = new Waves.ResourceState();
-        }
-        return Model;
-    }());
-    Waves.Model = Model;
+        MainGame.prototype.create = function () {
+            _super.prototype.create.call(this);
+            this.mainButton = new Waves.Button(this.game, "Paddle with your hands");
+            this.mainButton.pressed.add(this.onPress.bind(this));
+            this.milesDisplay = this.game.add.text(300, 10, "Testing 12 12", { font: "30px Arial", fill: '#00f', align: 'right' });
+            this.updateMiles();
+            this.sea = new Waves.Sea(this.game, 320, 280);
+            this.boat = new Waves.Boat(this.game, 550, 400);
+            this.inventory = new Waves.Inventory(this.game, 10, 280);
+            this.person = new Waves.InventoryItem(this.game, 100, 100, 'person');
+            this.oar = new Waves.InventoryItem(this.game, 200, 100, 'oar');
+            this.person.dropped.add(this.onDrop.bind(this));
+            this.thingsInView = new Waves.ThingsInView(this.game, new Phaser.Point(this.boat.x + this.boat.width, this.boat.y + this.boat.height));
+        };
+        MainGame.prototype.onPress = function () {
+            //alert("pressed");
+            this.game.model.world.MoveDistance(1);
+            this.updateMiles();
+            this.thingsInView.update();
+        };
+        MainGame.prototype.onDrop = function (dropData) {
+            var item = dropData["dropItem"];
+            if (!this.inventory.acceptItem(item)) {
+                item.returnToPlace();
+            }
+        };
+        MainGame.prototype.updateMiles = function () {
+            this.milesDisplay.text = "You are " + this.game.model.world.milesRemaining + " miles from land";
+        };
+        MainGame.prototype.update = function () {
+            this.sea.update();
+        };
+        return MainGame;
+    })(Phaser.State);
+    Waves.MainGame = MainGame;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
@@ -635,12 +655,15 @@ var Waves;
             item.setDrag(false);
             this.thingsInView.push(new Waves.ThingPosition(thing, position, item));
         };
-        ThingsInView.prototype.screenPosition = function (position) {
+        ThingsInView.prototype.proportionalDistance = function (position) {
             var relativePosition = position - this.game.model.world.position;
             if (relativePosition <= 0) {
                 relativePosition = 0;
             }
-            var proportion = (relativePosition / Waves.WorldState.LEAD_DISTANCE);
+            return (relativePosition / Waves.WorldState.LEAD_DISTANCE);
+        };
+        ThingsInView.prototype.screenPosition = function (position) {
+            var proportion = this.proportionalDistance(position);
             return new Phaser.Point(proportion * (ThingsInView.THING_ORIGIIN.x - this.boatSide.x) + this.boatSide.x, proportion * (ThingsInView.THING_ORIGIIN.y - this.boatSide.y) + this.boatSide.y);
         };
         ThingsInView.prototype.isAlongside = function (thingPosition) {
@@ -648,11 +671,15 @@ var Waves;
             return (relativePosition <= 0);
         };
         ThingsInView.prototype.updateThingInView = function (thingPosition) {
-            if (this.isAlongside(thingPosition))
+            if (this.isAlongside(thingPosition)) {
                 thingPosition.inventoryItem.setDrag(true);
+                this.removeThingInView(thingPosition);
+            }
             var screenPosition = this.screenPosition(thingPosition.position);
             thingPosition.inventoryItem.position.x = screenPosition.x;
             thingPosition.inventoryItem.position.y = screenPosition.y;
+            var proportionalDistance = this.proportionalDistance(thingPosition.position);
+            thingPosition.inventoryItem.scale = new Phaser.Point(1 - proportionalDistance, 1 - proportionalDistance);
         };
         ThingsInView.prototype.removeThingInView = function (thingPosition) {
             if (this.thingsInView.indexOf(thingPosition) >= 0)
