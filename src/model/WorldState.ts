@@ -3,24 +3,39 @@ module Waves {
     export class WorldState {
 
         static STARTING_MILES: number = 50;
-        private _milesRemaining: number = WorldState.STARTING_MILES;
+        public static LEAD_DISTANCE: number = 10;
+        private _position: number = 0;
 
         public get milesRemaining(): number {
-            return this._milesRemaining;
+            return WorldState.STARTING_MILES - this.position;
         }
 
-      
+        public get position(): number {
+            return this._position;
+        }
 
+        public set position(value: number) {
+            this._position = value;
+        }
+
+        private _thingEventCallback: (thing: Thing, position: number) => void;
+        public get thingEventCallback() {
+            return this._thingEventCallback;
+        }
+
+        public set thingEventCallback(callback: (thing: Thing, position: number) => void) {
+            this._thingEventCallback = callback;
+        }
       
 
         constructor() {
-            this.triggers.push(new ThingTrigger(40, new Thing("paddle")));
-            this.triggers.push(new EventTrigger(45, new FlyingFishStoryEvent()));
+            this.triggers.push(new ThingTrigger(13, new Thing("paddle")));
+            this.triggers.push(new EventTrigger(5, new FlyingFishStoryEvent()));
         }
 
         public MoveDistance(miles: number) {
-            this._milesRemaining -= miles;
-            this.CheckTriggers(this.milesRemaining);
+            this.position += miles;
+            this.CheckTriggers(this.position);
         }
 
         private _triggers: Trigger[]= new Array<Trigger>();
@@ -33,17 +48,15 @@ module Waves {
            this.triggers.forEach((value: Trigger, index: number, array: Trigger[]) => void this.CheckTrigger(value, position));
         }
 
-        private _thingsInView: ThingPosition[] = new Array<ThingPosition>();
-
-        public get thingsInView(): ThingPosition[] {
-            return this._thingsInView;
-        }
-
         private CheckTrigger(trigger: Trigger, position: number) {
-            if (trigger.position >= position) {
+            if (trigger.position <= position) {
                 if (trigger instanceof EventTrigger)
                     this.TriggerEvent(trigger as EventTrigger);
-                else if (trigger instanceof ThingTrigger)
+                this.RemoveTrigger(trigger);
+            }
+
+            if (trigger.position - WorldState.LEAD_DISTANCE <= position) {
+                if (trigger instanceof ThingTrigger)
                     this.TriggerThing(trigger as ThingTrigger);
                 this.RemoveTrigger(trigger);
             }
@@ -58,8 +71,11 @@ module Waves {
         }
 
         private TriggerThing(trigger: ThingTrigger) {
-            this.thingsInView.push(new ThingPosition(trigger.thing, trigger.position));
             console.log("Thing Triggered");
+            if (this.thingEventCallback != null)
+                this.thingEventCallback(trigger.thing, trigger.position);
+            else
+                throw new Error("ThingEventCallback not set");
         }
 
 

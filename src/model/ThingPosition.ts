@@ -2,20 +2,26 @@ module Waves {
 
     export class ThingPosition {
 
-        constructor(thing: Thing, distance: number) {
+        constructor(thing: Thing, position: number, inventoryItem: InventoryItem) {
             this._thing = thing;
-            this._distance = distance;
+            this._position = position;
+            this._inventoryItem = inventoryItem;
         }
 
         private _thing: Thing;
-        private _distance: number;
+        private _position: number;
+        private _inventoryItem: InventoryItem;
 
         public get thing(): ThingPosition {
             return this.thing;
         }
 
-        public get distance(): number {
-            return this._distance;
+        public get position(): number {
+            return this._position;
+        }
+
+        public get inventoryItem(): InventoryItem {
+            return this._inventoryItem;
         }
 
     }
