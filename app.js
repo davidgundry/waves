@@ -16,7 +16,7 @@ var Waves;
             this.state.start('Boot');
         }
         return Game;
-    })(Phaser.Game);
+    }(Phaser.Game));
     Waves.Game = Game;
 })(Waves || (Waves = {}));
 window.onload = function () {
@@ -34,7 +34,7 @@ var Waves;
             this.game.add.tween(this).to({ rotation: -0.03 }, 1000, "Sine.easeInOut", true, 0, -1, true);
         }
         return Boat;
-    })(Phaser.Group);
+    }(Phaser.Group));
     Waves.Boat = Boat;
 })(Waves || (Waves = {}));
 var Waves;
@@ -69,7 +69,7 @@ var Waves;
             this.game.state.start('Preloader', true, false);
         };
         return Boot;
-    })(Phaser.State);
+    }(Phaser.State));
     Waves.Boot = Boot;
     ;
 })(Waves || (Waves = {}));
@@ -110,7 +110,7 @@ var Waves;
             this.pressed.dispatch();
         };
         return Button;
-    })(Phaser.Group);
+    }(Phaser.Group));
     Waves.Button = Button;
 })(Waves || (Waves = {}));
 var Waves;
@@ -167,7 +167,7 @@ var Waves;
             return new Phaser.Point(x, y);
         };
         return Inventory;
-    })(Phaser.Group);
+    }(Phaser.Group));
     Waves.Inventory = Inventory;
 })(Waves || (Waves = {}));
 var Waves;
@@ -227,7 +227,7 @@ var Waves;
             this.game.add.tween(this.position).to({ y: 1000 }, 2000, "Sine.easeIn", true);
         };
         return InventoryItem;
-    })(Phaser.Group);
+    }(Phaser.Group));
     Waves.InventoryItem = InventoryItem;
 })(Waves || (Waves = {}));
 var Waves;
@@ -269,6 +269,12 @@ var Waves;
         };
         MainGame.prototype.update = function () {
             this.sailTheBoat();
+            if (this.game.model.inventory.hasPlayerRowThing()) {
+                this.mainButton.setButtonText(this.game.model.inventory.playerRowThing.buttonLabel);
+            }
+            else {
+                this.mainButton.setButtonText("Row with your hands");
+            }
             this.sea.update();
             this.updateMiles();
             this.thingsInView.update();
@@ -285,7 +291,7 @@ var Waves;
             this.milesDisplay.text = "You are " + this.game.model.world.milesRemaining.toFixed(4) + " miles from land";
         };
         return MainGame;
-    })(Phaser.State);
+    }(Phaser.State));
     Waves.MainGame = MainGame;
 })(Waves || (Waves = {}));
 var Waves;
@@ -363,7 +369,7 @@ var Waves;
         });
         InventoryState.STARTING_TOTAL_SPACE = 10;
         return InventoryState;
-    })();
+    }());
     Waves.InventoryState = InventoryState;
 })(Waves || (Waves = {}));
 var Waves;
@@ -375,7 +381,7 @@ var Waves;
             this.resource = new Waves.ResourceState();
         }
         return Model;
-    })();
+    }());
     Waves.Model = Model;
 })(Waves || (Waves = {}));
 var Waves;
@@ -384,7 +390,7 @@ var Waves;
         function ResourceState() {
         }
         return ResourceState;
-    })();
+    }());
     Waves.ResourceState = ResourceState;
 })(Waves || (Waves = {}));
 var Waves;
@@ -409,7 +415,7 @@ var Waves;
             configurable: true
         });
         return StoryEvent;
-    })();
+    }());
     Waves.StoryEvent = StoryEvent;
     var FlyingFishStoryEvent = (function (_super) {
         __extends(FlyingFishStoryEvent, _super);
@@ -417,7 +423,7 @@ var Waves;
             _super.call(this, "Flying Fish", "You see some totally sweet flying fish.");
         }
         return FlyingFishStoryEvent;
-    })(StoryEvent);
+    }(StoryEvent));
     Waves.FlyingFishStoryEvent = FlyingFishStoryEvent;
 })(Waves || (Waves = {}));
 var Waves;
@@ -444,7 +450,7 @@ var Waves;
             configurable: true
         });
         return Thing;
-    })();
+    }());
     Waves.Thing = Thing;
     var RowThing = (function (_super) {
         __extends(RowThing, _super);
@@ -468,7 +474,7 @@ var Waves;
             configurable: true
         });
         return RowThing;
-    })(Thing);
+    }(Thing));
     Waves.RowThing = RowThing;
     var SailThing = (function (_super) {
         __extends(SailThing, _super);
@@ -484,7 +490,7 @@ var Waves;
             configurable: true
         });
         return SailThing;
-    })(Thing);
+    }(Thing));
     Waves.SailThing = SailThing;
 })(Waves || (Waves = {}));
 var Waves;
@@ -517,7 +523,7 @@ var Waves;
             configurable: true
         });
         return ThingPosition;
-    })();
+    }());
     Waves.ThingPosition = ThingPosition;
 })(Waves || (Waves = {}));
 var Waves;
@@ -534,7 +540,7 @@ var Waves;
             configurable: true
         });
         return Trigger;
-    })();
+    }());
     Waves.Trigger = Trigger;
     var EventTrigger = (function (_super) {
         __extends(EventTrigger, _super);
@@ -550,7 +556,7 @@ var Waves;
             configurable: true
         });
         return EventTrigger;
-    })(Trigger);
+    }(Trigger));
     Waves.EventTrigger = EventTrigger;
     var ThingTrigger = (function (_super) {
         __extends(ThingTrigger, _super);
@@ -566,7 +572,7 @@ var Waves;
             configurable: true
         });
         return ThingTrigger;
-    })(Trigger);
+    }(Trigger));
     Waves.ThingTrigger = ThingTrigger;
 })(Waves || (Waves = {}));
 var Waves;
@@ -651,7 +657,7 @@ var Waves;
         WorldState.STARTING_MILES = 50;
         WorldState.LEAD_DISTANCE = 1;
         return WorldState;
-    })();
+    }());
     Waves.WorldState = WorldState;
 })(Waves || (Waves = {}));
 var Waves;
@@ -687,7 +693,7 @@ var Waves;
             this.game.state.start('MainGame', true, false);
         };
         return Preloader;
-    })(Phaser.State);
+    }(Phaser.State));
     Waves.Preloader = Preloader;
 })(Waves || (Waves = {}));
 var Waves;
@@ -739,7 +745,7 @@ var Waves;
             }
         };
         return Sea;
-    })(Phaser.Group);
+    }(Phaser.Group));
     Waves.Sea = Sea;
 })(Waves || (Waves = {}));
 var Waves;
@@ -824,7 +830,7 @@ var Waves;
         };
         ThingsInView.THING_ORIGIIN = new Phaser.Point(800, 300);
         return ThingsInView;
-    })();
+    }());
     Waves.ThingsInView = ThingsInView;
 })(Waves || (Waves = {}));
 //# sourceMappingURL=app.js.map

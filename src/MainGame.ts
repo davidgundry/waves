@@ -52,7 +52,11 @@
 
         update() {
             this.sailTheBoat();
-
+            if ((<Game>this.game).model.inventory.hasPlayerRowThing()) {
+                this.mainButton.setButtonText((<Game>this.game).model.inventory.playerRowThing.buttonLabel);
+            } else {
+                this.mainButton.setButtonText("Row with your hands");
+            }
             this.sea.update();
             this.updateMiles();
             this.thingsInView.update();
