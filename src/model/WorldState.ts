@@ -33,7 +33,7 @@ module Waves {
            this.triggers.forEach((value: Trigger, index: number, array: Trigger[]) => void this.CheckTrigger(value, position));
         }
 
-        private _thingsInView: ThingPosition[];
+        private _thingsInView: ThingPosition[] = new Array<ThingPosition>();
 
         public get thingsInView(): ThingPosition[] {
             return this._thingsInView;

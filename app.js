@@ -377,6 +377,7 @@ var Waves;
         function WorldState() {
             this._milesRemaining = WorldState.STARTING_MILES;
             this._triggers = new Array();
+            this._thingsInView = new Array();
             this.triggers.push(new Waves.ThingTrigger(40, new Waves.Thing("paddle")));
             this.triggers.push(new Waves.EventTrigger(45, new Waves.FlyingFishStoryEvent()));
         }
