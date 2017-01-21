@@ -1,6 +1,5 @@
 ﻿module Waves {
    
-
     export class InventoryItem extends Phaser.Group {
         baseSprite: Phaser.Sprite;
 
@@ -33,9 +32,6 @@
             this.baseSprite.position.y = 0;
         }
 
-
-
- 
 
 
     }
