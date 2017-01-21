@@ -36,7 +36,7 @@ module Waves {
         private _thingsInView: ThingPosition[];
 
         public get thingsInView(): ThingPosition[] {
-            return this.thingsInView;
+            return this._thingsInView;
         }
 
         private CheckTrigger(trigger: Trigger, position: number) {
