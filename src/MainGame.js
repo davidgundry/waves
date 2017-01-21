@@ -12,11 +12,13 @@ var Waves;
         }
         MainGame.prototype.create = function () {
             _super.prototype.create.call(this);
+            this.mainButton = new Waves.Button(this.game, "Paddle with your hands");
+            alert("calling main game");
         };
         MainGame.prototype.update = function () {
         };
         return MainGame;
-    })(Phaser.State);
+    }(Phaser.State));
     Waves.MainGame = MainGame;
 })(Waves || (Waves = {}));
 //# sourceMappingURL=MainGame.js.map

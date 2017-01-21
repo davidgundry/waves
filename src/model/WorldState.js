@@ -4,7 +4,7 @@ var Waves;
         function WorldState() {
         }
         return WorldState;
-    })();
+    }());
     Waves.WorldState = WorldState;
 })(Waves || (Waves = {}));
 //# sourceMappingURL=WorldState.js.map
