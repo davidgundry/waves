@@ -24,6 +24,20 @@ window.onload = function () {
 };
 var Waves;
 (function (Waves) {
+    var Boat = (function (_super) {
+        __extends(Boat, _super);
+        function Boat(game, newX, newY) {
+            _super.call(this, game);
+            this.position.x = newX;
+            this.position.y = newY;
+            this.create(0, 0, "boat");
+        }
+        return Boat;
+    })(Phaser.Group);
+    Waves.Boat = Boat;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
     var Boot = (function (_super) {
         __extends(Boot, _super);
         function Boot() {
@@ -143,8 +157,9 @@ var Waves;
             this.mainButton.pressed.add(this.onPress.bind(this));
             this.milesDisplay = this.game.add.text(300, 10, "Testing 12 12", { font: "30px Arial", fill: '#00f', align: 'right' });
             this.updateMiles();
-            this.person = new Waves.InventoryItem(this.game, 100, 100, 'person');
-            this.sea = new Waves.Sea(this.game, 320, 640);
+            // this.person = new InventoryItem(this.game, 100, 100, 'person');
+            this.sea = new Waves.Sea(this.game, 320, 280);
+            this.boat = new Waves.Boat(this.game, 550, 500);
         };
         MainGame.prototype.onPress = function () {
             //alert("pressed");
@@ -162,6 +177,7 @@ var Waves;
         MainGame.prototype.updateThingInWater = function (thingPosition) {
         };
         MainGame.prototype.update = function () {
+            this.sea.update();
         };
         return MainGame;
     })(Phaser.State);
@@ -361,7 +377,6 @@ var Waves;
         function WorldState() {
             this._milesRemaining = WorldState.STARTING_MILES;
             this._triggers = new Array();
-            this._thingsInView = new Array();
             this.triggers.push(new Waves.ThingTrigger(40, new Waves.Thing("paddle")));
             this.triggers.push(new Waves.EventTrigger(45, new Waves.FlyingFishStoryEvent()));
         }
@@ -372,6 +387,10 @@ var Waves;
             enumerable: true,
             configurable: true
         });
+        WorldState.prototype.MoveDistance = function (miles) {
+            this._milesRemaining -= miles;
+            this.CheckTriggers(this.milesRemaining);
+        };
         Object.defineProperty(WorldState.prototype, "triggers", {
             get: function () {
                 return this._triggers;
@@ -379,6 +398,10 @@ var Waves;
             enumerable: true,
             configurable: true
         });
+        WorldState.prototype.CheckTriggers = function (position) {
+            var _this = this;
+            this.triggers.forEach(function (value, index, array) { return void _this.CheckTrigger(value, position); });
+        };
         Object.defineProperty(WorldState.prototype, "thingsInView", {
             get: function () {
                 return this._thingsInView;
@@ -386,20 +409,6 @@ var Waves;
             enumerable: true,
             configurable: true
         });
-        WorldState.prototype.MoveDistance = function (miles) {
-            this._milesRemaining -= miles;
-            this.CheckTriggers(this.milesRemaining);
-        };
-        WorldState.prototype.PickedUpThing = function (thingPosition) {
-            if (this.thingsInView.indexOf(thingPosition) >= 0)
-                this.thingsInView.splice(this.thingsInView.indexOf(thingPosition));
-            else
-                throw new Error("Thing not found");
-        };
-        WorldState.prototype.CheckTriggers = function (position) {
-            var _this = this;
-            this.triggers.forEach(function (value, index, array) { return void _this.CheckTrigger(value, position); });
-        };
         WorldState.prototype.CheckTrigger = function (trigger, position) {
             if (trigger.position >= position) {
                 if (trigger instanceof Waves.EventTrigger)
@@ -445,8 +454,7 @@ var Waves;
             this.game.load.image("sea1", "assets/sea-top.png");
             this.game.load.image("sea2", "assets/sea-middle.png");
             this.game.load.image("sea3", "assets/sea-bottom.png");
-            //this.game.load.image('particle', 'assets/particle.png');
-            // this.game.load.text('mainText', 'text/NorwoodBuilder.txt');
+            this.game.load.image("boat", "assets/boat1.png");
         };
         Preloader.prototype.create = function () {
             _super.prototype.create.call(this);
@@ -464,10 +472,11 @@ var Waves;
         function Sea(game, newX, newY) {
             _super.call(this, game);
             this.numberOfStrips = 3;
-            this.width = 640;
-            this.height = 330;
+            this.maskWidth = 640;
+            this.maskHeight = 330;
             this.position.x = newX;
             this.position.y = newY;
+            this.addSeaStrips();
             this.createMask();
         }
         Sea.prototype.addSeaStrips = function () {
@@ -480,15 +489,23 @@ var Waves;
             }
         };
         Sea.prototype.createMask = function () {
-            var mask = this.game.add.graphics(0, 100);
+            var mask = this.game.add.graphics(0, 0, this);
             //  Shapes drawn to the Graphics object must be filled.
             mask.beginFill(0xffffff);
             //  Here we'll draw a rectangle for each group sprite
-            mask.drawRect(0, 0, this.width, this.height);
+            mask.drawRect(0, 0, this.maskWidth, this.maskHeight * 2); // no idea why it has to be height *2
             // mask.drawRect(330, 0, 140, 200);
             //mask.drawRect(530, 0, 140, 200);
             //  And apply it to the Group itself
             this.mask = mask;
+        };
+        Sea.prototype.update = function () {
+            for (var i = 0; i < this.numberOfStrips; i++) {
+                this.strips[i].position.x -= (i + 1) / 25;
+                if ((this.strips[i].position.x + this.strips[i].width) < this.maskWidth) {
+                    this.strips[i].position.x = 0;
+                }
+            }
         };
         return Sea;
     })(Phaser.Group);

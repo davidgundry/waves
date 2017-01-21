@@ -9,17 +9,9 @@ module Waves {
             return this._milesRemaining;
         }
 
-        private _triggers: Trigger[] = new Array<Trigger>();
+      
 
-        private get triggers(): Trigger[] {
-            return this._triggers;
-        }
-
-        private _thingsInView: ThingPosition[] = new Array <ThingPosition>();
-
-        public get thingsInView(): ThingPosition[] {
-            return this._thingsInView;
-        }
+      
 
         constructor() {
             this.triggers.push(new ThingTrigger(40, new Thing("paddle")));
@@ -31,15 +23,20 @@ module Waves {
             this.CheckTriggers(this.milesRemaining);
         }
 
-        public PickedUpThing(thingPosition: ThingPosition) {
-            if (this.thingsInView.indexOf(thingPosition) >=0)
-                this.thingsInView.splice(this.thingsInView.indexOf(thingPosition));
-            else
-                throw new Error("Thing not found");
+        private _triggers: Trigger[]= new Array<Trigger>();
+        
+        private get triggers(): Trigger[] {
+            return this._triggers;
         }
         
         private CheckTriggers(position: number) {
            this.triggers.forEach((value: Trigger, index: number, array: Trigger[]) => void this.CheckTrigger(value, position));
+        }
+
+        private _thingsInView: ThingPosition[];
+
+        public get thingsInView(): ThingPosition[] {
+            return this._thingsInView;
         }
 
         private CheckTrigger(trigger: Trigger, position: number) {
