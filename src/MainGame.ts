@@ -7,6 +7,7 @@
         milesDisplay: Phaser.Text;
         person: Phaser.Group;//InventoryItem;
         sea: Sea;
+        thingsInWater: InventoryItem[] = new Array<InventoryItem>();
 
         create() {
             super.create();
@@ -22,10 +23,19 @@
             //alert("pressed");
             (<Game>this.game).model.world.MoveDistance(1);
             this.updateMiles();
+            this.updateThingsInWater();
         }
         updateMiles() {
             this.milesDisplay.text = "You are " + (<Game>this.game).model.world.milesRemaining + " miles from land";
 
+        }
+
+        updateThingsInWater() {
+            //thingsInView: ThingPosition[] = (<Game>this.game).model.world.thingsInView;
+            //thingsInView.forEach((value: ThingPosition, index: number, array: Trigger[]) => void this.updateThingInWater(value));
+        }
+
+        updateThingInWater(thingPosition: ThingPosition) {
         }
 
        

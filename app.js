@@ -135,6 +135,7 @@ var Waves;
         __extends(MainGame, _super);
         function MainGame() {
             _super.apply(this, arguments);
+            this.thingsInWater = new Array();
         }
         MainGame.prototype.create = function () {
             _super.prototype.create.call(this);
@@ -149,9 +150,16 @@ var Waves;
             //alert("pressed");
             this.game.model.world.MoveDistance(1);
             this.updateMiles();
+            this.updateThingsInWater();
         };
         MainGame.prototype.updateMiles = function () {
             this.milesDisplay.text = "You are " + this.game.model.world.milesRemaining + " miles from land";
+        };
+        MainGame.prototype.updateThingsInWater = function () {
+            //thingsInView: ThingPosition[] = (<Game>this.game).model.world.thingsInView;
+            //thingsInView.forEach((value: ThingPosition, index: number, array: Trigger[]) => void this.updateThingInWater(value));
+        };
+        MainGame.prototype.updateThingInWater = function (thingPosition) {
         };
         MainGame.prototype.update = function () {
         };
