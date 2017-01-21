@@ -168,15 +168,6 @@ var Waves;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
-    var Trigger = (function () {
-        function Trigger() {
-        }
-        return Trigger;
-    })();
-    Waves.Trigger = Trigger;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
     var WorldState = (function () {
         function WorldState() {
             this._milesRemaining = WorldState.STARTING_MILES;
@@ -261,9 +252,8 @@ var Waves;
             this.mainButton.pressed.add(this.onPress.bind(this));
             this.milesDisplay = this.game.add.text(300, 10, "Testing 12 12", { font: "30px Arial", fill: '#00f', align: 'right' });
             this.updateMiles();
-            // this.game.add.sprite(100, 100, 'person');
             this.person = new Waves.InventoryItem(this.game, 100, 100, 'person');
-            // this.person.create(100, 100, "person");
+            this.sea = new Waves.Sea(this.game, 320, 640);
         };
         MainGame.prototype.onPress = function () {
             //alert("pressed");
@@ -297,6 +287,9 @@ var Waves;
             this.load.setPreloadSprite(this.preloadBar);
             //  Load our actual games assets
             this.game.load.image("person", "assets/placeholderMan.png");
+            this.game.load.image("sea1", "assets/sea-top.png");
+            this.game.load.image("sea2", "assets/sea-middle.png");
+            this.game.load.image("sea3", "assets/sea-bottom.png");
             //this.game.load.image('particle', 'assets/particle.png');
             // this.game.load.text('mainText', 'text/NorwoodBuilder.txt');
         };
@@ -308,5 +301,42 @@ var Waves;
         return Preloader;
     }(Phaser.State));
     Waves.Preloader = Preloader;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var Sea = (function (_super) {
+        __extends(Sea, _super);
+        function Sea(game, newX, newY) {
+            _super.call(this, game);
+            this.numberOfStrips = 3;
+            this.width = 640;
+            this.height = 330;
+            this.position.x = newX;
+            this.position.y = newY;
+            this.createMask();
+        }
+        Sea.prototype.addSeaStrips = function () {
+            this.strips = [];
+            var y = 0;
+            for (var i = 1; i <= this.numberOfStrips; i++) {
+                var strip = this.create(0, y, "sea" + i);
+                y += strip.height;
+                this.strips.push(strip);
+            }
+        };
+        Sea.prototype.createMask = function () {
+            var mask = this.game.add.graphics(0, 100);
+            //  Shapes drawn to the Graphics object must be filled.
+            mask.beginFill(0xffffff);
+            //  Here we'll draw a rectangle for each group sprite
+            mask.drawRect(0, 0, this.width, this.height);
+            // mask.drawRect(330, 0, 140, 200);
+            //mask.drawRect(530, 0, 140, 200);
+            //  And apply it to the Group itself
+            this.mask = mask;
+        };
+        return Sea;
+    }(Phaser.Group));
+    Waves.Sea = Sea;
 })(Waves || (Waves = {}));
 //# sourceMappingURL=app.js.map

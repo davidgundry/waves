@@ -6,6 +6,7 @@
         mainButton: Button;
         milesDisplay: Phaser.Text;
         person: Phaser.Group;//InventoryItem;
+        sea: Sea;
 
         create() {
             super.create();
@@ -13,9 +14,8 @@
             this.mainButton.pressed.add(this.onPress.bind(this));
             this.milesDisplay = this.game.add.text(300, 10, "Testing 12 12", { font: "30px Arial", fill: '#00f', align: 'right' })
             this.updateMiles();
-           // this.game.add.sprite(100, 100, 'person');
             this.person = new InventoryItem(this.game, 100, 100, 'person');
-           // this.person.create(100, 100, "person");
+            this.sea = new Sea(this.game,320,640);
           
         }
         onPress() {
