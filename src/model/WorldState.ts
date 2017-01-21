@@ -16,17 +16,17 @@ module Waves {
 
         private _triggers: Trigger[];
         
-        private get triggers : Trigger[] {
-            return _triggers;
+        private get triggers(): Trigger[] {
+            return this._triggers;
         }
         
         private CheckTriggers(position: number) {
-            this.triggers.forEach({ if(true) this.TriggerEvent();
-        })
+            //this.triggers.forEach({ if(true) this.TriggerEvent();
+        //})
         }
 
-        public ThingsInView() : ThingPosition {
-
+        public ThingsInView(): ThingPosition[] {
+            return null;
         }
 
 
