@@ -10,11 +10,13 @@
         sea: Sea;
         thingsInView: ThingsInView;
         boat: Boat;
+        sail: Boat;
         inventory: Inventory;
 
         create() {
             super.create();
             this.mainButton = new Button(this.game, "Paddle with your hands")
+            this.mainButton.setButtonText("Paddle with your nose");
             this.mainButton.pressed.add(this.onPress.bind(this));
             this.milesDisplay = this.game.add.text(300, 10, "Testing 12 12", { font: "30px Arial", fill: '#00f', align: 'right' })
             this.updateMiles();
@@ -24,7 +26,8 @@
             this.boat = new Boat(this.game, 550, 400);
             this.inventory = new Inventory(this.game,10, 280);
             this.person = new InventoryItem(this.game, 100, 100, this.onDrop.bind(this), new Thing("person"));
-            this.oar = new InventoryItem(this.game, 200, 100, this.onDrop.bind(this),new Thing("oar"));
+            this.oar = new InventoryItem(this.game, 200, 100, this.onDrop.bind(this), new Thing("oar"));
+            this.sail = new InventoryItem(this.game, 300, 100, this.onDrop.bind(this), new Thing("sail"));
 
           
             this.thingsInView = new ThingsInView((<Game>this.game), this.onDrop.bind(this), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y + this.boat.height), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y));
@@ -67,7 +70,7 @@
         }
 
         updateMiles() {
-            this.milesDisplay.text = "You are " + (<Game>this.game).model.world.milesRemaining + " miles from land";
+            this.milesDisplay.text = "You are " + (<Game>this.game).model.world.milesRemaining.toFixed(4) + " miles from land";
         }
 
 

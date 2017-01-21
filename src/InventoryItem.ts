@@ -11,6 +11,7 @@
         constructor(game: Phaser.Game,  newX: number, newY: number,dropHandler:Function,thing:Thing) {
             super(game);
             this.baseThing = thing;
+            thing.inventoryItem = this;
             this.baseSprite = this.create(0, 0, thing.spriteName);
             this.baseSprite.anchor.setTo(0.5, 0.5);
             this.inUseSprite = this.create(0, 0, "inUse");
@@ -37,8 +38,12 @@
         }
         onClick() {
             if (this.inventorySlot !== null) {
-                this.inUseSprite.visible = !this.inUseSprite.visible;
+                
+                (<Game>this.game).model.inventory.SetInUse(this.baseThing);
             }
+        }
+        setInUse(isUsed: boolean) {
+            this.inUseSprite.visible = isUsed;
         }
         onDragStart() {
             this.lastPos = new Phaser.Point(this.position.x, this.position.y);

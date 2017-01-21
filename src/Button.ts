@@ -31,6 +31,9 @@
             boxSprite.events.onInputDown.add(this.onPressed, this);
 
         }
+        setButtonText(newText: string) {
+            this.text.text = newText;
+        }
         createText(label: string) {
             this.text = this.game.add.text(10, this.boxHeight / 2, label, { font: "20px Arial", fill: '#00f', align: 'left' }, this);
             this.text.anchor.set(0, 0.5);
