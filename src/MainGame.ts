@@ -12,8 +12,6 @@
         boat: Boat;
         inventory: Inventory;
 
-
-
         create() {
             super.create();
             this.mainButton = new Button(this.game, "Paddle with your hands")
@@ -34,11 +32,9 @@
         }
 
         onPress() {
-            //alert("pressed");
-            (<Game>this.game).model.world.MoveMeters(100);
-            this.updateMiles();
-            this.thingsInView.update();
+            this.rowTheBoat()
         }
+
         onDrop(dropData: Object) {
             var item: InventoryItem = <InventoryItem>dropData["dropItem"]
             if (!this.inventory.acceptItem(item)) {
@@ -50,13 +46,30 @@
                 }
             }
         }
+
+        update() {
+            this.sailTheBoat();
+
+            this.sea.update();
+            this.updateMiles();
+            this.thingsInView.update();
+        }
+
+        rowTheBoat() {
+            (<Game>this.game).model.world.MoveMeters(100);
+            if ((<Game>this.game).model.inventory.hasPlayerRowThing())
+                (<Game>this.game).model.world.MoveMeters((<Game>this.game).model.inventory.playerRowThing.speed);
+        }
+
+        sailTheBoat() {
+            if ((<Game>this.game).model.inventory.hasSailThing())
+                (<Game>this.game).model.world.MoveMeters((<Game>this.game).model.inventory.sailThing.speed);
+        }
+
         updateMiles() {
             this.milesDisplay.text = "You are " + (<Game>this.game).model.world.milesRemaining + " miles from land";
         }
 
-        update() {
-           this.sea.update();
-        }
 
 
     }

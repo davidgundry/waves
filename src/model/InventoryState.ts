@@ -38,6 +38,21 @@ module Waves {
                 throw new Error("Thing not in inventory");
         }
 
+        public hasPlayerRowThing(): boolean {
+            return false;
+        }
+
+        public hasSailThing(): boolean {
+            return false;
+        }
+
+        public get playerRowThing(): RowThing {
+            return null;
+        }
+
+        public get sailThing(): SailThing {
+            return null;
+        }
 
     }
 

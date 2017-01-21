@@ -42,6 +42,7 @@ module Waves {
             this.MoveDistance(meters / 1609);
         }
 
+
         private _triggers: Trigger[]= new Array<Trigger>();
         
         private get triggers(): Trigger[] {
