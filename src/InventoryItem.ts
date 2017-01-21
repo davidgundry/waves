@@ -19,7 +19,7 @@
             if (isEnabled) {
                 this.baseSprite.input.enableDrag();
                 this.baseSprite.events.onDragStart.add(this.onDragStart.bind(this), this);
-                this.baseSprite.events.onDragStop.add(this.onDragStart.bind(this), this);
+                this.baseSprite.events.onDragStop.add(this.onDragStop.bind(this), this);
             } else {
                 this.baseSprite.input.disableDrag();
             }

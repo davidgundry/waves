@@ -93,7 +93,7 @@ var Waves;
             var y = item.position.y;
             if (this.boundsRect.contains(x, y)) {
                 var slot = this.getSlot(item.position.x, item.position.y);
-                if (this.slots[slot] != null) {
+                if (this.slots[slot] === null) {
                     this.slots[slot] = item;
                     var centre = this.getSlotMiddle(slot);
                     this.game.add.tween(item).to({ x: centre.x, y: centre.y }, 1000, "Sine.easeIn");
@@ -103,8 +103,8 @@ var Waves;
             return false;
         };
         Inventory.prototype.getSlot = function (x, y) {
-            var slotX = (x - this.position.x) / this.slotWidth;
-            var slotY = (y - this.position[y]) / this.slotHeight;
+            var slotX = Math.round((x - this.position.x) / this.slotWidth);
+            var slotY = Math.round((y - this.position.y) / this.slotHeight);
             return (slotY * 3) + slotX;
         };
         Inventory.prototype.getSlotMiddle = function (slotNumber) {
@@ -134,7 +134,7 @@ var Waves;
             if (isEnabled) {
                 this.baseSprite.input.enableDrag();
                 this.baseSprite.events.onDragStart.add(this.onDragStart.bind(this), this);
-                this.baseSprite.events.onDragStop.add(this.onDragStart.bind(this), this);
+                this.baseSprite.events.onDragStop.add(this.onDragStop.bind(this), this);
             }
             else {
                 this.baseSprite.input.disableDrag();
