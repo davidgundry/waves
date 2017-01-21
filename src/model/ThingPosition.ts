@@ -3,15 +3,15 @@ module Waves {
     export class ThingPosition {
 
         constructor(thing: Thing, distance: number) {
-            this.thing = thing;
-            this.distance = distance;
+            this._thing = thing;
+            this._distance = distance;
         }
 
         private _thing: Thing;
         private _distance: number;
 
         public get thing(): ThingPosition {
-            return this._thing;
+            return this.thing;
         }
 
         public get distance(): number {
