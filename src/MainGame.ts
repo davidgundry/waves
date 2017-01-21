@@ -11,6 +11,8 @@
         boat: Boat;
         inventory: Inventory;
 
+
+
         create() {
             super.create();
             this.mainButton = new Button(this.game, "Paddle with your hands")
@@ -25,7 +27,7 @@
             this.person = new InventoryItem(this.game, 100, 100, 'person');
             this.person.dropped.add(this.onDrop.bind(this));
           
-            this.thingsInView = new ThingsInView((<Game>this.game), new Phaser.Point(800,300), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y + this.boat.height));
+            this.thingsInView = new ThingsInView((<Game>this.game), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y + this.boat.height));
 
         }
 
