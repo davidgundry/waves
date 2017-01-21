@@ -23,8 +23,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app.css" />
+    <Content Include="assets\phaser-logo-small.png" />
     <Content Include="index.html" />
     <Content Include="phaser\phaser.js" />
+    <Content Include="src\MainGame.js" />
+    <Content Include="src\model\gameState.js" />
     <Content Include="web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -35,6 +38,10 @@
     <TypeScriptCompile Include="phaser\p2.d.ts" />
     <TypeScriptCompile Include="phaser\phaser.d.ts" />
     <TypeScriptCompile Include="phaser\pixi.d.ts" />
+    <TypeScriptCompile Include="src\Boot.ts" />
+    <TypeScriptCompile Include="src\MainGame.ts" />
+    <TypeScriptCompile Include="src\model\gameState.ts" />
+    <TypeScriptCompile Include="src\Preloader.ts" />
   </ItemGroup>
   <ItemGroup>
     <None Include="web.Debug.config">

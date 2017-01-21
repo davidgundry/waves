@@ -16,6 +16,6 @@ var Waves;
         MainGame.prototype.update = function () {
         };
         return MainGame;
-    })(Phaser.State);
+    }(Phaser.State));
 })(Waves || (Waves = {}));
 //# sourceMappingURL=MainGame.js.map
