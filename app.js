@@ -312,7 +312,9 @@ var Waves;
         function WorldState() {
             this._milesRemaining = WorldState.STARTING_MILES;
             this._triggers = new Array();
+            this._thingsInView = new Array();
             this.triggers.push(new Waves.ThingTrigger(40, new Waves.Thing("paddle")));
+            this.triggers.push(new Waves.EventTrigger(45));
         }
         Object.defineProperty(WorldState.prototype, "milesRemaining", {
             get: function () {
@@ -330,7 +332,7 @@ var Waves;
         });
         Object.defineProperty(WorldState.prototype, "thingsInView", {
             get: function () {
-                return this.thingsInView;
+                return this._thingsInView;
             },
             enumerable: true,
             configurable: true
@@ -350,7 +352,7 @@ var Waves;
             this.triggers.forEach(function (value, index, array) { return void _this.CheckTrigger(value, position); });
         };
         WorldState.prototype.CheckTrigger = function (trigger, position) {
-            if (trigger.position <= position) {
+            if (trigger.position >= position) {
                 if (trigger instanceof Waves.EventTrigger)
                     this.TriggerEvent(trigger);
                 else if (trigger instanceof Waves.ThingTrigger)
@@ -362,9 +364,11 @@ var Waves;
             this.triggers.splice(this.triggers.indexOf(trigger));
         };
         WorldState.prototype.TriggerEvent = function (trigger) {
+            console.log("Event Triggered");
         };
         WorldState.prototype.TriggerThing = function (trigger) {
             this.thingsInView.push(new Waves.ThingPosition(trigger.thing, trigger.position));
+            console.log("Thing Triggered");
         };
         WorldState.STARTING_MILES = 50;
         return WorldState;

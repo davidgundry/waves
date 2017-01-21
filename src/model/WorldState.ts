@@ -15,14 +15,15 @@ module Waves {
             return this._triggers;
         }
 
-        private _thingsInView: ThingPosition[];
+        private _thingsInView: ThingPosition[] = new Array <ThingPosition>();
 
         public get thingsInView(): ThingPosition[] {
-            return this.thingsInView;
+            return this._thingsInView;
         }
 
         constructor() {
             this.triggers.push(new ThingTrigger(40, new Thing("paddle")));
+            this.triggers.push(new EventTrigger(45));
         }
 
         public MoveDistance(miles: number) {
@@ -42,7 +43,7 @@ module Waves {
         }
 
         private CheckTrigger(trigger: Trigger, position: number) {
-            if (trigger.position <= position) {
+            if (trigger.position >= position) {
                 if (trigger instanceof EventTrigger)
                     this.TriggerEvent(trigger as EventTrigger);
                 else if (trigger instanceof ThingTrigger)
@@ -56,11 +57,12 @@ module Waves {
         }
 
         private TriggerEvent(trigger: EventTrigger) {
-
+            console.log("Event Triggered");
         }
 
         private TriggerThing(trigger: ThingTrigger) {
             this.thingsInView.push(new ThingPosition(trigger.thing, trigger.position));
+            console.log("Thing Triggered");
         }
 
 
