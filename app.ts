@@ -6,7 +6,7 @@
         static pausePlay: boolean; // we may need this later
 
         constructor() {
-            super(800, 480, Phaser.CANVAS, 'game');
+            super(960, 600, Phaser.CANVAS, 'game');
             this.model = new Model();
 
             this.state.add('Boot', Boot, false);
