@@ -5,10 +5,11 @@
         
         mainButton: Button;
         milesDisplay: Phaser.Text;
-        person: Phaser.Group;//InventoryItem;
+        person: InventoryItem;
         sea: Sea;
         thingsInView: ThingsInView;
         boat: Boat;
+        inventory: Inventory;
 
         create() {
             super.create();
@@ -16,12 +17,16 @@
             this.mainButton.pressed.add(this.onPress.bind(this));
             this.milesDisplay = this.game.add.text(300, 10, "Testing 12 12", { font: "30px Arial", fill: '#00f', align: 'right' })
             this.updateMiles();
-           // this.person = new InventoryItem(this.game, 100, 100, 'person');
+            
             this.sea = new Sea(this.game, 320, 280);
-            this.boat = new Boat(this.game, 550, 500);
-
-            this.thingsInView = new ThingsInView((<Game>this.game), new Phaser.Point(this.boat.x + this.boat.width,this.boat.y + this.boat.height));
+            
+            this.boat = new Boat(this.game, 550, 400);
+            this.inventory = new Inventory(this.game,10, 280);
+            this.person = new InventoryItem(this.game, 100, 100, 'person');
+            this.person.dropped.add(this.onDrop.bind(this));
           
+            this.thingsInView = new ThingsInView((<Game>this.game), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y + this.boat.height));
+
         }
 
         onPress() {
@@ -30,7 +35,12 @@
             this.updateMiles();
             this.thingsInView.update();
         }
-
+        onDrop(dropData: Object) {
+            var item: InventoryItem = <InventoryItem>dropData["dropItem"]
+            if (!this.inventory.acceptItem(item)) {
+               item.returnToPlace();
+            }
+        }
         updateMiles() {
             this.milesDisplay.text = "You are " + (<Game>this.game).model.world.milesRemaining + " miles from land";
         }
