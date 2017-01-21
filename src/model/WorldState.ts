@@ -23,7 +23,7 @@ module Waves {
 
         constructor() {
             this.triggers.push(new ThingTrigger(40, new Thing("paddle")));
-            this.triggers.push(new EventTrigger(45));
+            this.triggers.push(new EventTrigger(45, new FlyingFishStoryEvent()));
         }
 
         public MoveDistance(miles: number) {
@@ -57,7 +57,7 @@ module Waves {
         }
 
         private TriggerEvent(trigger: EventTrigger) {
-            console.log("Event Triggered");
+            console.log(trigger.event.name + " event triggered");
         }
 
         private TriggerThing(trigger: ThingTrigger) {

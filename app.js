@@ -225,6 +225,39 @@ var Waves;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
+    var StoryEvent = (function () {
+        function StoryEvent(name, description) {
+            this._name = name;
+            this._description = description;
+        }
+        Object.defineProperty(StoryEvent.prototype, "name", {
+            get: function () {
+                return this._name;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(StoryEvent.prototype, "description", {
+            get: function () {
+                return this._description;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return StoryEvent;
+    })();
+    Waves.StoryEvent = StoryEvent;
+    var FlyingFishStoryEvent = (function (_super) {
+        __extends(FlyingFishStoryEvent, _super);
+        function FlyingFishStoryEvent() {
+            _super.call(this, "Flying Fish", "You see some totally sweet flying fish.");
+        }
+        return FlyingFishStoryEvent;
+    })(StoryEvent);
+    Waves.FlyingFishStoryEvent = FlyingFishStoryEvent;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
     var Thing = (function () {
         function Thing(name) {
             this._name = name;
@@ -283,9 +316,17 @@ var Waves;
     Waves.Trigger = Trigger;
     var EventTrigger = (function (_super) {
         __extends(EventTrigger, _super);
-        function EventTrigger(position) {
+        function EventTrigger(position, event) {
             _super.call(this, position);
+            this._event = event;
         }
+        Object.defineProperty(EventTrigger.prototype, "event", {
+            get: function () {
+                return this._event;
+            },
+            enumerable: true,
+            configurable: true
+        });
         return EventTrigger;
     })(Trigger);
     Waves.EventTrigger = EventTrigger;
@@ -314,7 +355,7 @@ var Waves;
             this._triggers = new Array();
             this._thingsInView = new Array();
             this.triggers.push(new Waves.ThingTrigger(40, new Waves.Thing("paddle")));
-            this.triggers.push(new Waves.EventTrigger(45));
+            this.triggers.push(new Waves.EventTrigger(45, new Waves.FlyingFishStoryEvent()));
         }
         Object.defineProperty(WorldState.prototype, "milesRemaining", {
             get: function () {
@@ -364,7 +405,7 @@ var Waves;
             this.triggers.splice(this.triggers.indexOf(trigger));
         };
         WorldState.prototype.TriggerEvent = function (trigger) {
-            console.log("Event Triggered");
+            console.log(trigger.event.name + " event triggered");
         };
         WorldState.prototype.TriggerThing = function (trigger) {
             this.thingsInView.push(new Waves.ThingPosition(trigger.thing, trigger.position));

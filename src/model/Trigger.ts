@@ -15,8 +15,15 @@ module Waves {
 
     export class EventTrigger extends Trigger{
 
-        constructor(position: number) {
+        private _event: StoryEvent
+
+        constructor(position: number, event : StoryEvent) {
             super(position);
+            this._event = event;
+        }
+
+        public get event(): StoryEvent {
+            return this._event;
         }
 
     }
