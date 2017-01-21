@@ -9,7 +9,7 @@ var Waves;
         __extends(Game, _super);
         function Game() {
             _super.call(this, 800, 480, Phaser.CANVAS, 'game');
-            this.gameState = new Waves.Model();
+            this.model = new Waves.Model();
             this.state.add('Boot', Waves.Boot, false);
             this.state.add('Preloader', Waves.Preloader, false);
             this.state.add('MainGame', Waves.MainGame, false);
@@ -54,7 +54,7 @@ var Waves;
             this.game.state.start('Preloader', true, false);
         };
         return Boot;
-    })(Phaser.State);
+    }(Phaser.State));
     Waves.Boot = Boot;
     ;
 })(Waves || (Waves = {}));
@@ -113,8 +113,17 @@ var Waves;
         MainGame.prototype.update = function () {
         };
         return MainGame;
-    })(Phaser.State);
+    }(Phaser.State));
     Waves.MainGame = MainGame;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var Model = (function () {
+        function Model() {
+        }
+        return Model;
+    }());
+    Waves.Model = Model;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
@@ -234,6 +243,72 @@ var Waves;
     ThingPosition;
     {
     }
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var Boot = (function (_super) {
+        __extends(Boot, _super);
+        function Boot() {
+            _super.apply(this, arguments);
+            this.orientated = false;
+        }
+        Boot.prototype.preload = function () {
+            _super.prototype.preload.call(this);
+            this.load.image('preloadBar', 'assets/whiteLoadBar.png');
+        };
+        Boot.prototype.create = function () {
+            _super.prototype.create.call(this);
+            this.input.maxPointers = 1;
+            this.stage.disableVisibilityChange = true;
+            if (this.game.device.desktop) {
+                this.scale.scaleMode = Phaser.ScaleManager.NO_SCALE;
+                this.scale.pageAlignHorizontally = true;
+                this.scale.pageAlignVertically = true;
+            }
+            else {
+                this.scale.fullScreenScaleMode = Phaser.ScaleManager.NO_SCALE;
+                this.scale.pageAlignHorizontally = true;
+                this.scale.pageAlignVertically = true;
+                this.scale.refresh();
+                var gameElement = document.getElementById('game');
+                gameElement.style.overflow = "visible";
+            }
+            this.game.state.start('Preloader', true, false);
+        };
+        return Boot;
+    }(Phaser.State));
+    Waves.Boot = Boot;
+    ;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var MainGame = (function (_super) {
+        __extends(MainGame, _super);
+        function MainGame() {
+            _super.apply(this, arguments);
+        }
+        MainGame.prototype.create = function () {
+            _super.prototype.create.call(this);
+            this.mainButton = new Waves.Button(this.game, "Paddle with your hands");
+            this.mainButton.pressed.add(this.onPress);
+            this.milesDisplay = this.game.add.text(300, 10, "Testing 12 12", { font: "30px Arial", fill: '#00f', align: 'right' });
+            this.updateMiles();
+        };
+        MainGame.prototype.onPress = function () {
+            //alert("pressed");
+            this.game.model.world.MoveDistance(1);
+            this.updateMiles();
+        };
+        MainGame.prototype.updateMiles = function () {
+            alert("Miles " + this.game.model.world.milesRemaining);
+            //this.milesDisplay.text = "You are " + (<Game>this.game).model.world.milesRemaining + " miles from land";
+            this.milesDisplay.text = "You are " + 5 + " miles from land";
+        };
+        MainGame.prototype.update = function () {
+        };
+        return MainGame;
+    }(Phaser.State));
+    Waves.MainGame = MainGame;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
