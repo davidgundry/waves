@@ -29,7 +29,7 @@
             this.oar = new InventoryItem(this.game, 200, 100, this.onDrop.bind(this),'oar');
 
           
-            this.thingsInView = new ThingsInView((<Game>this.game), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y + this.boat.height));
+            this.thingsInView = new ThingsInView((<Game>this.game), this.onDrop.bind(this),  new Phaser.Point(this.boat.x + this.boat.width, this.boat.y + this.boat.height));
 
         }
 
