@@ -608,27 +608,45 @@ var Waves;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(ThingsInView.prototype, "boatSide", {
+            get: function () {
+                return this._boatSide;
+            },
+            enumerable: true,
+            configurable: true
+        });
         ThingsInView.prototype.thingEventCallback = function (thing, position) {
-            if (this.game == null)
-                alert("null game");
-            var item = new Waves.InventoryItem(this.game, 600, 400, "thing");
-            item.setDrag(false);
-            this.thingsInView.push(new Waves.ThingPosition(thing, position, item));
+            this.addThingInView(thing, position);
         };
         ThingsInView.prototype.update = function () {
             var _this = this;
-            this.thingsInView.forEach(function (value, index, array) { return void _this.updateThingInWater(value); });
+            this.thingsInView.forEach(function (value, index, array) { return void _this.updateThingInView(value); });
         };
-        ThingsInView.prototype.updateThingInWater = function (thingPosition) {
-            var relativePosition = thingPosition.position - this.game.model.world.position;
+        ThingsInView.prototype.addThingInView = function (thing, position) {
+            var screenPosition = this.screenPosition(position);
+            var item = new Waves.InventoryItem(this.game, screenPosition.x, screenPosition.y, "thing");
+            item.setDrag(false);
+            this.thingsInView.push(new Waves.ThingPosition(thing, position, item));
+        };
+        ThingsInView.prototype.screenPosition = function (position) {
+            var relativePosition = position - this.game.model.world.position;
             if (relativePosition <= 0) {
                 relativePosition = 0;
-                thingPosition.inventoryItem.setDrag(true);
             }
-            thingPosition.inventoryItem.position.x = this.boatSide.x + relativePosition;
-            thingPosition.inventoryItem.position.y = this.boatSide.y - relativePosition;
+            return new Phaser.Point(this.boatSide.x + relativePosition, this.boatSide.y - relativePosition);
         };
-        ThingsInView.prototype.removeThingInWater = function (thingPosition) {
+        ThingsInView.prototype.isAlongside = function (thingPosition) {
+            var relativePosition = thingPosition.position - this.game.model.world.position;
+            return (relativePosition <= 0);
+        };
+        ThingsInView.prototype.updateThingInView = function (thingPosition) {
+            if (this.isAlongside(thingPosition))
+                thingPosition.inventoryItem.setDrag(true);
+            var screenPosition = this.screenPosition(thingPosition.position);
+            thingPosition.inventoryItem.position.x = screenPosition.x;
+            thingPosition.inventoryItem.position.y = screenPosition.y;
+        };
+        ThingsInView.prototype.removeThingInView = function (thingPosition) {
             if (this.thingsInView.indexOf(thingPosition) >= 0)
                 this.thingsInView.splice(this.thingsInView.indexOf(thingPosition));
             else

@@ -3,10 +3,16 @@ module Waves {
     export class ThingsInView {
 
         private _game: Game;
-        boatSide: Phaser.Point;
+        private _boatSide: Phaser.Point;
+
+        private thingsInView: ThingPosition[] = new Array<ThingPosition>();
 
         private get game(): Game {
             return this._game;
+        }
+
+        private get boatSide(): Phaser.Point {
+            return this._boatSide;
         }
 
         constructor(game: Game, boatSide: Phaser.Point) {
@@ -16,31 +22,45 @@ module Waves {
             (<Game>this.game).model.world.thingEventCallback = this.thingEventCallback.bind(this);
         }   
 
-        thingsInView: ThingPosition[] = new Array<ThingPosition>();
 
         thingEventCallback(thing: Thing, position: number) {
-            if (this.game == null)
-                alert("null game");
-            var item: InventoryItem = new InventoryItem(this.game, 600, 400, "thing");
+            this.addThingInView(thing, position);
+        }
+
+        update() {
+            this.thingsInView.forEach((value: ThingPosition, index: number, array: ThingPosition[]) => void this.updateThingInView(value));
+        }
+
+        addThingInView(thing: Thing, position: number) {
+            var screenPosition: Phaser.Point = this.screenPosition(position);
+            var item: InventoryItem = new InventoryItem(this.game, screenPosition.x, screenPosition.y, "thing");
             item.setDrag(false);
             this.thingsInView.push(new ThingPosition(thing, position, item));
         }
 
-        update() {
-            this.thingsInView.forEach((value: ThingPosition, index: number, array: ThingPosition[]) => void this.updateThingInWater(value));
-        }
-
-        updateThingInWater(thingPosition: ThingPosition) {
-            var relativePosition: number = thingPosition.position - (<Game>this.game).model.world.position;
+        screenPosition(position: number): Phaser.Point{
+            var relativePosition: number = position - (<Game>this.game).model.world.position;
             if (relativePosition <= 0) {
                 relativePosition = 0;
-                thingPosition.inventoryItem.setDrag(true);
             }
-            thingPosition.inventoryItem.position.x = this.boatSide.x + relativePosition
-            thingPosition.inventoryItem.position.y = this.boatSide.y - relativePosition
+            return new Phaser.Point(this.boatSide.x + relativePosition, this.boatSide.y - relativePosition);
         }
 
-        removeThingInWater(thingPosition: ThingPosition) {
+        isAlongside(thingPosition: ThingPosition) : boolean {
+            var relativePosition: number = thingPosition.position - (<Game>this.game).model.world.position;
+            return (relativePosition <= 0)
+        }
+
+        updateThingInView(thingPosition: ThingPosition) {
+            if (this.isAlongside(thingPosition))
+                thingPosition.inventoryItem.setDrag(true);
+
+            var screenPosition: Phaser.Point = this.screenPosition(thingPosition.position);
+            thingPosition.inventoryItem.position.x = screenPosition.x;
+            thingPosition.inventoryItem.position.y = screenPosition.y;
+        }
+
+        removeThingInView(thingPosition: ThingPosition) {
             if (this.thingsInView.indexOf(thingPosition) >= 0)
                 this.thingsInView.splice(this.thingsInView.indexOf(thingPosition));
             else
