@@ -217,6 +217,7 @@ var Waves;
             this.person = new Waves.InventoryItem(this.game, 100, 100, 'person');
             this.oar = new Waves.InventoryItem(this.game, 200, 100, 'oar');
             this.person.dropped.add(this.onDrop.bind(this));
+            this.oar.dropped.add(this.onDrop.bind(this));
             this.thingsInView = new Waves.ThingsInView(this.game, new Phaser.Point(this.boat.x + this.boat.width, this.boat.y + this.boat.height));
         };
         MainGame.prototype.onPress = function () {
@@ -651,12 +652,15 @@ var Waves;
             return (relativePosition <= 0);
         };
         ThingsInView.prototype.updateThingInView = function (thingPosition) {
-            if (this.isAlongside(thingPosition))
+            if (this.isAlongside(thingPosition)) {
                 thingPosition.inventoryItem.setDrag(true);
+                this.removeThingInView(thingPosition);
+            }
             var screenPosition = this.screenPosition(thingPosition.position);
             thingPosition.inventoryItem.position.x = screenPosition.x;
             thingPosition.inventoryItem.position.y = screenPosition.y;
-            //thingPosition.inventoryItem.scale
+            var proportionalDistance = this.proportionalDistance(thingPosition.position);
+            thingPosition.inventoryItem.scale = new Phaser.Point(1 - proportionalDistance, 1 - proportionalDistance);
         };
         ThingsInView.prototype.removeThingInView = function (thingPosition) {
             if (this.thingsInView.indexOf(thingPosition) >= 0)

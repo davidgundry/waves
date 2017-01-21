@@ -59,13 +59,17 @@ module Waves {
         }
 
         updateThingInView(thingPosition: ThingPosition) {
-            if (this.isAlongside(thingPosition))
+            if (this.isAlongside(thingPosition)) {
+
                 thingPosition.inventoryItem.setDrag(true);
+                this.removeThingInView(thingPosition);
+            }
 
             var screenPosition: Phaser.Point = this.screenPosition(thingPosition.position);
             thingPosition.inventoryItem.position.x = screenPosition.x;
             thingPosition.inventoryItem.position.y = screenPosition.y;
-            //thingPosition.inventoryItem.scale
+            var proportionalDistance: number = this.proportionalDistance(thingPosition.position);
+            thingPosition.inventoryItem.scale = new Phaser.Point(1 - proportionalDistance, 1 - proportionalDistance);
         }
 
         removeThingInView(thingPosition: ThingPosition) {
