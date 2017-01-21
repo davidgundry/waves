@@ -25,8 +25,6 @@
     <Content Include="app.css" />
     <Content Include="index.html" />
     <Content Include="phaser\phaser.js" />
-    <Content Include="src\MainGame.js" />
-    <Content Include="src\model\gameState.js" />
     <Content Include="web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -39,10 +37,11 @@
     <TypeScriptCompile Include="phaser\pixi.d.ts" />
     <TypeScriptCompile Include="src\MainGame.ts" />
     <TypeScriptCompile Include="src\model\gameState.ts" />
+    <TypeScriptCompile Include="src\model\InventoryState.ts" />
+    <TypeScriptCompile Include="src\model\ResourceState.ts" />
+    <TypeScriptCompile Include="src\model\WorldState.ts" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="src\MainGame.js.map" />
-    <Content Include="src\model\gameState.js.map" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
