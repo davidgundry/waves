@@ -24,6 +24,7 @@ window.onload = function () {
 };
 var Waves;
 (function (Waves) {
+<<<<<<< HEAD
     var Boot = (function (_super) {
         __extends(Boot, _super);
         function Boot() {
@@ -60,6 +61,8 @@ var Waves;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
+=======
+>>>>>>> 2fcec0cf72895cada2a59b3dac465f86fb14fbec
     var Button = (function (_super) {
         __extends(Button, _super);
         function Button(game, label) {
@@ -234,6 +237,7 @@ var Waves;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
+<<<<<<< HEAD
     var ThingPosition = (function () {
         function ThingPosition(thing, distance) {
             this._thing = thing;
@@ -292,6 +296,8 @@ var Waves;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
+=======
+>>>>>>> e17e320083200412757fb45d88696d9ce7b39093
     var WorldState = (function () {
         function WorldState() {
             this._milesRemaining = WorldState.STARTING_MILES;
@@ -333,15 +339,86 @@ var Waves;
                     this.TriggerThing(trigger);
             }
         };
+<<<<<<< HEAD
         WorldState.prototype.TriggerEvent = function (trigger) {
+=======
+        WorldState.STARTING_MILES = 50;
+        return WorldState;
+    }());
+    Waves.WorldState = WorldState;
+<<<<<<< HEAD
+=======
+    ThingsInView();
+    ThingPosition;
+    {
+    }
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var Boot = (function (_super) {
+        __extends(Boot, _super);
+        function Boot() {
+            _super.apply(this, arguments);
+            this.orientated = false;
+        }
+        Boot.prototype.preload = function () {
+            _super.prototype.preload.call(this);
+            this.load.image('preloadBar', 'assets/whiteLoadBar.png');
+        };
+        Boot.prototype.create = function () {
+            _super.prototype.create.call(this);
+            this.input.maxPointers = 1;
+            this.stage.disableVisibilityChange = true;
+            if (this.game.device.desktop) {
+                this.scale.scaleMode = Phaser.ScaleManager.NO_SCALE;
+                this.scale.pageAlignHorizontally = true;
+                this.scale.pageAlignVertically = true;
+            }
+            else {
+                this.scale.fullScreenScaleMode = Phaser.ScaleManager.NO_SCALE;
+                this.scale.pageAlignHorizontally = true;
+                this.scale.pageAlignVertically = true;
+                this.scale.refresh();
+                var gameElement = document.getElementById('game');
+                gameElement.style.overflow = "visible";
+            }
+            this.game.state.start('Preloader', true, false);
+        };
+        return Boot;
+    }(Phaser.State));
+    Waves.Boot = Boot;
+    ;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var MainGame = (function (_super) {
+        __extends(MainGame, _super);
+        function MainGame() {
+            _super.apply(this, arguments);
+        }
+        MainGame.prototype.create = function () {
+            _super.prototype.create.call(this);
+            this.mainButton = new Waves.Button(this.game, "Paddle with your hands");
+            this.mainButton.pressed.add(this.onPress.bind(this));
+            this.milesDisplay = this.game.add.text(300, 10, "Testing 12 12", { font: "30px Arial", fill: '#00f', align: 'right' });
+            this.updateMiles();
+            this.person = new Waves.InventoryItem(this.game, 100, 100, 'person');
+            this.sea = new Waves.Sea(this.game, 320, 640);
+        };
+        MainGame.prototype.onPress = function () {
+            //alert("pressed");
+            this.game.model.world.MoveDistance(1);
+            this.updateMiles();
+>>>>>>> 5f7a9d13a41209a71e0f3ed2f2dc549f90211621
+>>>>>>> e17e320083200412757fb45d88696d9ce7b39093
         };
         WorldState.prototype.TriggerThing = function (trigger) {
             //this.thingsInView.push(trigger.thing);
         };
-        WorldState.STARTING_MILES = 50;
-        return WorldState;
-    })();
-    Waves.WorldState = WorldState;
+        return MainGame;
+    }(Phaser.State));
+    Waves.MainGame = MainGame;
+>>>>>>> 2fcec0cf72895cada2a59b3dac465f86fb14fbec
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
