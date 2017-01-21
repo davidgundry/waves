@@ -17,7 +17,7 @@
             this.updateMiles();
            // this.person = new InventoryItem(this.game, 100, 100, 'person');
             this.sea = new Sea(this.game, 320, 280);
-            this.boat = new Boat(this.game, 550, 500);
+            this.boat = new Boat(this.game, 550, 400);
           
         }
         onPress() {
