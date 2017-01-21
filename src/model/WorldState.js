@@ -16,7 +16,7 @@ var Waves;
         };
         WorldState.STARTING_MILES = 50;
         return WorldState;
-    })();
+    }());
     Waves.WorldState = WorldState;
 })(Waves || (Waves = {}));
 //# sourceMappingURL=WorldState.js.map

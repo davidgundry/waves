@@ -11,7 +11,7 @@ var Waves;
             configurable: true
         });
         return InventoryState;
-    })();
+    }());
     Waves.InventoryState = InventoryState;
 })(Waves || (Waves = {}));
 //# sourceMappingURL=InventoryState.js.map
