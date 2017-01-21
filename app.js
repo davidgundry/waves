@@ -27,7 +27,7 @@ var Waves;
         __extends(Button, _super);
         function Button(game, label) {
             _super.call(this, game);
-            this.boxWidth = 100;
+            this.boxWidth = 300;
             this.boxHeight = 40;
             this.drawBox();
             this.createText(label);
@@ -38,7 +38,7 @@ var Waves;
             var graphics = this.game.add.graphics(0, 0);
             boxSprite.addChild(graphics);
             graphics.lineStyle(1, 0x000000, 1);
-            graphics.beginFill(0x333333, 1);
+            graphics.beginFill(0xffffff, 1);
             graphics.drawRect(0, 0, this.boxWidth, this.boxHeight);
             graphics.endFill();
             this.addChild(boxSprite);
@@ -140,7 +140,10 @@ var Waves;
         MainGame.prototype.create = function () {
             _super.prototype.create.call(this);
             this.mainButton = new Waves.Button(this.game, "Paddle with your hands");
-            alert("calling main game");
+            this.mainButton.pressed.add(this.onPress);
+        };
+        MainGame.prototype.onPress = function () {
+            alert("pressed");
         };
         MainGame.prototype.update = function () {
         };

@@ -10,7 +10,7 @@
 
         constructor(game: Phaser.Game, label: string) {
             super(game);
-            this.boxWidth = 100;
+            this.boxWidth = 300;
             this.boxHeight = 40;
             this.drawBox();
             this.createText(label);
@@ -22,7 +22,7 @@
             var graphics: Phaser.Graphics = this.game.add.graphics(0, 0);
             boxSprite.addChild(graphics);
             graphics.lineStyle(1, 0x000000, 1);
-            graphics.beginFill(0x333333, 1);
+            graphics.beginFill(0xffffff, 1);
             graphics.drawRect(0, 0, this.boxWidth, this.boxHeight);
             graphics.endFill();
             this.addChild(boxSprite);

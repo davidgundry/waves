@@ -8,8 +8,11 @@
         create() {
             super.create();
             this.mainButton = new Button(this.game, "Paddle with your hands")
-            alert("calling main game");
+            this.mainButton.pressed.add(this.onPress);
           
+        }
+        onPress() {
+            alert("pressed");
         }
 
 
