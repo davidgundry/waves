@@ -21,6 +21,7 @@
 
             //  Load our actual games assets
 
+            this.game.load.image("inventory", "assets/inventory.png");
             this.game.load.image("person", "assets/placeholderMan.png");
             this.game.load.image("sea1", "assets/sea-top.png");
             this.game.load.image("sea2", "assets/sea-middle.png");
@@ -33,7 +34,7 @@
 
         create() {
             super.create();
-            this.stage.backgroundColor = 0xEEEEEE; // light grey
+            this.stage.backgroundColor = 0xffffff; // white
             this.game.state.start('MainGame', true, false);
 
         }
