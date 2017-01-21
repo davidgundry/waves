@@ -14,8 +14,8 @@
             this.mainButton.pressed.add(this.onPress.bind(this));
             this.milesDisplay = this.game.add.text(300, 10, "Testing 12 12", { font: "30px Arial", fill: '#00f', align: 'right' })
             this.updateMiles();
-            this.person = new InventoryItem(this.game, 100, 100, 'person');
-            this.sea = new Sea(this.game,320,640);
+           // this.person = new InventoryItem(this.game, 100, 100, 'person');
+            this.sea = new Sea(this.game,320,280);
           
         }
         onPress() {
@@ -25,12 +25,11 @@
         }
         updateMiles() {
             this.milesDisplay.text = "You are " + (<Game>this.game).model.world.milesRemaining + " miles from land";
-
         }
 
        
         update() {
-
+           this.sea.update();
         }
 
 

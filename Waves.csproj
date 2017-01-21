@@ -37,6 +37,7 @@
     <TypeScriptCompile Include="phaser\p2.d.ts" />
     <TypeScriptCompile Include="phaser\phaser.d.ts" />
     <TypeScriptCompile Include="phaser\pixi.d.ts" />
+    <TypeScriptCompile Include="src\Boat.ts" />
     <TypeScriptCompile Include="src\Button.ts" />
     <TypeScriptCompile Include="src\InventoryItem.ts" />
     <TypeScriptCompile Include="src\model\Model.ts" />

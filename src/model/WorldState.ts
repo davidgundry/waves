@@ -21,7 +21,7 @@ module Waves {
         }
         
         private CheckTriggers(position: number) {
-           this.triggers.forEach((value: Trigger, index: number, array: Trigger[]) => void { this.CheckTrigger(value, position); });
+          // this.triggers.forEach((value: Trigger, index: number, array: Trigger[]) => void { this.CheckTrigger(value, position); });
         }
 
         private _thingsInView: ThingPosition[];
