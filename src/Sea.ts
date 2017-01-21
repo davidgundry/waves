@@ -6,6 +6,7 @@
         maskWidth: number = 640;
         maskHeight: number = 330;
         strips: Array<Phaser.Sprite>;
+        boundsRect: Phaser.Rectangle;
 
         constructor(game: Phaser.Game, newX: number, newY:number) {
             super(game);
@@ -42,6 +43,9 @@
 
             //  And apply it to the Group itself
             this.mask = mask;
+        }
+        thrownIntheSea(item: InventoryItem) {
+
         }
         update() {
            
