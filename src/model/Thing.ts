@@ -3,12 +3,12 @@ module Waves {
     export class Thing {
 
         constructor(name: string) {
-            this._name = name;
+            this._spriteName = name;
         }
 
-        private _name: string;
-        public get name() : string {
-            return this._name;
+        private _spriteName: string;
+        public get spriteName() : string {
+            return this._spriteName;
         }
 
     }
