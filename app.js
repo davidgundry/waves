@@ -39,6 +39,42 @@ var Waves;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
+    var Boot = (function (_super) {
+        __extends(Boot, _super);
+        function Boot() {
+            _super.apply(this, arguments);
+            this.orientated = false;
+        }
+        Boot.prototype.preload = function () {
+            _super.prototype.preload.call(this);
+            this.load.image('preloadBar', 'assets/whiteLoadBar.png');
+        };
+        Boot.prototype.create = function () {
+            _super.prototype.create.call(this);
+            this.input.maxPointers = 1;
+            this.stage.disableVisibilityChange = true;
+            if (this.game.device.desktop) {
+                this.scale.scaleMode = Phaser.ScaleManager.NO_SCALE;
+                this.scale.pageAlignHorizontally = true;
+                this.scale.pageAlignVertically = true;
+            }
+            else {
+                this.scale.fullScreenScaleMode = Phaser.ScaleManager.NO_SCALE;
+                this.scale.pageAlignHorizontally = true;
+                this.scale.pageAlignVertically = true;
+                this.scale.refresh();
+                var gameElement = document.getElementById('game');
+                gameElement.style.overflow = "visible";
+            }
+            this.game.state.start('Preloader', true, false);
+        };
+        return Boot;
+    }(Phaser.State));
+    Waves.Boot = Boot;
+    ;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
     var Button = (function (_super) {
         __extends(Button, _super);
         function Button(game, label) {
@@ -138,6 +174,7 @@ var Waves;
         function InventoryItem(game, newX, newY, dropHandler, thing) {
             _super.call(this, game);
             this.baseThing = thing;
+            thing.inventoryItem = this;
             this.baseSprite = this.create(0, 0, thing.spriteName);
             this.baseSprite.anchor.setTo(0.5, 0.5);
             this.inUseSprite = this.create(0, 0, "inUse");
@@ -164,8 +201,11 @@ var Waves;
         };
         InventoryItem.prototype.onClick = function () {
             if (this.inventorySlot !== null) {
-                this.inUseSprite.visible = !this.inUseSprite.visible;
+                this.game.model.inventory.SetInUse(this.baseThing);
             }
+        };
+        InventoryItem.prototype.setInUse = function (isUsed) {
+            this.inUseSprite.visible = isUsed;
         };
         InventoryItem.prototype.onDragStart = function () {
             this.lastPos = new Phaser.Point(this.position.x, this.position.y);
@@ -186,6 +226,133 @@ var Waves;
         return InventoryItem;
     }(Phaser.Group));
     Waves.InventoryItem = InventoryItem;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var MainGame = (function (_super) {
+        __extends(MainGame, _super);
+        function MainGame() {
+            _super.apply(this, arguments);
+        }
+        MainGame.prototype.create = function () {
+            _super.prototype.create.call(this);
+            this.mainButton = new Waves.Button(this.game, "Paddle with your hands");
+            this.mainButton.pressed.add(this.onPress.bind(this));
+            this.milesDisplay = this.game.add.text(300, 10, "Testing 12 12", { font: "30px Arial", fill: '#00f', align: 'right' });
+            this.updateMiles();
+            this.sea = new Waves.Sea(this.game, 320, 280);
+            this.boat = new Waves.Boat(this.game, 550, 400);
+            this.inventory = new Waves.Inventory(this.game, 10, 280);
+            this.person = new Waves.InventoryItem(this.game, 100, 100, this.onDrop.bind(this), new Waves.Thing("person"));
+            this.oar = new Waves.InventoryItem(this.game, 200, 100, this.onDrop.bind(this), new Waves.Thing("oar"));
+            this.thingsInView = new Waves.ThingsInView(this.game, this.onDrop.bind(this), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y + this.boat.height));
+        };
+        MainGame.prototype.onPress = function () {
+            //alert("pressed");
+            this.game.model.world.MoveMeters(100);
+            this.updateMiles();
+            this.thingsInView.update();
+        };
+        MainGame.prototype.onDrop = function (dropData) {
+            var item = dropData["dropItem"];
+            if (!this.inventory.acceptItem(item)) {
+                if (this.sea.thrownIntheSea(item)) {
+                    this.inventory.removeItem(item);
+                    item.sink();
+                }
+                else {
+                    item.returnToPlace();
+                }
+            }
+        };
+        MainGame.prototype.updateMiles = function () {
+            this.milesDisplay.text = "You are " + this.game.model.world.milesRemaining + " miles from land";
+        };
+        MainGame.prototype.update = function () {
+            this.sea.update();
+        };
+        return MainGame;
+    }(Phaser.State));
+    Waves.MainGame = MainGame;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var InventoryState = (function () {
+        function InventoryState() {
+            this._things = new Array();
+            this._totalSpace = InventoryState.STARTING_TOTAL_SPACE;
+        }
+        Object.defineProperty(InventoryState.prototype, "things", {
+            get: function () {
+                return this._things;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(InventoryState.prototype, "thingUsed", {
+            get: function () {
+                return this._thingUsed;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(InventoryState.prototype, "totalSpace", {
+            get: function () {
+                return this._totalSpace;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        InventoryState.prototype.SpaceRemaining = function () {
+            return (this.totalSpace - this.things.length > 0);
+        };
+        InventoryState.prototype.ContainsItem = function (thing) {
+            return (this.things.indexOf(thing) >= 0);
+        };
+        InventoryState.prototype.AddItem = function (newThing) {
+            if (this.SpaceRemaining)
+                this.things.push(newThing);
+            else
+                throw new Error("Inventory full");
+        };
+        InventoryState.prototype.SetInUse = function (usedThing) {
+            this._thingUsed = usedThing;
+            for (var i = 0; i < this._things.length; i++) {
+                this.things[i].inventoryItem.setInUse(false);
+            }
+            usedThing.inventoryItem.setInUse(true);
+        };
+        InventoryState.prototype.DiscardItem = function (thing) {
+            if (this.ContainsItem(thing))
+                this.things.splice(this.things.indexOf(thing));
+            else
+                throw new Error("Thing not in inventory");
+        };
+        InventoryState.STARTING_TOTAL_SPACE = 10;
+        return InventoryState;
+    }());
+    Waves.InventoryState = InventoryState;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var Model = (function () {
+        function Model() {
+            this.world = new Waves.WorldState();
+            this.inventory = new Waves.InventoryState();
+            this.resource = new Waves.ResourceState();
+        }
+        return Model;
+    }());
+    Waves.Model = Model;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var ResourceState = (function () {
+        function ResourceState() {
+        }
+        return ResourceState;
+    }());
+    Waves.ResourceState = ResourceState;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
@@ -222,75 +389,20 @@ var Waves;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
-    var Model = (function () {
-        function Model() {
-            this.world = new Waves.WorldState();
-            this.inventory = new Waves.InventoryState();
-            this.resource = new Waves.ResourceState();
-        }
-        return Model;
-    }());
-    Waves.Model = Model;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
-    var InventoryState = (function () {
-        function InventoryState() {
-            this._things = new Array();
-            this._totalSpace = InventoryState.STARTING_TOTAL_SPACE;
-        }
-        Object.defineProperty(InventoryState.prototype, "things", {
-            get: function () {
-                return this._things;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(InventoryState.prototype, "totalSpace", {
-            get: function () {
-                return this._totalSpace;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        InventoryState.prototype.SpaceRemaining = function () {
-            return (this.totalSpace - this.things.length > 0);
-        };
-        InventoryState.prototype.ContainsItem = function (thing) {
-            return (this.things.indexOf(thing) >= 0);
-        };
-        InventoryState.prototype.AddItem = function (newThing) {
-            if (this.SpaceRemaining)
-                this.things.push(newThing);
-            else
-                throw new Error("Inventory full");
-        };
-        InventoryState.prototype.DiscardItem = function (thing) {
-            if (this.ContainsItem(thing))
-                this.things.splice(this.things.indexOf(thing));
-            else
-                throw new Error("Thing not in inventory");
-        };
-        InventoryState.STARTING_TOTAL_SPACE = 10;
-        return InventoryState;
-    }());
-    Waves.InventoryState = InventoryState;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
-    var ResourceState = (function () {
-        function ResourceState() {
-        }
-        return ResourceState;
-    }());
-    Waves.ResourceState = ResourceState;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
     var Thing = (function () {
         function Thing(name) {
             this._spriteName = name;
         }
+        Object.defineProperty(Thing.prototype, "inventoryItem", {
+            get: function () {
+                return this._inventoryItem;
+            },
+            set: function (newItem) {
+                this._inventoryItem = newItem;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(Thing.prototype, "spriteName", {
             get: function () {
                 return this._spriteName;
@@ -468,90 +580,6 @@ var Waves;
         return WorldState;
     }());
     Waves.WorldState = WorldState;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
-    var Boot = (function (_super) {
-        __extends(Boot, _super);
-        function Boot() {
-            _super.apply(this, arguments);
-            this.orientated = false;
-        }
-        Boot.prototype.preload = function () {
-            _super.prototype.preload.call(this);
-            this.load.image('preloadBar', 'assets/whiteLoadBar.png');
-        };
-        Boot.prototype.create = function () {
-            _super.prototype.create.call(this);
-            this.input.maxPointers = 1;
-            this.stage.disableVisibilityChange = true;
-            if (this.game.device.desktop) {
-                this.scale.scaleMode = Phaser.ScaleManager.NO_SCALE;
-                this.scale.pageAlignHorizontally = true;
-                this.scale.pageAlignVertically = true;
-            }
-            else {
-                this.scale.fullScreenScaleMode = Phaser.ScaleManager.NO_SCALE;
-                this.scale.pageAlignHorizontally = true;
-                this.scale.pageAlignVertically = true;
-                this.scale.refresh();
-                var gameElement = document.getElementById('game');
-                gameElement.style.overflow = "visible";
-            }
-            this.game.state.start('Preloader', true, false);
-        };
-        return Boot;
-    }(Phaser.State));
-    Waves.Boot = Boot;
-    ;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
-    var MainGame = (function (_super) {
-        __extends(MainGame, _super);
-        function MainGame() {
-            _super.apply(this, arguments);
-        }
-        MainGame.prototype.create = function () {
-            _super.prototype.create.call(this);
-            this.mainButton = new Waves.Button(this.game, "Paddle with your hands");
-            this.mainButton.pressed.add(this.onPress.bind(this));
-            this.milesDisplay = this.game.add.text(300, 10, "Testing 12 12", { font: "30px Arial", fill: '#00f', align: 'right' });
-            this.updateMiles();
-            this.sea = new Waves.Sea(this.game, 320, 280);
-            this.boat = new Waves.Boat(this.game, 550, 400);
-            this.inventory = new Waves.Inventory(this.game, 10, 280);
-            this.person = new Waves.InventoryItem(this.game, 100, 100, this.onDrop.bind(this), new Waves.Thing("person"));
-            this.oar = new Waves.InventoryItem(this.game, 200, 100, this.onDrop.bind(this), new Waves.Thing("oar"));
-            this.thingsInView = new Waves.ThingsInView(this.game, this.onDrop.bind(this), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y + this.boat.height));
-        };
-        MainGame.prototype.onPress = function () {
-            //alert("pressed");
-            this.game.model.world.MoveMeters(100);
-            this.updateMiles();
-            this.thingsInView.update();
-        };
-        MainGame.prototype.onDrop = function (dropData) {
-            var item = dropData["dropItem"];
-            if (!this.inventory.acceptItem(item)) {
-                if (this.sea.thrownIntheSea(item)) {
-                    this.inventory.removeItem(item);
-                    item.sink();
-                }
-                else {
-                    item.returnToPlace();
-                }
-            }
-        };
-        MainGame.prototype.updateMiles = function () {
-            this.milesDisplay.text = "You are " + this.game.model.world.milesRemaining + " miles from land";
-        };
-        MainGame.prototype.update = function () {
-            this.sea.update();
-        };
-        return MainGame;
-    }(Phaser.State));
-    Waves.MainGame = MainGame;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {

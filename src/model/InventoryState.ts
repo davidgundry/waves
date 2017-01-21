@@ -5,9 +5,13 @@ module Waves {
         static STARTING_TOTAL_SPACE = 10;
 
         private _things: Thing[] = new Array<Thing>();
+        private _thingUsed: Thing;
 
         public get things(): Thing[] {
             return this._things;
+        }
+        public get thingUsed(): Thing {
+            return this._thingUsed;
         }
 
         private _totalSpace: number = InventoryState.STARTING_TOTAL_SPACE;
@@ -30,6 +34,14 @@ module Waves {
             else
                 throw new Error("Inventory full");
         }
+        public SetInUse(usedThing: Thing) {
+            this._thingUsed = usedThing;
+            for (var i = 0; i < this._things.length; i++) {
+                this.things[i].inventoryItem.setInUse(false);
+            }
+            usedThing.inventoryItem.setInUse(true);
+        }
+
 
         public DiscardItem(thing: Thing) {
             if (this.ContainsItem(thing))
