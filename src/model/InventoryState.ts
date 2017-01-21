@@ -2,7 +2,12 @@ module Waves {
 
     export class InventoryState {
 
-        things: Thing[];
+        private _things: Thing[];
+
+        public get things(): Thing[] {
+            return this.things;
+        }
+
 
     }
 

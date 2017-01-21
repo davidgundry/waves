@@ -2,19 +2,19 @@ var Waves;
 (function (Waves) {
     var WorldState = (function () {
         function WorldState() {
-            this.STARTING_MILES = 50;
-            this._milesRemaining = STARTING_MILES;
+            this._milesRemaining = WorldState.STARTING_MILES;
         }
         Object.defineProperty(WorldState.prototype, "milesRemaining", {
             get: function () {
-                return _milesRemaining;
+                return this._milesRemaining;
             },
             enumerable: true,
             configurable: true
         });
         WorldState.prototype.MoveDistance = function (miles) {
-            _milesRemaining -= miles;
+            this._milesRemaining -= miles;
         };
+        WorldState.STARTING_MILES = 50;
         return WorldState;
     })();
     Waves.WorldState = WorldState;

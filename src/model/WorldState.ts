@@ -2,15 +2,15 @@ module Waves {
 
     export class WorldState {
 
-        STARTING_MILES: number = 50;
-        private _milesRemaining: number = STARTING_MILES;
+        static STARTING_MILES: number = 50;
+        private _milesRemaining: number = WorldState.STARTING_MILES;
 
         public get milesRemaining(): number {
-            return _milesRemaining;
+            return this._milesRemaining;
         }
 
         public MoveDistance(miles: number) {
-            _milesRemaining -= miles;
+            this._milesRemaining -= miles;
         }
 
 
