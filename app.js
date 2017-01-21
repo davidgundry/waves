@@ -1,4 +1,3 @@
-"use strict";
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -16,7 +15,7 @@ var Game = (function (_super) {
         this.state.start('Boot');
     }
     return Game;
-}(Phaser.Game));
+})(Phaser.Game);
 exports.Game = Game;
 var SimpleGame = (function () {
     function SimpleGame() {
@@ -30,7 +29,7 @@ var SimpleGame = (function () {
         logo.anchor.setTo(0.5, 0.5);
     };
     return SimpleGame;
-}());
+})();
 window.onload = function () {
     var game = new Game();
 };
