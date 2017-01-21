@@ -4,7 +4,7 @@ module Waves {
 
         static STARTING_TOTAL_SPACE = 10;
 
-        private _things: Thing[];
+        private _things: Thing[] = new Array<Thing>();
 
         public get things(): Thing[] {
             return this._things;

@@ -43,7 +43,7 @@ module Waves {
 
         addThingInView(thing: Thing, position: number) {
             var screenPosition: Phaser.Point = this.screenPosition(position);
-            var item: InventoryItem = new InventoryItem(this.game, screenPosition.x, screenPosition.y, this._dropHandler, "thing");
+            var item: InventoryItem = new InventoryItem(this.game, screenPosition.x, screenPosition.y, this._dropHandler, new Thing("thing"));
             item.setDrag(false);
             this.thingsInView.push(new ThingPosition(thing, position, item));
         }
