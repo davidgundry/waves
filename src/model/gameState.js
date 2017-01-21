@@ -4,7 +4,7 @@ var Waves;
         function GameState() {
         }
         return GameState;
-    }());
+    })();
     Waves.GameState = GameState;
 })(Waves || (Waves = {}));
 //# sourceMappingURL=gameState.js.map

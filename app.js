@@ -15,7 +15,7 @@ var Waves;
             this.state.start('Boot');
         }
         return Game;
-    }(Phaser.Game));
+    })(Phaser.Game);
     Waves.Game = Game;
 })(Waves || (Waves = {}));
 /*

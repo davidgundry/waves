@@ -35,7 +35,7 @@ var Waves;
             this.game.state.start('Preloader', true, false);
         };
         return Boot;
-    }(Phaser.State));
+    })(Phaser.State);
     Waves.Boot = Boot;
     ;
 })(Waves || (Waves = {}));

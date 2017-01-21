@@ -1,6 +1,6 @@
 ﻿module Waves {
 
-    class MainGame extends Phaser.State {
+    export class MainGame extends Phaser.State {
 
         
 

@@ -29,7 +29,7 @@ var Waves;
             this.game.state.start('MainGame', true, false);
         };
         return Preloader;
-    }(Phaser.State));
+    })(Phaser.State);
     Waves.Preloader = Preloader;
 })(Waves || (Waves = {}));
 //# sourceMappingURL=Preloader.js.map
