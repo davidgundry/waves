@@ -191,6 +191,15 @@ var Waves;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
+    var Trigger = (function () {
+        function Trigger() {
+        }
+        return Trigger;
+    })();
+    Waves.Trigger = Trigger;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
     var WorldState = (function () {
         function WorldState() {
             this._milesRemaining = WorldState.STARTING_MILES;
@@ -204,11 +213,27 @@ var Waves;
         });
         WorldState.prototype.MoveDistance = function (miles) {
             this._milesRemaining -= miles;
+            this.CheckTriggers(this.milesRemaining);
+        };
+        Object.defineProperty(WorldState.prototype, "triggers", {
+            get: function () {
+                return _triggers;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        WorldState.prototype.CheckTriggers = function (position) {
+            this.triggers.forEach({ if: function () { }, true:  });
+            this.TriggerEvent();
         };
         WorldState.STARTING_MILES = 50;
         return WorldState;
     })();
     Waves.WorldState = WorldState;
+    ThingsInView();
+    ThingPosition;
+    {
+    }
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
