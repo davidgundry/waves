@@ -248,7 +248,7 @@ var Waves;
             this.boat = new Waves.Boat(this.game, 550, 400);
             this.inventory = new Waves.Inventory(this.game, 10, 280);
             this.person = new Waves.InventoryItem(this.game, 100, 100, this.onDrop.bind(this), new Waves.Thing("person"));
-            this.oar = new Waves.InventoryItem(this.game, 200, 100, this.onDrop.bind(this), new Waves.RowThing("oar", 100));
+            this.oar = new Waves.InventoryItem(this.game, 200, 100, this.onDrop.bind(this), new Waves.RowThing("oar", 100, "Row with an oar"));
             this.sail = new Waves.InventoryItem(this.game, 300, 100, this.onDrop.bind(this), new Waves.SailThing("sail", 5));
             this.thingsInView = new Waves.ThingsInView(this.game, this.onDrop.bind(this), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y + this.boat.height), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y));
         };
@@ -454,13 +454,21 @@ var Waves;
     Waves.Thing = Thing;
     var RowThing = (function (_super) {
         __extends(RowThing, _super);
-        function RowThing(name, speed) {
+        function RowThing(name, speed, buttonLabel) {
             _super.call(this, name);
             this._speed = speed;
+            this._buttonLabel = buttonLabel;
         }
         Object.defineProperty(RowThing.prototype, "speed", {
             get: function () {
                 return this._speed;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(RowThing.prototype, "buttonLabel", {
+            get: function () {
+                return this._buttonLabel;
             },
             enumerable: true,
             configurable: true

@@ -26,7 +26,7 @@
             this.boat = new Boat(this.game, 550, 400);
             this.inventory = new Inventory(this.game,10, 280);
             this.person = new InventoryItem(this.game, 100, 100, this.onDrop.bind(this), new Thing("person"));
-            this.oar = new InventoryItem(this.game, 200, 100, this.onDrop.bind(this), new RowThing("oar",100));
+            this.oar = new InventoryItem(this.game, 200, 100, this.onDrop.bind(this), new RowThing("oar",100, "Row with an oar"));
             this.sail = new InventoryItem(this.game, 300, 100, this.onDrop.bind(this), new SailThing("sail",5));
 
           

@@ -24,14 +24,20 @@ module Waves {
 
     export class RowThing extends Thing {
 
-        constructor(name: string, speed : number) {
+        constructor(name: string, speed : number, buttonLabel: string) {
             super(name)
             this._speed = speed;
+            this._buttonLabel = buttonLabel;
         }
 
         private _speed: number;
         public get speed(): number {
             return this._speed;
+        }
+
+        private _buttonLabel: number;
+        public get buttonLabel(): number {
+            return this._buttonLabel;
         }
 
     }
