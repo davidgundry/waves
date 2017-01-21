@@ -5,11 +5,15 @@
         lastPos: Phaser.Point;
         dropped: Phaser.Signal;
         inventorySlot: number;
+        inUseSprite: Phaser.Sprite;
 
         constructor(game: Phaser.Game,  newX: number, newY: number,dropHandler:Function,spriteName:string) {
             super(game);
             this.baseSprite = this.create(0, 0, spriteName);
             this.baseSprite.anchor.setTo(0.5, 0.5);
+            this.inUseSprite = this.create(0, 0, "inUse");
+            this.inUseSprite.anchor.setTo(0.5, 0.5);
+            this.inUseSprite.visible = false;
             this.position.x = newX;
             this.position.y = newY;
             this.dropped = new Phaser.Signal();
@@ -23,10 +27,16 @@
                 this.baseSprite.input.enableDrag();
                 this.baseSprite.events.onDragStart.add(this.onDragStart.bind(this), this);
                 this.baseSprite.events.onDragStop.add(this.onDragStop.bind(this), this);
+                this.baseSprite.events.onInputDown.add(this.onClick.bind(this),this);
             } else {
                 this.baseSprite.input.disableDrag();
             }
            
+        }
+        onClick() {
+            if (this.inventorySlot !== null) {
+                this.inUseSprite.visible = !this.inUseSprite.visible;
+            }
         }
         onDragStart() {
             this.lastPos = new Phaser.Point(this.position.x, this.position.y);

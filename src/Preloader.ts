@@ -20,7 +20,7 @@
 
 
             //  Load our actual games assets
-
+            this.game.load.image("inUse", "assets/InUse.png");
             this.game.load.image("inventory", "assets/inventory.png");
             this.game.load.image("person", "assets/placeholderMan.png");
             this.game.load.image("oar", "assets/oarPlaceHolder.png");
