@@ -21,12 +21,30 @@ module Waves {
         }
         
         private CheckTriggers(position: number) {
-            //this.triggers.forEach({ if(true) this.TriggerEvent();
-        //})
+           // this.triggers.forEach((value: Trigger, index: number, array: Trigger[]) => void { this.CheckTrigger(value, position); });
         }
 
-        public ThingsInView(): ThingPosition[] {
-            return null;
+        private _thingsInView: ThingPosition[];
+
+        public get thingsInView(): ThingPosition[] {
+            return this.thingsInView;
+        }
+
+        private CheckTrigger(trigger: Trigger, position: number) {
+            if (trigger.position <= position) {
+                if (trigger instanceof TriggerEvent)
+                    this.TriggerEvent(trigger as TriggerEvent);
+                else if (trigger instanceof TriggerThing)
+                    this.TriggerThing(trigger as TriggerThing);
+            }
+        }
+
+        private TriggerEvent(trigger: TriggerEvent) {
+
+        }
+
+        private TriggerThing(trigger: TriggerThing) {
+            //this.thingsInView.push(trigger.thing);
         }
 
 
