@@ -15,12 +15,48 @@ var Waves;
             this.state.start('Boot');
         }
         return Game;
-    }(Phaser.Game));
+    })(Phaser.Game);
     Waves.Game = Game;
 })(Waves || (Waves = {}));
 window.onload = function () {
     var game = new Waves.Game();
 };
+var Waves;
+(function (Waves) {
+    var Boot = (function (_super) {
+        __extends(Boot, _super);
+        function Boot() {
+            _super.apply(this, arguments);
+            this.orientated = false;
+        }
+        Boot.prototype.preload = function () {
+            _super.prototype.preload.call(this);
+            this.load.image('preloadBar', 'assets/whiteLoadBar.png');
+        };
+        Boot.prototype.create = function () {
+            _super.prototype.create.call(this);
+            this.input.maxPointers = 1;
+            this.stage.disableVisibilityChange = true;
+            if (this.game.device.desktop) {
+                this.scale.scaleMode = Phaser.ScaleManager.NO_SCALE;
+                this.scale.pageAlignHorizontally = true;
+                this.scale.pageAlignVertically = true;
+            }
+            else {
+                this.scale.fullScreenScaleMode = Phaser.ScaleManager.NO_SCALE;
+                this.scale.pageAlignHorizontally = true;
+                this.scale.pageAlignVertically = true;
+                this.scale.refresh();
+                var gameElement = document.getElementById('game');
+                gameElement.style.overflow = "visible";
+            }
+            this.game.state.start('Preloader', true, false);
+        };
+        return Boot;
+    })(Phaser.State);
+    Waves.Boot = Boot;
+    ;
+})(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
     var Button = (function (_super) {
@@ -55,80 +91,8 @@ var Waves;
             this.pressed.dispatch();
         };
         return Button;
-    }(Phaser.Group));
+    })(Phaser.Group);
     Waves.Button = Button;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
-    var GameState = (function () {
-        function GameState() {
-        }
-        return GameState;
-    }());
-    Waves.GameState = GameState;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
-    var InventoryState = (function () {
-        function InventoryState() {
-        }
-        return InventoryState;
-    }());
-    Waves.InventoryState = InventoryState;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
-    var ResourceState = (function () {
-        function ResourceState() {
-        }
-        return ResourceState;
-    }());
-    Waves.ResourceState = ResourceState;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
-    var WorldState = (function () {
-        function WorldState() {
-        }
-        return WorldState;
-    }());
-    Waves.WorldState = WorldState;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
-    var Boot = (function (_super) {
-        __extends(Boot, _super);
-        function Boot() {
-            _super.apply(this, arguments);
-            this.orientated = false;
-        }
-        Boot.prototype.preload = function () {
-            _super.prototype.preload.call(this);
-            this.load.image('preloadBar', 'assets/whiteLoadBar.png');
-        };
-        Boot.prototype.create = function () {
-            _super.prototype.create.call(this);
-            this.input.maxPointers = 1;
-            this.stage.disableVisibilityChange = true;
-            if (this.game.device.desktop) {
-                this.scale.scaleMode = Phaser.ScaleManager.NO_SCALE;
-                this.scale.pageAlignHorizontally = true;
-                this.scale.pageAlignVertically = true;
-            }
-            else {
-                this.scale.fullScreenScaleMode = Phaser.ScaleManager.NO_SCALE;
-                this.scale.pageAlignHorizontally = true;
-                this.scale.pageAlignVertically = true;
-                this.scale.refresh();
-                var gameElement = document.getElementById('game');
-                gameElement.style.overflow = "visible";
-            }
-            this.game.state.start('Preloader', true, false);
-        };
-        return Boot;
-    }(Phaser.State));
-    Waves.Boot = Boot;
-    ;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
@@ -148,8 +112,72 @@ var Waves;
         MainGame.prototype.update = function () {
         };
         return MainGame;
-    }(Phaser.State));
+    })(Phaser.State);
     Waves.MainGame = MainGame;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var GameState = (function () {
+        function GameState() {
+        }
+        return GameState;
+    })();
+    Waves.GameState = GameState;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var InventoryState = (function () {
+        function InventoryState() {
+        }
+        Object.defineProperty(InventoryState.prototype, "things", {
+            get: function () {
+                return this.things;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return InventoryState;
+    })();
+    Waves.InventoryState = InventoryState;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var ResourceState = (function () {
+        function ResourceState() {
+        }
+        return ResourceState;
+    })();
+    Waves.ResourceState = ResourceState;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var Thing = (function () {
+        function Thing() {
+        }
+        return Thing;
+    })();
+    Waves.Thing = Thing;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var WorldState = (function () {
+        function WorldState() {
+            this._milesRemaining = WorldState.STARTING_MILES;
+        }
+        Object.defineProperty(WorldState.prototype, "milesRemaining", {
+            get: function () {
+                return this._milesRemaining;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        WorldState.prototype.MoveDistance = function (miles) {
+            this._milesRemaining -= miles;
+        };
+        WorldState.STARTING_MILES = 50;
+        return WorldState;
+    })();
+    Waves.WorldState = WorldState;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
@@ -177,7 +205,7 @@ var Waves;
             this.game.state.start('MainGame', true, false);
         };
         return Preloader;
-    }(Phaser.State));
+    })(Phaser.State);
     Waves.Preloader = Preloader;
 })(Waves || (Waves = {}));
 //# sourceMappingURL=app.js.map

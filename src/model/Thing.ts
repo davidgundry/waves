@@ -1,6 +1,6 @@
 module Waves {
 
-    class Thing {
+    export class Thing {
 
         name: string;
         iconName: string;
