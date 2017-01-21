@@ -52,6 +52,7 @@
     <TypeScriptCompile Include="src\MainGame.ts" />
     <TypeScriptCompile Include="src\Preloader.ts" />
     <TypeScriptCompile Include="src\Sea.ts" />
+    <TypeScriptCompile Include="src\ThingsInView.ts" />
   </ItemGroup>
   <ItemGroup>
     <None Include="web.Debug.config">
