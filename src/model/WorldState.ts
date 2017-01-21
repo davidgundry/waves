@@ -3,7 +3,7 @@ module Waves {
     export class WorldState {
 
         static STARTING_MILES: number = 50;
-        public static LEAD_DISTANCE: number = 10;
+        public static LEAD_DISTANCE: number = 1;
         private _position: number = 0;
 
         public get milesRemaining(): number {
@@ -29,13 +29,17 @@ module Waves {
       
 
         constructor() {
-            this.triggers.push(new ThingTrigger(13, new Thing("paddle")));
-            this.triggers.push(new EventTrigger(5, new FlyingFishStoryEvent()));
+            this.triggers.push(new ThingTrigger(1, new Thing("paddle")));
+            this.triggers.push(new EventTrigger(0.5, new FlyingFishStoryEvent()));
         }
 
-        public MoveDistance(miles: number) {
+        private MoveDistance(miles: number) {
             this.position += miles;
             this.CheckTriggers(this.position);
+        }
+
+        public MoveMeters(meters: number) {
+            this.MoveDistance(meters / 1609);
         }
 
         private _triggers: Trigger[]= new Array<Trigger>();

@@ -47,7 +47,7 @@ module Waves {
                 relativePosition = 0;
             }
 
-            return (relativePosition / WorldState.LEAD_DISTANCE);
+            return (Math.pow(10, (relativePosition / WorldState.LEAD_DISTANCE)) - 1) / 10;
         }
 
         screenPosition(position: number): Phaser.Point{

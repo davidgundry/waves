@@ -221,7 +221,7 @@ var Waves;
         };
         MainGame.prototype.onPress = function () {
             //alert("pressed");
-            this.game.model.world.MoveDistance(1);
+            this.game.model.world.MoveMeters(100);
             this.updateMiles();
             this.thingsInView.update();
         };
@@ -443,8 +443,8 @@ var Waves;
         function WorldState() {
             this._position = 0;
             this._triggers = new Array();
-            this.triggers.push(new Waves.ThingTrigger(13, new Waves.Thing("paddle")));
-            this.triggers.push(new Waves.EventTrigger(5, new Waves.FlyingFishStoryEvent()));
+            this.triggers.push(new Waves.ThingTrigger(1, new Waves.Thing("paddle")));
+            this.triggers.push(new Waves.EventTrigger(0.5, new Waves.FlyingFishStoryEvent()));
         }
         Object.defineProperty(WorldState.prototype, "milesRemaining", {
             get: function () {
@@ -476,6 +476,9 @@ var Waves;
         WorldState.prototype.MoveDistance = function (miles) {
             this.position += miles;
             this.CheckTriggers(this.position);
+        };
+        WorldState.prototype.MoveMeters = function (meters) {
+            this.MoveDistance(meters / 1609);
         };
         Object.defineProperty(WorldState.prototype, "triggers", {
             get: function () {
@@ -514,7 +517,7 @@ var Waves;
                 throw new Error("ThingEventCallback not set");
         };
         WorldState.STARTING_MILES = 50;
-        WorldState.LEAD_DISTANCE = 10;
+        WorldState.LEAD_DISTANCE = 1;
         return WorldState;
     })();
     Waves.WorldState = WorldState;
@@ -641,7 +644,7 @@ var Waves;
             if (relativePosition <= 0) {
                 relativePosition = 0;
             }
-            return (relativePosition / Waves.WorldState.LEAD_DISTANCE);
+            return (Math.pow(10, (relativePosition / Waves.WorldState.LEAD_DISTANCE)) - 1) / 10;
         };
         ThingsInView.prototype.screenPosition = function (position) {
             var proportion = this.proportionalDistance(position);

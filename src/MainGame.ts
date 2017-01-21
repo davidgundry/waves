@@ -35,7 +35,7 @@
 
         onPress() {
             //alert("pressed");
-            (<Game>this.game).model.world.MoveDistance(1);
+            (<Game>this.game).model.world.MoveMeters(100);
             this.updateMiles();
             this.thingsInView.update();
         }
