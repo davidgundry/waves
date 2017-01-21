@@ -25,10 +25,9 @@
             
             this.boat = new Boat(this.game, 550, 400);
             this.inventory = new Inventory(this.game,10, 280);
-            this.person = new InventoryItem(this.game, 100, 100, 'person');
-            this.oar = new InventoryItem(this.game, 200, 100, 'oar');
-            this.person.dropped.add(this.onDrop.bind(this));
-            this.oar.dropped.add(this.onDrop.bind(this));
+            this.person = new InventoryItem(this.game, 100, 100, this.onDrop.bind(this), 'person');
+            this.oar = new InventoryItem(this.game, 200, 100, this.onDrop.bind(this),'oar');
+
           
             this.thingsInView = new ThingsInView((<Game>this.game), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y + this.boat.height));
 

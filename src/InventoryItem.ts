@@ -6,13 +6,14 @@
         dropped: Phaser.Signal;
         inventorySlot: number;
 
-        constructor(game: Phaser.Game,  newX: number, newY: number,spriteName:string) {
+        constructor(game: Phaser.Game,  newX: number, newY: number,dropHandler:Function,spriteName:string) {
             super(game);
             this.baseSprite = this.create(0, 0, spriteName);
             this.baseSprite.anchor.setTo(0.5, 0.5);
             this.position.x = newX;
             this.position.y = newY;
             this.dropped = new Phaser.Signal();
+            this.dropped.add(dropHandler);
             this.inventorySlot = null;
             this.setDrag(true)
         }
