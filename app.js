@@ -129,23 +129,27 @@ var Waves;
             var y = item.position.y;
             if (this.boundsRect.contains(x, y)) {
                 var slot = this.getSlot(item.position.x, item.position.y);
-                if (this.slots[slot] === null) {
+                if ((this.slots[slot] === null) || (slot === item.inventorySlot)) {
                     this.slots[slot] = item;
+                    if (item.inventorySlot) {
+                        this.slots[item.inventorySlot] = null;
+                    }
+                    item.inventorySlot = slot;
                     var centre = this.getSlotMiddle(slot);
-                    this.game.add.tween(item).to({ x: centre.x, y: centre.y }, 1000, "Sine.easeIn");
+                    this.game.add.tween(item).to({ x: centre.x, y: centre.y }, 1000, "Sine.easeIn", true);
                     return true;
                 }
             }
             return false;
         };
         Inventory.prototype.getSlot = function (x, y) {
-            var slotX = Math.round((x - this.position.x) / this.slotWidth);
-            var slotY = Math.round((y - this.position.y) / this.slotHeight);
+            var slotX = Math.floor((x - this.position.x) / this.slotWidth);
+            var slotY = Math.floor((y - this.position.y) / this.slotHeight);
             return (slotY * 3) + slotX;
         };
         Inventory.prototype.getSlotMiddle = function (slotNumber) {
-            var x = this.position.x + (slotNumber % 3) + 0.5 * this.slotWidth;
-            var y = this.position.y + Math.round(slotNumber / 3) + 0.5 * this.slotHeight;
+            var x = this.position.x + ((slotNumber % 3) + 0.5) * this.slotWidth;
+            var y = this.position.y + (Math.floor(slotNumber / 3) + 0.5) * this.slotHeight;
             return new Phaser.Point(x, y);
         };
         return Inventory;
@@ -163,6 +167,7 @@ var Waves;
             this.position.x = newX;
             this.position.y = newY;
             this.dropped = new Phaser.Signal();
+            this.inventorySlot = null;
             this.setDrag(true);
         }
         InventoryItem.prototype.setDrag = function (isEnabled) {
@@ -180,14 +185,14 @@ var Waves;
             this.lastPos = new Phaser.Point(this.position.x, this.position.y);
         };
         InventoryItem.prototype.onDragStop = function () {
-            this.position.x = this.baseSprite.position.x;
-            this.position.y = this.baseSprite.position.y;
+            this.position.x = this.baseSprite.worldPosition.x;
+            this.position.y = this.baseSprite.worldPosition.y;
             this.baseSprite.position.x = 0;
             this.baseSprite.position.y = 0;
             this.dropped.dispatch({ dropItem: this });
         };
         InventoryItem.prototype.returnToPlace = function () {
-            this.game.add.tween(this).to({ x: this.lastPos.x, y: this.lastPos.y }, 1000, "Sine.easeIn");
+            this.game.add.tween(this.position).to({ x: this.lastPos.x, y: this.lastPos.y }, 1000, "Sine.easeIn", true);
         };
         return InventoryItem;
     }(Phaser.Group));
@@ -212,7 +217,9 @@ var Waves;
             this.boat = new Waves.Boat(this.game, 550, 400);
             this.inventory = new Waves.Inventory(this.game, 10, 280);
             this.person = new Waves.InventoryItem(this.game, 100, 100, 'person');
+            this.oar = new Waves.InventoryItem(this.game, 200, 100, 'oar');
             this.person.dropped.add(this.onDrop.bind(this));
+            this.oar.dropped.add(this.onDrop.bind(this));
         };
         MainGame.prototype.onPress = function () {
             //alert("pressed");
@@ -559,6 +566,7 @@ var Waves;
             //  Load our actual games assets
             this.game.load.image("inventory", "assets/inventory.png");
             this.game.load.image("person", "assets/placeholderMan.png");
+            this.game.load.image("oar", "assets/oarPlaceHolder.png");
             this.game.load.image("sea1", "assets/sea-top.png");
             this.game.load.image("sea2", "assets/sea-middle.png");
             this.game.load.image("sea3", "assets/sea-bottom.png");

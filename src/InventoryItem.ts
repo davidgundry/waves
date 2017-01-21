@@ -4,6 +4,7 @@
         baseSprite: Phaser.Sprite;
         lastPos: Phaser.Point;
         dropped: Phaser.Signal;
+        inventorySlot: number;
 
         constructor(game: Phaser.Game,  newX: number, newY: number,spriteName:string) {
             super(game);
@@ -12,6 +13,7 @@
             this.position.x = newX;
             this.position.y = newY;
             this.dropped = new Phaser.Signal();
+            this.inventorySlot = null;
             this.setDrag(true)
         }
         setDrag(isEnabled: boolean) {
@@ -30,14 +32,14 @@
 
         }
         onDragStop() {
-            this.position.x = this.baseSprite.position.x;
-            this.position.y = this.baseSprite.position.y;
+            this.position.x = this.baseSprite.worldPosition.x;
+            this.position.y = this.baseSprite.worldPosition.y;
             this.baseSprite.position.x = 0;
             this.baseSprite.position.y = 0;
             this.dropped.dispatch({ dropItem: this });
         }
         returnToPlace() {
-            this.game.add.tween(this).to({ x: this.lastPos.x, y: this.lastPos.y }, 1000, "Sine.easeIn");
+            this.game.add.tween(this.position).to({ x: this.lastPos.x, y: this.lastPos.y }, 1000, "Sine.easeIn",true);
         }
 
 
