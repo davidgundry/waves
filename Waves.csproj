@@ -42,6 +42,8 @@
     <TypeScriptCompile Include="src\model\InventoryState.ts" />
     <TypeScriptCompile Include="src\model\ResourceState.ts" />
     <TypeScriptCompile Include="src\model\Thing.ts" />
+    <TypeScriptCompile Include="src\model\ThingPosition.ts" />
+    <TypeScriptCompile Include="src\model\Trigger.ts" />
     <TypeScriptCompile Include="src\model\WorldState.ts" />
     <TypeScriptCompile Include="src\Boot.ts" />
     <TypeScriptCompile Include="src\MainGame.ts" />
