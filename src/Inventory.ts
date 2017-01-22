@@ -6,7 +6,8 @@
         slotHeight: number = 100;
         boundsRect: Phaser.Rectangle;
 
-        private _thingUsed: Thing = new Thing("hands","hands");
+        private yourHands: Thing = new Thing("hands", "hands", { clickSpeed: 0.01, buttonLabel: "Row with your hands"});
+        private _thingUsed = this.yourHands;
 
         public get thingUsed(): Thing {
             return this._thingUsed;
@@ -72,19 +73,16 @@
             this.slots[slot] = item;
             if (item.inventorySlot) {
                 this.slots[item.inventorySlot] = null;
-            //} else {
-            //    (<Game>this.game).model.inventory.AddItem(item.baseThing);
             }
             item.inventorySlot = slot;
             
         }
         removeItem(item: InventoryItem) {
-            //(<Game>this.game).model.inventory.DiscardItem(item.baseThing);
             item.setInUse(false);
             this.slots[item.inventorySlot] = null;
             item.inventorySlot = null;
             if (this._thingUsed == item.baseThing)
-                this._thingUsed = new Thing("hands","hands");
+                this._thingUsed = this.yourHands;
         }
         getSlot(x: number, y: number): number {
             var slotX: number = Math.floor((x - this.position.x) / this.slotWidth);
