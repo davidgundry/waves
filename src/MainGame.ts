@@ -204,7 +204,7 @@
 
             world.fuel += this.inventory.thingUsed.fuelChange;
             console.log("used thing=" + this.inventory.thingUsed.spriteName)
-            if (this.inventory.thingUsed.spriteName == "plastic-bag") {
+            if ((this.inventory.thingUsed.spriteName == "plastic-bag") || (this.inventory.thingUsed.spriteName == "sail")) {
                 this.boat.setSail(true);
             } else {
                 this.boat.setSail(false);
