@@ -1,6 +1,8 @@
 ﻿module Waves {
 
     export class Boat extends Phaser.Group {
+        noSail: Sprite;
+
       
         constructor(game: Phaser.Game, newX: number, newY: number) {
             super(game);

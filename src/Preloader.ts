@@ -38,14 +38,15 @@
             this.game.load.image("fish", "assets/fish.png");
             this.game.load.image("barrel", "assets/barrel.png");
 
-            this.game.load.image("inUse", "assets/InUse.png");
+            this.game.load.image("inUse", "assets/InUse2.png");
             this.game.load.image("inventory", "assets/inventory.png");
             this.game.load.image("person", "assets/placeholderMan.png");
             
             this.game.load.image("sea1", "assets/sea-top.png");
             this.game.load.image("sea2", "assets/sea-middle.png");
             this.game.load.image("sea3", "assets/sea-bottom.png");
-            this.game.load.image("boat", "assets/boat1.png");
+            this.game.load.image("boat", "assets/boat1NoSail.png");
+            this.game.load.image("boatWithSail", "assets/boat1.png");
 
 
 
