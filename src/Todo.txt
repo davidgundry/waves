@@ -2,7 +2,7 @@
 - Popup box mechanism
 -Events - with and without consequences and pictures. Events and items in the world use the same mechanism.
 
-
+Give up and drown
 
 
 Instructions - pop up box for adding to inventory. How to remove?
@@ -27,5 +27,15 @@ Motor - Moves forward at Z speed. Uses Fuel at K speed
 Petrol - Adds to Fuel
 
 Other 
+Fishing rod/ net - catches food increases
 Harpoon - Used to attack sea monsters?
 Radio - Recieves desert island discs
+Gun - Killing yourself?
+
+Events
+- Sea Monsters - need sea monsters coming towrds you
+- White Whale
+- Flying fish - needs fish coming towards you
+- Halucinate
+- End game
+

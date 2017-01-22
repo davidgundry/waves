@@ -55,7 +55,7 @@ module Waves {
         public set thingEventCallback(callback: (thing: Thing, position: number) => void) {
             this._thingEventCallback = callback;
         }
-      
+
         private MoveDistance(miles: number) {
             this.position += miles;
             this.CheckTriggers(this.position);
