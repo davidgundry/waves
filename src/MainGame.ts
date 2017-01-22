@@ -94,6 +94,7 @@
           //  this.eventBox.show("You found god", "Do you want to keep or throw back?", "Keep", "Throw back");
 
             (<Game>this.game).model.world.MoveMeters(0.01);
+            this.onEvent(new StartEvent());
         }
         press1() {
             this.eventBox.hideMessage();
@@ -104,6 +105,7 @@
             alert("Pressed 2");
         }
         onEvent(event: StoryEvent) {
+            this.game.world.bringToTop(this.eventBox);
             this.currentEvent = event;
             this.eventBox.setListeners(this.event1.bind(this), this.event2.bind(this), this);
             this.eventBox.show(event.name, event.description, event.button1, event.button2);   
