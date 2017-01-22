@@ -1,8 +1,7 @@
 ﻿module Waves {
 
     export class Boat extends Phaser.Group {
-        noSail: Phaser.Sprite;
-        sail: Phaser.Sprite;
+        noSail: Sprite;
 
       
         constructor(game: Phaser.Game, newX: number, newY: number) {
