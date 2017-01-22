@@ -23,13 +23,24 @@
             super.create();
             (<Game>this.game).model.world.getEventSignal(this.onEvent.bind(this));
             this.mainButton = new Button(this.game, "Paddle with your hands")
-            this.mainButton.position.setTo(10, 550);
+            this.mainButton.position.setTo(20, 545);
             this.mainButton.pressed.add(this.onPress.bind(this));
-            this.milesDisplay = this.game.add.text(300, 10, "Testing 12 12", { font: "60px biro_script_reducedregular", fill: '#0078C2', align: 'right' })
+            this.milesDisplay = this.game.add.text(310, 10, "Testing 12 12", { font: "60px biro_script_reducedregular", fill: '#0078C2', align: 'right' })
             this.healthDisplay = this.game.add.text(10, 10, "HEALTH: 100%", { font: "28px biro_script_reducedregular", fill: '#0078C2', align: 'left' })
             this.waterDisplay = this.game.add.text(10, 40, "WATER", { font: "28px biro_script_reducedregular", fill: '#0078C2', align: 'left' })
             this.foodDisplay = this.game.add.text(10, 70, "FOOD", { font: "28px biro_script_reducedregular", fill: '#0078C2', align: 'left' })
             this.fuelDisplay = this.game.add.text(10, 110, "FUEL", { font: "28px biro_script_reducedregular", fill: '#0078C2', align: 'left' })
+            var graphics = this.game.add.graphics(0, 0);
+
+            // set a fill and line style
+            graphics.beginFill(0xFF3300);
+            graphics.lineStyle(1, 0x0078C2, 1);
+
+            // draw a line
+            graphics.moveTo(300, 0);
+            graphics.lineTo(300, 600);
+            graphics.endFill();
+            graphics.drawRect(0, 0,960,600);
             this.updateMiles();
 
             
@@ -99,6 +110,7 @@
           //  this.eventBox.show("You found god", "Do you want to keep or throw back?", "Keep", "Throw back");
 
             (<Game>this.game).model.world.MoveMeters(0.01);
+            this.game.world.bringToTop(graphics);
             this.onEvent(new StartEvent());
         }
         press1() {
@@ -129,7 +141,7 @@
             choice.changeWorld((<Game>this.game).model.world);
             if (choice.response != "") {
                 this.eventBox.setListeners(this.hideEvent, this.hideEvent, this);
-                this.eventBox.setText(this.currentEvent.name, this.currentEvent.onB1.response, "Ok", "");
+                this.eventBox.setText(this.currentEvent.name, choice.response, "Ok", "");
             } else {
                 this.hideEvent();
             }
@@ -222,7 +234,7 @@
            
         updateMiles() {
           //  this.milesDisplay.text = "You are " + (<Game>this.game).model.world.milesRemaining.toFixed(4) + " miles from land"; 
-            this.milesDisplay.text = "Miles from land:" + (<Game>this.game).model.world.milesRemaining.toFixed(4) 
+            this.milesDisplay.text = "Miles from land: " + (<Game>this.game).model.world.milesRemaining.toFixed(4) 
         }
 
         getItem(item: InventoryItem) {
