@@ -477,18 +477,20 @@ var Waves;
             }
         };
         MainGame.prototype.update = function () {
-            this.sailTheBoat();
-            if (this.inventory.thingUsed.clickSpeed > 0) {
-                this.mainButton.setButtonText(this.inventory.thingUsed.buttonLabel);
+            if (!this.eventBox.showing) {
+                this.sailTheBoat();
+                if (this.inventory.thingUsed.clickSpeed > 0) {
+                    this.mainButton.setButtonText(this.inventory.thingUsed.buttonLabel);
+                }
+                else {
+                    this.mainButton.setButtonText("Row with your hands");
+                }
+                this.sea.update();
+                this.updateMiles();
+                this.foodAndHealth();
+                this.updateHealthFoodAndWater();
+                this.thingsInView.update();
             }
-            else {
-                this.mainButton.setButtonText("Row with your hands");
-            }
-            this.sea.update();
-            this.updateMiles();
-            this.foodAndHealth();
-            this.updateHealthFoodAndWater();
-            this.thingsInView.update();
         };
         MainGame.prototype.rowTheBoat = function () {
             if (this.inventory.thingUsed.clickSpeed > 0)
@@ -517,6 +519,9 @@ var Waves;
             }
             else {
                 world.health -= Waves.WorldState.HEALTH_NO_FOOD_RATE;
+            }
+            if (world.health <= 0) {
+                this.onEvent(new Waves.DeathEvent());
             }
         };
         MainGame.prototype.updateHealthFoodAndWater = function () {
@@ -668,6 +673,15 @@ var Waves;
         return LandStoryEvent;
     })(StoryEvent);
     Waves.LandStoryEvent = LandStoryEvent;
+    var DeathEvent = (function (_super) {
+        __extends(DeathEvent, _super);
+        function DeathEvent() {
+            _super.call(this, "You died", "You died of hunger and thirst. You'll float on the sea forever", "Try again", "", new ChoiceAction(""));
+            this._onB1.endGame = true;
+        }
+        return DeathEvent;
+    })(StoryEvent);
+    Waves.DeathEvent = DeathEvent;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {

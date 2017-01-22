@@ -121,18 +121,20 @@
         }
 
         update() {
-            this.sailTheBoat();
-            if (this.inventory.thingUsed.clickSpeed > 0) {
-                this.mainButton.setButtonText(this.inventory.thingUsed.buttonLabel);
-            } else {
-                this.mainButton.setButtonText("Row with your hands");
+            if (!this.eventBox.showing) {
+                this.sailTheBoat();
+                if (this.inventory.thingUsed.clickSpeed > 0) {
+                    this.mainButton.setButtonText(this.inventory.thingUsed.buttonLabel);
+                } else {
+                    this.mainButton.setButtonText("Row with your hands");
+                }
+                this.sea.update();
+                this.updateMiles();
+                this.foodAndHealth();
+
+                this.updateHealthFoodAndWater();
+                this.thingsInView.update();
             }
-            this.sea.update();
-            this.updateMiles();
-            this.foodAndHealth();
-     
-            this.updateHealthFoodAndWater();
-            this.thingsInView.update();
         }
 
         rowTheBoat() {
@@ -163,6 +165,9 @@
                 world.food -= WorldState.FOOD_RATE;
             } else {
                 world.health -= WorldState.HEALTH_NO_FOOD_RATE;
+            }
+            if (world.health <= 0) {
+                this.onEvent(new DeathEvent());
             }
         }
         updateHealthFoodAndWater() {
