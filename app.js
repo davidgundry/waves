@@ -200,10 +200,14 @@ var Waves;
             _super.prototype.drop.call(this, newCallback);
         };
         EventPopup.prototype.setText = function (titleText, bodyText, button1, button2) {
+            this.button2.visible = false;
             this.title.text = titleText;
             this.bodyText.text = bodyText;
             this.button1.setButtonText(button1);
-            this.button2.setButtonText(button2);
+            if (button2 !== "") {
+                this.button2.visible = true;
+                this.button2.setButtonText(button2);
+            }
         };
         return EventPopup;
     })(Waves.PopupBox);
@@ -833,6 +837,8 @@ var Waves;
             this._water = 0;
             this._food = 0;
             this._triggers = new Array();
+            this.triggers.push(new Waves.ThingTrigger(0.1, new Waves.Thing("paddle")));
+            this.triggers.push(new Waves.EventTrigger(0.5, new Waves.FlyingFishStoryEvent()));
         }
         Object.defineProperty(WorldState.prototype, "milesRemaining", {
             get: function () {
@@ -891,6 +897,9 @@ var Waves;
             enumerable: true,
             configurable: true
         });
+        WorldState.prototype.getEventSignal = function (onEvent) {
+            this.eventSignal.add(onEvent);
+        };
         WorldState.prototype.MoveDistance = function (miles) {
             this.position += miles;
             this.CheckTriggers(this.position);
@@ -907,18 +916,22 @@ var Waves;
         });
         WorldState.prototype.CheckTriggers = function (position) {
             var _this = this;
+            console.log("check triggers " + this.triggers.length);
             this.triggers.forEach(function (value, index, array) { return void _this.CheckTrigger(value, position); });
         };
         WorldState.prototype.CheckTrigger = function (trigger, position) {
+            console.log("t=" + trigger.position + " " + position);
             if (trigger.position <= position) {
-                if (trigger instanceof Waves.EventTrigger)
+                if (trigger instanceof Waves.EventTrigger) {
                     this.TriggerEvent(trigger);
-                this.RemoveTrigger(trigger);
+                    this.RemoveTrigger(trigger);
+                }
             }
             if (trigger.position - WorldState.LEAD_DISTANCE <= position) {
-                if (trigger instanceof Waves.ThingTrigger)
+                if (trigger instanceof Waves.ThingTrigger) {
                     this.TriggerThing(trigger);
-                this.RemoveTrigger(trigger);
+                    this.RemoveTrigger(trigger);
+                }
             }
         };
         WorldState.prototype.RemoveTrigger = function (trigger) {
@@ -926,6 +939,7 @@ var Waves;
         };
         WorldState.prototype.TriggerEvent = function (trigger) {
             console.log(trigger.event.name + " event triggered");
+            this.eventSignal.dispatch(trigger.event);
         };
         WorldState.prototype.TriggerThing = function (trigger) {
             console.log("Thing Triggered");

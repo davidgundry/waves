@@ -12,6 +12,7 @@ module Waves {
         private _health: number = 100;
         private _water: number = 0;
         private _food: number = 0;
+        private eventSignal: Phaser.Signal;
 
         public get milesRemaining(): number {
             return WorldState.STARTING_MILES - this.position;
@@ -55,6 +56,14 @@ module Waves {
         public set thingEventCallback(callback: (thing: Thing, position: number) => void) {
             this._thingEventCallback = callback;
         }
+      
+
+        constructor() {
+            this.eventSignal = new Phaser.Signal();
+        }
+        getEventSignal(onEvent: Function) {
+            this.eventSignal.add(onEvent);
+        }
 
         private MoveDistance(miles: number) {
             this.position += miles;
@@ -73,20 +82,24 @@ module Waves {
         }
         
         private CheckTriggers(position: number) {
+            console.log("check triggers " + this.triggers.length);
            this.triggers.forEach((value: Trigger, index: number, array: Trigger[]) => void this.CheckTrigger(value, position));
         }
 
         private CheckTrigger(trigger: Trigger, position: number) {
+            console.log("t=" + trigger.position + " " + position);
             if (trigger.position <= position) {
-                if (trigger instanceof EventTrigger)
+                if (trigger instanceof EventTrigger) {
                     this.TriggerEvent(trigger as EventTrigger);
-                this.RemoveTrigger(trigger);
+                    this.RemoveTrigger(trigger);
+                }
             }
 
             if (trigger.position - WorldState.LEAD_DISTANCE <= position) {
-                if (trigger instanceof ThingTrigger)
+                if (trigger instanceof ThingTrigger) {
                     this.TriggerThing(trigger as ThingTrigger);
-                this.RemoveTrigger(trigger);
+                    this.RemoveTrigger(trigger);
+                }
             }
         }
 
@@ -96,6 +109,7 @@ module Waves {
 
         private TriggerEvent(trigger: EventTrigger) {
             console.log(trigger.event.name + " event triggered");
+            this.eventSignal.dispatch(trigger.event);
         }
 
         private TriggerThing(trigger: ThingTrigger) {

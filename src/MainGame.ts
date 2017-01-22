@@ -19,6 +19,7 @@
 
         create() {
             super.create();
+            (<Game>this.game).model.world.getEventSignal(this.onEvent.bind(this));
             this.mainButton = new Button(this.game, "Paddle with your hands")
             this.mainButton.setButtonText("Paddle with your nose");
             this.mainButton.pressed.add(this.onPress.bind(this));
@@ -27,6 +28,7 @@
             this.waterDisplay = this.game.add.text(10, 80, "Water", { font: "20px Arial", fill: '#00f', align: 'left' })
             this.foodDisplay = this.game.add.text(10, 110, "Food", { font: "20px Arial", fill: '#00f', align: 'left' })
             this.updateMiles();
+
             
             this.sea = new Sea(this.game, 320, 280);
             
@@ -55,6 +57,13 @@
         press2() {
             this.eventBox.hideMessage();
             alert("Pressed 2");
+        }
+        onEvent(event: StoryEvent) {
+            
+            this.eventBox.show(event.name, event.description, event.button1, event.button2);
+            this.eventBox.setListeners(this.event1, this.event2, this);
+
+            alert("Event " + event.name);
         }
         onPress() {
             this.rowTheBoat()

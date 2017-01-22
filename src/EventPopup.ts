@@ -53,10 +53,14 @@ module Waves {
 
         }
         setText(titleText: string, bodyText: string, button1: string, button2: string) {
+            this.button2.visible = false;
             this.title.text = titleText;
             this.bodyText.text = bodyText;
             this.button1.setButtonText(button1);
-            this.button2.setButtonText(button2);
+            if (button2 !== "") {
+                this.button2.visible = true;
+                this.button2.setButtonText(button2);
+            }
           
         }
       
