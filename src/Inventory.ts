@@ -6,7 +6,7 @@
         slotHeight: number = 100;
         boundsRect: Phaser.Rectangle;
 
-        private _thingUsed: Thing;
+        private _thingUsed: Thing = new Thing("hands");
 
         public get thingUsed(): Thing {
             return this._thingUsed;
@@ -84,7 +84,7 @@
             this.slots[item.inventorySlot] = null;
             item.inventorySlot = null;
             if (this._thingUsed == item.baseThing)
-                this._thingUsed = null;
+                this._thingUsed = new Thing("hands");
         }
         getSlot(x: number, y: number): number {
             var slotX: number = Math.floor((x - this.position.x) / this.slotWidth);

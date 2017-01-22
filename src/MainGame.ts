@@ -8,6 +8,7 @@
         healthDisplay: Phaser.Text;
         waterDisplay: Phaser.Text;
         foodDisplay: Phaser.Text;
+        fuelDisplay: Phaser.Text;
         person: InventoryItem;
         oar: InventoryItem;
         sea: Sea;
@@ -26,8 +27,9 @@
             this.mainButton.pressed.add(this.onPress.bind(this));
             this.milesDisplay = this.game.add.text(300, 10, "Testing 12 12", { font: "30px Arial", fill: '#00f', align: 'right' })
             this.healthDisplay = this.game.add.text(10, 50, "Health: 100%", { font: "20px Arial", fill: '#00f', align: 'left' })
-            this.waterDisplay = this.game.add.text(10, 80, "Water", { font: "20px Arial", fill: '#00f', align: 'left' })
-            this.foodDisplay = this.game.add.text(10, 110, "Food", { font: "20px Arial", fill: '#00f', align: 'left' })
+            this.waterDisplay = this.game.add.text(10, 90, "Water", { font: "20px Arial", fill: '#00f', align: 'left' })
+            this.foodDisplay = this.game.add.text(10, 120, "Food", { font: "20px Arial", fill: '#00f', align: 'left' })
+            this.fuelDisplay = this.game.add.text(10, 140, "Fuel", { font: "20px Arial", fill: '#00f', align: 'left' })
             this.updateMiles();
 
             
@@ -35,9 +37,9 @@
             
             this.boat = new Boat(this.game, 550, 400);
             this.inventory = new Inventory(this.game, 10, 280);
-            this.person = new InventoryItem(this.game, this.inventory, 100, 100, this.onDrop.bind(this), new Thing("person"));
-            this.oar = new InventoryItem(this.game, this.inventory, 200, 100, this.onDrop.bind(this), new RowThing("oar",100, "Row with an oar"));
-            this.sail = new InventoryItem(this.game, this.inventory, 300, 100, this.onDrop.bind(this), new SailThing("sail",5));
+          //  this.person = new InventoryItem(this.game, this.inventory, 100, 100, this.onDrop.bind(this), new Thing("person"));
+         //   this.oar = new InventoryItem(this.game, this.inventory, 200, 100, this.onDrop.bind(this), new RowThing("oar",100, "Row with an oar"));
+            this.sail = new InventoryItem(this.game, this.inventory, 300, 100, this.onDrop.bind(this), new Thing("sail", { constantSpeed: 5 }));
             (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.1, new Thing("motor", { speed: 1, fuelChange: -1 })));
             
          //   (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.00032, new SailThing("test", 0.1)));
@@ -120,6 +122,7 @@
             this.sea.update();
             this.updateMiles();
             this.foodAndHealth();
+     
             this.updateHealthFoodAndWater();
             this.thingsInView.update();
         }
@@ -132,7 +135,11 @@
         }
 
         sailTheBoat() {
-            (<Game>this.game).model.world.MoveMeters(this.inventory.thingUsed.constantSpeed);
+            var world: WorldState = (<Game>this.game).model.world;
+            if ((this.inventory.thingUsed.fuelChange == 0) || (world.fuel>0))
+                (<Game>this.game).model.world.MoveMeters(this.inventory.thingUsed.constantSpeed);
+
+            world.fuel += this.inventory.thingUsed.fuelChange;
            // if (this.inventory.hasSailThing())
              //   (<Game>this.game).model.world.MoveMeters(this.inventory.sailThing.speed);
         }
@@ -155,6 +162,8 @@
             this.healthDisplay.text = "Health: " + Math.ceil(world.health) + "%";
             this.foodDisplay.text = "Food: " + Math.ceil(world.food)
             this.waterDisplay.text = "Water: " + Math.ceil(world.water)
+            this.fuelDisplay.text = "Fuel: " + Math.ceil(world.fuel);
+            this.fuelDisplay.visible = (world.fuel > 0);
         }
            
         updateMiles() {

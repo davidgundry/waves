@@ -16,15 +16,15 @@ module Waves {
             if (parameters.hasOwnProperty("water")) 
                 this.waterChangeOnAdd = parameters["water"];
             if (parameters.hasOwnProperty("food"))
-                this.waterChangeOnAdd = parameters["food"];
+                this.foodChangeOnAdd = parameters["food"];
             if (parameters.hasOwnProperty("fuel"))
-                this.waterChangeOnAdd = parameters["fuel"];
+                this.fuelChangeOnAdd = parameters["fuel"];
             if (parameters.hasOwnProperty("fuelChange"))
-                this.waterChangeOnAdd = parameters["fuelChange"];
+                this.fuelChange = parameters["fuelChange"];
             if (parameters.hasOwnProperty("clickSpeed"))
-                this.waterChangeOnAdd = parameters["clickSpeed"];
+                this.clickSpeed = parameters["clickSpeed"];
             if (parameters.hasOwnProperty("constantSpeed"))
-                this.waterChangeOnAdd = parameters["constantSpeed"];
+                this.constantSpeed = parameters["constantSpeed"];
             
             this._spriteName = name;
             this._displayName = name;
