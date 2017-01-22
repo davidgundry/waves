@@ -98,7 +98,7 @@
         public SetInUse(usedThing: Thing) {
             this._thingUsed = usedThing;
             for (var i = 0; i < this.slots.length; i++) {
-                if (this.slots[i] != null)
+                if (this.slots[i] !== null)
                     this.slots[i].setInUse(false);
             }
             usedThing.inventoryItem.setInUse(true);
