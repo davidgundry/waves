@@ -5,6 +5,9 @@
         
         mainButton: Button;
         milesDisplay: Phaser.Text;
+        healthDisplay: Phaser.Text;
+        waterDisplay: Phaser.Text;
+        foodDisplay: Phaser.Text;
         person: InventoryItem;
         oar: InventoryItem;
         sea: Sea;
@@ -20,6 +23,9 @@
             this.mainButton.setButtonText("Paddle with your nose");
             this.mainButton.pressed.add(this.onPress.bind(this));
             this.milesDisplay = this.game.add.text(300, 10, "Testing 12 12", { font: "30px Arial", fill: '#00f', align: 'right' })
+            this.healthDisplay = this.game.add.text(10, 50, "Health: 100%", { font: "20px Arial", fill: '#00f', align: 'left' })
+            this.waterDisplay = this.game.add.text(10, 80, "Water", { font: "20px Arial", fill: '#00f', align: 'left' })
+            this.foodDisplay = this.game.add.text(10, 110, "Food", { font: "20px Arial", fill: '#00f', align: 'left' })
             this.updateMiles();
             
             this.sea = new Sea(this.game, 320, 280);
@@ -69,6 +75,8 @@
             }
             this.sea.update();
             this.updateMiles();
+            this.foodAndHealth();
+            this.updateHealthFoodAndWater();
             this.thingsInView.update();
         }
 
@@ -82,8 +90,28 @@
                 (<Game>this.game).model.world.MoveMeters((<Game>this.game).model.inventory.sailThing.speed);
         }
 
+        foodAndHealth() {
+            var world: WorldState = (<Game>this.game).model.world;
+            if (world.water > 0) {
+                world.water -= WorldState.WATER_RATE;
+            } else {
+                world.health -= WorldState.HEALTH_NO_WATER_RATE;
+            }
+            if (world.food > 0) {
+                world.food -= WorldState.FOOD_RATE;
+            } else {
+                world.health -= WorldState.HEALTH_NO_FOOD_RATE;
+            }
+        }
+        updateHealthFoodAndWater() {
+            var world: WorldState = (<Game>this.game).model.world;
+            this.healthDisplay.text = "Health: " + Math.ceil(world.health) + "%";
+            this.foodDisplay.text = "Food: " + Math.ceil(world.food)
+            this.waterDisplay.text = "Water: " + Math.ceil(world.water)
+        }
+           
         updateMiles() {
-            this.milesDisplay.text = "You are " + (<Game>this.game).model.world.milesRemaining.toFixed(4) + " miles from land";
+                this.milesDisplay.text = "You are " + (<Game>this.game).model.world.milesRemaining.toFixed(4) + " miles from land";   
         }
 
 

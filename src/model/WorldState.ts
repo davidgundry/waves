@@ -3,8 +3,15 @@ module Waves {
     export class WorldState {
 
         static STARTING_MILES: number = 50;
+        static WATER_RATE: number = 0.001;
+        static FOOD_RATE: number = 0.0005;
+        static HEALTH_NO_WATER_RATE: number = 0.001;
+        static HEALTH_NO_FOOD_RATE: number = 0.0005;
         public static LEAD_DISTANCE: number = 1;
         private _position: number = 0;
+        private _health: number = 100;
+        private _water: number = 0;
+        private _food: number = 0;
 
         public get milesRemaining(): number {
             return WorldState.STARTING_MILES - this.position;
@@ -16,6 +23,28 @@ module Waves {
 
         public set position(value: number) {
             this._position = value;
+        }
+        public get health(): number {
+            return this._health;
+        }
+
+        public set health(value: number) {
+            this._health = value;
+        }
+
+        public get water(): number {
+            return this._water;
+        }
+
+        public set water(value: number) {
+            this._water = value;
+        }
+        public get food(): number {
+            return this._food;
+        }
+
+        public set food(value: number) {
+            this._food= value;
         }
 
         private _thingEventCallback: (thing: Thing, position: number) => void;

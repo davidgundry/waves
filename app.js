@@ -576,6 +576,9 @@ var Waves;
     var WorldState = (function () {
         function WorldState() {
             this._position = 0;
+            this._health = 100;
+            this._water = 0;
+            this._food = 0;
             this._triggers = new Array();
             this.triggers.push(new Waves.ThingTrigger(1, new Waves.Thing("paddle")));
             this.triggers.push(new Waves.EventTrigger(0.5, new Waves.FlyingFishStoryEvent()));
@@ -593,6 +596,36 @@ var Waves;
             },
             set: function (value) {
                 this._position = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(WorldState.prototype, "health", {
+            get: function () {
+                return this._health;
+            },
+            set: function (value) {
+                this._health = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(WorldState.prototype, "water", {
+            get: function () {
+                return this._water;
+            },
+            set: function (value) {
+                this._water = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(WorldState.prototype, "food", {
+            get: function () {
+                return this._food;
+            },
+            set: function (value) {
+                this._food = value;
             },
             enumerable: true,
             configurable: true
@@ -651,6 +684,10 @@ var Waves;
                 throw new Error("ThingEventCallback not set");
         };
         WorldState.STARTING_MILES = 50;
+        WorldState.WATER_RATE = 0.001;
+        WorldState.FOOD_RATE = 0.0005;
+        WorldState.HEALTH_NO_WATER_RATE = 0.001;
+        WorldState.HEALTH_NO_FOOD_RATE = 0.0005;
         WorldState.LEAD_DISTANCE = 1;
         return WorldState;
     }());
@@ -705,6 +742,9 @@ var Waves;
             this.mainButton.setButtonText("Paddle with your nose");
             this.mainButton.pressed.add(this.onPress.bind(this));
             this.milesDisplay = this.game.add.text(300, 10, "Testing 12 12", { font: "30px Arial", fill: '#00f', align: 'right' });
+            this.healthDisplay = this.game.add.text(10, 50, "Health: 100%", { font: "20px Arial", fill: '#00f', align: 'left' });
+            this.waterDisplay = this.game.add.text(10, 80, "Water", { font: "20px Arial", fill: '#00f', align: 'left' });
+            this.foodDisplay = this.game.add.text(10, 110, "Food", { font: "20px Arial", fill: '#00f', align: 'left' });
             this.updateMiles();
             this.sea = new Waves.Sea(this.game, 320, 280);
             this.boat = new Waves.Boat(this.game, 550, 400);
@@ -750,6 +790,8 @@ var Waves;
             }
             this.sea.update();
             this.updateMiles();
+            this.foodAndHealth();
+            this.updateHealthFoodAndWater();
             this.thingsInView.update();
         };
         MainGame.prototype.rowTheBoat = function () {
@@ -759,6 +801,27 @@ var Waves;
         MainGame.prototype.sailTheBoat = function () {
             if (this.game.model.inventory.hasSailThing())
                 this.game.model.world.MoveMeters(this.game.model.inventory.sailThing.speed);
+        };
+        MainGame.prototype.foodAndHealth = function () {
+            var world = this.game.model.world;
+            if (world.water > 0) {
+                world.water -= Waves.WorldState.WATER_RATE;
+            }
+            else {
+                world.health -= Waves.WorldState.HEALTH_NO_WATER_RATE;
+            }
+            if (world.food > 0) {
+                world.food -= Waves.WorldState.FOOD_RATE;
+            }
+            else {
+                world.health -= Waves.WorldState.HEALTH_NO_FOOD_RATE;
+            }
+        };
+        MainGame.prototype.updateHealthFoodAndWater = function () {
+            var world = this.game.model.world;
+            this.healthDisplay.text = "Health: " + Math.ceil(world.health) + "%";
+            this.foodDisplay.text = "Food: " + Math.ceil(world.food);
+            this.waterDisplay.text = "Water: " + Math.ceil(world.water);
         };
         MainGame.prototype.updateMiles = function () {
             this.milesDisplay.text = "You are " + this.game.model.world.milesRemaining.toFixed(4) + " miles from land";
