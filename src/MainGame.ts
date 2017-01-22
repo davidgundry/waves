@@ -126,8 +126,9 @@
                 this.sailTheBoat();
                 if (this.inventory.thingUsed.clickSpeed > 0) {
                     this.mainButton.setButtonText(this.inventory.thingUsed.buttonLabel);
+                    this.mainButton.visible = true;
                 } else {
-                    this.mainButton.setButtonText("Row with your hands");
+                    this.mainButton.visible = false;
                 }
                 this.sea.update();
                 this.updateMiles();
@@ -142,7 +143,7 @@
             if (this.inventory.thingUsed.clickSpeed > 0)
                 (<Game>this.game).model.world.MoveMeters(this.inventory.thingUsed.clickSpeed);
             else
-                (<Game>this.game).model.world.MoveMeters(0.1);
+                (<Game>this.game).model.world.MoveMeters(0.01);
         }
 
         sailTheBoat() {

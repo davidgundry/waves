@@ -83,6 +83,7 @@ module Waves {
             this.updateThingWorldPosition(thingPosition);
 
             if (this.isAlongside(thingPosition)) {
+                thingPosition.inventoryItem.scale = new Phaser.Point(1, 1);
                 this.itemFoundHandler(thingPosition);
                 this.thingsInViewToRemove.push(thingPosition);
             }
@@ -93,7 +94,7 @@ module Waves {
             thingPosition.inventoryItem.position.x = screenPosition.x;
             thingPosition.inventoryItem.position.y = screenPosition.y;
             var proportionalDistance: number = this.proportionalDistance(thingPosition.position);
-            thingPosition.inventoryItem.scale = new Phaser.Point(1 - proportionalDistance, 1 - proportionalDistance);
+            thingPosition.inventoryItem.scale = new Phaser.Point((1 - proportionalDistance)/2, (1 - proportionalDistance)/2);
         }
 
         removeThingInView(thingPosition: ThingPosition) {
