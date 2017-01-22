@@ -38,12 +38,12 @@ module Waves {
             return this._button2;
         }
         protected _onB1: ChoiceAction
-        public get onB1(): string {
-            return this._button1;
+        public get onB1(): ChoiceAction {
+            return this._onB1;
         }
         protected _onB2: ChoiceAction;
-        public get onB2(): string {
-            return this._button2;
+        public get onB2(): ChoiceAction {
+            return this._onB2;
         }
        
 
