@@ -92,11 +92,23 @@ module Waves {
 
     export class SharksStoryEvent extends StoryEvent {
         constructor() {
-            super("Sharks", "You see some sharks", "Cool", "", new ChoiceAction("Oh no! They shoot lasers at your from their eyes!"));
+            super("Sharks", "You see some sharks", "Cool", "", new ChoiceAction("Oh no! They shoot lasers at you from their eyes!"));
             this._onB1.healthChange = -10;
         }
     }
 
+    export class IcebergStoryEvent extends StoryEvent {
+        constructor() {
+            super("Iceberg", "You're approaching an iceberg. It looks pretty small", "That's fine", "", new ChoiceAction("Oh no! It's much bigger than you expected!"));
+        }
+    }
+
+    export class PirateStoryEvent extends StoryEvent {
+        constructor() {
+            super("Pirates", "You see a pirate ship", "Attack", "Surrender", new ChoiceAction("You steal their grog"), new ChoiceAction("They plunder your tiny boat but find nothing of value"));
+            this._onB1.waterChange = +20;
+        }
+    }
 
 
 
