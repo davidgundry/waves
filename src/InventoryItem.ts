@@ -61,6 +61,7 @@
             return this._isUsed;
         }
         setInUse(isUsed: boolean) {
+            console.log(isUsed+" item set in use " + this.baseThing.displayName);
             this._isUsed = isUsed;
             this.inUseSprite.visible = isUsed;
         }

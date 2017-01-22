@@ -8,10 +8,10 @@
         boxHeight: number;// = 200;
 
 
-        constructor(game: Phaser.Game, label: string) {
+        constructor(game: Phaser.Game, label: string, width: number = 250, height: number = 50) {
             super(game);
-            this.boxWidth = 250;
-            this.boxHeight = 50;
+            this.boxWidth = width;
+            this.boxHeight = height;
             this.drawBox();
             this.createText(label);
             this.pressed = new Phaser.Signal();
