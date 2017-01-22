@@ -58,7 +58,7 @@ module Waves {
       
 
         constructor() {
-            this.triggers.push(new ThingTrigger(1, new Thing("paddle")));
+            this.triggers.push(new ThingTrigger(0.1, new Thing("paddle")));
             this.triggers.push(new EventTrigger(0.5, new FlyingFishStoryEvent()));
         }
 

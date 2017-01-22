@@ -580,7 +580,7 @@ var Waves;
             this._water = 0;
             this._food = 0;
             this._triggers = new Array();
-            this.triggers.push(new Waves.ThingTrigger(1, new Waves.Thing("paddle")));
+            this.triggers.push(new Waves.ThingTrigger(0.1, new Waves.Thing("paddle")));
             this.triggers.push(new Waves.EventTrigger(0.5, new Waves.FlyingFishStoryEvent()));
         }
         Object.defineProperty(WorldState.prototype, "milesRemaining", {
