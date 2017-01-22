@@ -83,7 +83,9 @@
         rowTheBoat() {
             if ((<Game>this.game).model.inventory.hasPlayerRowThing())
                 (<Game>this.game).model.world.MoveMeters((<Game>this.game).model.inventory.playerRowThing.speed);
-        }
+            else
+                (<Game>this.game).model.world.MoveMeters(0.5); // speed with your hands
+        } 
 
         sailTheBoat() {
             if ((<Game>this.game).model.inventory.hasSailThing())

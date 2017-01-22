@@ -797,6 +797,8 @@ var Waves;
         MainGame.prototype.rowTheBoat = function () {
             if (this.game.model.inventory.hasPlayerRowThing())
                 this.game.model.world.MoveMeters(this.game.model.inventory.playerRowThing.speed);
+            else
+                this.game.model.world.MoveMeters(0.5); // speed with your hands
         };
         MainGame.prototype.sailTheBoat = function () {
             if (this.game.model.inventory.hasSailThing())
