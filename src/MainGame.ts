@@ -65,10 +65,12 @@
             this.eventBox.show(event.name, event.description, event.button1, event.button2);   
         }
         event1() {
+            this.currentEvent.onB1.changeWorld((<Game>this.game).model.world);
             this.eventBox.setListeners(this.hideEvent, this.hideEvent, this);
             this.eventBox.setText(this.currentEvent.name, this.currentEvent.onB1.response, "Ok","");
         }
         event2() {
+            this.currentEvent.onB2.changeWorld((<Game>this.game).model.world);
             this.eventBox.setListeners(this.hideEvent, this.hideEvent, this);
             this.eventBox.setText(this.currentEvent.name, this.currentEvent.onB2.response, "Ok", "");
         }
