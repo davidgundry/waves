@@ -16,3 +16,16 @@ End game - could be an event
 -Food and or water (consequences?)
 -Multiple people
 -Two things active at the same (not necessary to have multiple people)
+
+List of items
+None - Can paddle with hands
+Oars - Click to move at X speed
+Sail - Always move at Y speed
+Water (Barrel or bottle?) - adds to water supply
+Food (tins? packet?) - adds to food supply
+Motor - Moves forward at Z speed. Uses Fuel at K speed
+Petrol - Adds to Fuel
+
+Other 
+Harpoon - Used to attack sea monsters?
+Radio - Recieves desert island discs
