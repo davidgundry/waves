@@ -85,7 +85,7 @@ module Waves {
     }
     export class StartEvent extends StoryEvent {
         constructor() {
-            super("You're cast adrift", "You're in boat 48 miles from land. Can you get back to dry land", "Maybe not", "", new ChoiceAction(""));
+            super("You're cast adrift", "You're in boat 48 miles from land. Can you get back to dry land", "Probably not", "", new ChoiceAction(""));
         }
     }
 }
