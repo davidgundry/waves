@@ -19,12 +19,105 @@ var Waves;
             this.state.start('MainGame');
         };
         return Game;
-    }(Phaser.Game));
+    })(Phaser.Game);
     Waves.Game = Game;
 })(Waves || (Waves = {}));
 window.onload = function () {
     var game = new Waves.Game();
 };
+var Waves;
+(function (Waves) {
+    var Boat = (function (_super) {
+        __extends(Boat, _super);
+        function Boat(game, newX, newY) {
+            _super.call(this, game);
+            this.position.x = newX;
+            this.position.y = newY;
+            this.create(0, 0, "boat");
+            this.game.add.tween(this).to({ rotation: -0.03 }, 1000, "Sine.easeInOut", true, 0, -1, true);
+        }
+        return Boat;
+    })(Phaser.Group);
+    Waves.Boat = Boat;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var Boot = (function (_super) {
+        __extends(Boot, _super);
+        function Boot() {
+            _super.apply(this, arguments);
+            this.orientated = false;
+        }
+        Boot.prototype.preload = function () {
+            _super.prototype.preload.call(this);
+            this.load.image('preloadBar', 'assets/whiteLoadBar.png');
+        };
+        Boot.prototype.create = function () {
+            _super.prototype.create.call(this);
+            this.input.maxPointers = 1;
+            this.stage.disableVisibilityChange = true;
+            if (this.game.device.desktop) {
+                this.scale.scaleMode = Phaser.ScaleManager.NO_SCALE;
+                this.scale.pageAlignHorizontally = true;
+                this.scale.pageAlignVertically = true;
+            }
+            else {
+                this.scale.fullScreenScaleMode = Phaser.ScaleManager.NO_SCALE;
+                this.scale.pageAlignHorizontally = true;
+                this.scale.pageAlignVertically = true;
+                this.scale.refresh();
+                var gameElement = document.getElementById('game');
+                gameElement.style.overflow = "visible";
+            }
+            this.game.state.start('Preloader', true, false);
+        };
+        return Boot;
+    })(Phaser.State);
+    Waves.Boot = Boot;
+    ;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var Button = (function (_super) {
+        __extends(Button, _super);
+        function Button(game, label) {
+            _super.call(this, game);
+            this.boxWidth = 250;
+            this.boxHeight = 50;
+            this.drawBox();
+            this.createText(label);
+            this.pressed = new Phaser.Signal();
+        }
+        Button.prototype.drawBox = function () {
+            var boxSprite = this.game.add.sprite(0, 0);
+            var graphics = this.game.add.graphics(0, 0);
+            boxSprite.addChild(graphics);
+            graphics.lineStyle(1, 0x0078C2, 1);
+            graphics.beginFill(0xffffff, 1);
+            graphics.drawRect(0, 0, this.boxWidth, this.boxHeight);
+            graphics.endFill();
+            this.addChild(boxSprite);
+            boxSprite.inputEnabled = true;
+            boxSprite.input.priorityID = 2;
+            boxSprite.events.onInputDown.add(this.onPressed, this);
+        };
+        Button.prototype.setButtonText = function (newText) {
+            this.text.text = newText;
+        };
+        Button.prototype.createText = function (label) {
+            this.text = this.game.add.text(10, this.boxHeight * .6, label, { font: "25px biro_script_reducedregular", fill: '#000000', align: 'left' }, this);
+            this.text.fontWeight = 'bold';
+            //this.text = this.game.add.text(10, this.boxHeight / 2, label, { font: "20px Arial", fill: '#00f', align: 'left' }, this);
+            this.text.anchor.set(0, 0.5);
+        };
+        Button.prototype.onPressed = function () {
+            //alert("button " + this.text.text + " pressed");
+            this.pressed.dispatch();
+        };
+        return Button;
+    })(Phaser.Group);
+    Waves.Button = Button;
+})(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
     var PopupBox = (function (_super) {
@@ -71,7 +164,7 @@ var Waves;
             this.doneDrop();
         };
         return PopupBox;
-    }(Phaser.Group));
+    })(Phaser.Group);
     Waves.PopupBox = PopupBox;
 })(Waves || (Waves = {}));
 /// <reference path="PopupBox.ts" />
@@ -124,65 +217,8 @@ var Waves;
             }
         };
         return EventPopup;
-    }(Waves.PopupBox));
+    })(Waves.PopupBox);
     Waves.EventPopup = EventPopup;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
-    var Boat = (function (_super) {
-        __extends(Boat, _super);
-        function Boat(game, newX, newY) {
-            _super.call(this, game);
-            this.position.x = newX;
-            this.position.y = newY;
-            this.create(0, 0, "boat");
-            this.game.add.tween(this).to({ rotation: -0.03 }, 1000, "Sine.easeInOut", true, 0, -1, true);
-        }
-        return Boat;
-    }(Phaser.Group));
-    Waves.Boat = Boat;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
-    var Button = (function (_super) {
-        __extends(Button, _super);
-        function Button(game, label) {
-            _super.call(this, game);
-            this.boxWidth = 250;
-            this.boxHeight = 50;
-            this.drawBox();
-            this.createText(label);
-            this.pressed = new Phaser.Signal();
-        }
-        Button.prototype.drawBox = function () {
-            var boxSprite = this.game.add.sprite(0, 0);
-            var graphics = this.game.add.graphics(0, 0);
-            boxSprite.addChild(graphics);
-            graphics.lineStyle(1, 0x0078C2, 1);
-            graphics.beginFill(0xffffff, 1);
-            graphics.drawRect(0, 0, this.boxWidth, this.boxHeight);
-            graphics.endFill();
-            this.addChild(boxSprite);
-            boxSprite.inputEnabled = true;
-            boxSprite.input.priorityID = 2;
-            boxSprite.events.onInputDown.add(this.onPressed, this);
-        };
-        Button.prototype.setButtonText = function (newText) {
-            this.text.text = newText;
-        };
-        Button.prototype.createText = function (label) {
-            this.text = this.game.add.text(10, this.boxHeight * .6, label, { font: "25px biro_script_reducedregular", fill: '#000000', align: 'left' }, this);
-            this.text.fontWeight = 'bold';
-            //this.text = this.game.add.text(10, this.boxHeight / 2, label, { font: "20px Arial", fill: '#00f', align: 'left' }, this);
-            this.text.anchor.set(0, 0.5);
-        };
-        Button.prototype.onPressed = function () {
-            //alert("button " + this.text.text + " pressed");
-            this.pressed.dispatch();
-        };
-        return Button;
-    }(Phaser.Group));
-    Waves.Button = Button;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
@@ -276,14 +312,21 @@ var Waves;
         };
         Inventory.prototype.SetInUse = function (usedThing) {
             this._thingUsed = usedThing;
+            this.unsetAllItems();
+            if (usedThing.inventoryItem != null)
+                usedThing.inventoryItem.setInUse(true);
+        };
+        Inventory.prototype.setHandsInUse = function () {
+            this.SetInUse(this.yourHands);
+        };
+        Inventory.prototype.unsetAllItems = function () {
             for (var i = 0; i < this.slots.length; i++) {
                 if (this.slots[i] !== null)
                     this.slots[i].setInUse(false);
             }
-            usedThing.inventoryItem.setInUse(true);
         };
         return Inventory;
-    }(Phaser.Group));
+    })(Phaser.Group);
     Waves.Inventory = Inventory;
 })(Waves || (Waves = {}));
 var Waves;
@@ -292,6 +335,7 @@ var Waves;
         __extends(InventoryItem, _super);
         function InventoryItem(game, inventory, newX, newY, dropHandler, thing) {
             _super.call(this, game);
+            this._isUsed = false;
             this.baseThing = thing;
             thing.inventoryItem = this;
             this.baseSprite = this.create(0, 0, thing.spriteName);
@@ -311,9 +355,12 @@ var Waves;
             this.baseSprite.inputEnabled = isEnabled;
             if (isEnabled) {
                 this.baseSprite.input.enableDrag();
+                this.baseSprite.events.onDragStart.removeAll();
                 this.baseSprite.events.onDragStart.add(this.onDragStart.bind(this), this);
+                this.baseSprite.events.onDragStop.removeAll();
                 this.baseSprite.events.onDragStop.add(this.onDragStop.bind(this), this);
-                this.baseSprite.events.onInputDown.add(this.onClick.bind(this), this);
+                this.baseSprite.events.onInputUp.removeAll();
+                this.baseSprite.events.onInputUp.add(this.onClick.bind(this), this);
             }
             else {
                 this.baseSprite.input.disableDrag();
@@ -321,10 +368,21 @@ var Waves;
         };
         InventoryItem.prototype.onClick = function () {
             if (this.inventorySlot !== null) {
-                this.inventory.SetInUse(this.baseThing);
+                if (this.isUsed)
+                    this.inventory.setHandsInUse();
+                else
+                    this.inventory.SetInUse(this.baseThing);
             }
         };
+        Object.defineProperty(InventoryItem.prototype, "isUsed", {
+            get: function () {
+                return this._isUsed;
+            },
+            enumerable: true,
+            configurable: true
+        });
         InventoryItem.prototype.setInUse = function (isUsed) {
+            this._isUsed = isUsed;
             this.inUseSprite.visible = isUsed;
         };
         InventoryItem.prototype.onDragStart = function () {
@@ -344,450 +402,8 @@ var Waves;
             this.game.add.tween(this.position).to({ y: 1000 }, 2000, "Sine.easeIn", true);
         };
         return InventoryItem;
-    }(Phaser.Group));
+    })(Phaser.Group);
     Waves.InventoryItem = InventoryItem;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
-    var ChoiceAction = (function () {
-        function ChoiceAction(newResponse) {
-            this.healthChange = 0;
-            this.positionChange = 0;
-            this.waterChange = 0;
-            this.foodChange = 0;
-            this.endGame = false;
-            this.response = newResponse;
-        }
-        ChoiceAction.prototype.changeWorld = function (world) {
-            world.health += this.healthChange;
-            world.position += this.positionChange;
-            world.water += this.waterChange;
-            world.food += this.foodChange;
-        };
-        return ChoiceAction;
-    }());
-    Waves.ChoiceAction = ChoiceAction;
-    var StoryEvent = (function () {
-        function StoryEvent(name, description, button1, button2, onB1, onB2) {
-            if (onB2 === void 0) { onB2 = null; }
-            this._name = name;
-            this._description = description;
-            this._button1 = button1;
-            this._button2 = button2;
-            this._onB1 = onB1;
-            this._onB2 = onB2;
-        }
-        Object.defineProperty(StoryEvent.prototype, "name", {
-            get: function () {
-                return this._name;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(StoryEvent.prototype, "description", {
-            get: function () {
-                return this._description;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(StoryEvent.prototype, "button1", {
-            get: function () {
-                return this._button1;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(StoryEvent.prototype, "button2", {
-            get: function () {
-                return this._button2;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(StoryEvent.prototype, "onB1", {
-            get: function () {
-                return this._onB1;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(StoryEvent.prototype, "onB2", {
-            get: function () {
-                return this._onB2;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return StoryEvent;
-    }());
-    Waves.StoryEvent = StoryEvent;
-    var FlyingFishStoryEvent = (function (_super) {
-        __extends(FlyingFishStoryEvent, _super);
-        function FlyingFishStoryEvent() {
-            _super.call(this, "Flying Fish", "You see some totally sweet flying fish.", "Try and catch them", "Marvel", new ChoiceAction("You waste time and energy"), new ChoiceAction("You feel this is a beautiful world"));
-            this._onB1.healthChange = -10;
-        }
-        return FlyingFishStoryEvent;
-    }(StoryEvent));
-    Waves.FlyingFishStoryEvent = FlyingFishStoryEvent;
-    var LandStoryEvent = (function (_super) {
-        __extends(LandStoryEvent, _super);
-        function LandStoryEvent() {
-            _super.call(this, "You've reached land", "You did it, you've reached land and survived.", "Rejoice", "", new ChoiceAction(""));
-            this._onB1.endGame = true;
-        }
-        return LandStoryEvent;
-    }(StoryEvent));
-    Waves.LandStoryEvent = LandStoryEvent;
-    var DeathEvent = (function (_super) {
-        __extends(DeathEvent, _super);
-        function DeathEvent() {
-            _super.call(this, "You died", "You died of hunger and thirst. You'll float on the sea forever", "Try again", "", new ChoiceAction(""));
-            this._onB1.endGame = true;
-        }
-        return DeathEvent;
-    }(StoryEvent));
-    Waves.DeathEvent = DeathEvent;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
-    var Model = (function () {
-        function Model() {
-            this.world = new Waves.WorldState();
-            //inventory: InventoryState = new InventoryState();
-            this.resource = new Waves.ResourceState();
-        }
-        return Model;
-    }());
-    Waves.Model = Model;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
-    var ResourceState = (function () {
-        function ResourceState() {
-        }
-        return ResourceState;
-    }());
-    Waves.ResourceState = ResourceState;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
-    var Thing = (function () {
-        function Thing(name, displayName, parameters) {
-            if (parameters === void 0) { parameters = {}; }
-            this.waterChangeOnAdd = 0;
-            this.foodChangeOnAdd = 0;
-            this.fuelChangeOnAdd = 0;
-            this.fuelChange = 0;
-            this.constantSpeed = 0;
-            this.clickSpeed = 0;
-            this.buttonLabel = "";
-            if (parameters.hasOwnProperty("water"))
-                this.waterChangeOnAdd = parameters["water"];
-            if (parameters.hasOwnProperty("food"))
-                this.foodChangeOnAdd = parameters["food"];
-            if (parameters.hasOwnProperty("fuel"))
-                this.fuelChangeOnAdd = parameters["fuel"];
-            if (parameters.hasOwnProperty("fuelChange"))
-                this.fuelChange = parameters["fuelChange"];
-            if (parameters.hasOwnProperty("clickSpeed"))
-                this.clickSpeed = parameters["clickSpeed"];
-            if (parameters.hasOwnProperty("constantSpeed"))
-                this.constantSpeed = parameters["constantSpeed"];
-            if (parameters.hasOwnProperty("buttonLabel"))
-                this.buttonLabel = parameters["buttonLabel"];
-            this._spriteName = name;
-            this._displayName = displayName;
-        }
-        Object.defineProperty(Thing.prototype, "inventoryItem", {
-            get: function () {
-                return this._inventoryItem;
-            },
-            set: function (newItem) {
-                this._inventoryItem = newItem;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Thing.prototype, "spriteName", {
-            get: function () {
-                return this._spriteName;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Thing.prototype, "displayName", {
-            get: function () {
-                return this._displayName;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return Thing;
-    }());
-    Waves.Thing = Thing;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
-    var ThingPosition = (function () {
-        function ThingPosition(thing, position, inventoryItem) {
-            this._thing = thing;
-            this._position = position;
-            this._inventoryItem = inventoryItem;
-        }
-        Object.defineProperty(ThingPosition.prototype, "thing", {
-            get: function () {
-                return this._thing;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(ThingPosition.prototype, "position", {
-            get: function () {
-                return this._position;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(ThingPosition.prototype, "inventoryItem", {
-            get: function () {
-                return this._inventoryItem;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return ThingPosition;
-    }());
-    Waves.ThingPosition = ThingPosition;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
-    var Trigger = (function () {
-        function Trigger(position) {
-            this._position = position;
-        }
-        Object.defineProperty(Trigger.prototype, "position", {
-            get: function () {
-                return this._position;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return Trigger;
-    }());
-    Waves.Trigger = Trigger;
-    var EventTrigger = (function (_super) {
-        __extends(EventTrigger, _super);
-        function EventTrigger(position, event) {
-            _super.call(this, position);
-            this._event = event;
-        }
-        Object.defineProperty(EventTrigger.prototype, "event", {
-            get: function () {
-                return this._event;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return EventTrigger;
-    }(Trigger));
-    Waves.EventTrigger = EventTrigger;
-    var ThingTrigger = (function (_super) {
-        __extends(ThingTrigger, _super);
-        function ThingTrigger(position, thing) {
-            _super.call(this, position);
-            this._thing = thing;
-        }
-        Object.defineProperty(ThingTrigger.prototype, "thing", {
-            get: function () {
-                return this._thing;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return ThingTrigger;
-    }(Trigger));
-    Waves.ThingTrigger = ThingTrigger;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
-    var WorldState = (function () {
-        function WorldState() {
-            this._position = 0;
-            this._health = 100;
-            this._water = 0;
-            this._food = 0;
-            this._fuel = 0;
-            this._triggers = new Array();
-            this._triggersToRemove = new Array();
-            this.eventSignal = new Phaser.Signal();
-        }
-        Object.defineProperty(WorldState.prototype, "milesRemaining", {
-            get: function () {
-                return WorldState.STARTING_MILES - this.position;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(WorldState.prototype, "position", {
-            get: function () {
-                return this._position;
-            },
-            set: function (value) {
-                this._position = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(WorldState.prototype, "health", {
-            get: function () {
-                return this._health;
-            },
-            set: function (value) {
-                this._health = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(WorldState.prototype, "water", {
-            get: function () {
-                return this._water;
-            },
-            set: function (value) {
-                this._water = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(WorldState.prototype, "food", {
-            get: function () {
-                return this._food;
-            },
-            set: function (value) {
-                this._food = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(WorldState.prototype, "fuel", {
-            get: function () {
-                return this._fuel;
-            },
-            set: function (value) {
-                this._fuel = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(WorldState.prototype, "thingEventCallback", {
-            get: function () {
-                return this._thingEventCallback;
-            },
-            set: function (callback) {
-                this._thingEventCallback = callback;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        WorldState.prototype.getEventSignal = function (onEvent) {
-            this.eventSignal.add(onEvent);
-        };
-        WorldState.prototype.MoveDistance = function (miles) {
-            this.position += miles;
-            this.CheckTriggers(this.position);
-        };
-        WorldState.prototype.MoveMeters = function (meters) {
-            this.MoveDistance(meters / 1609);
-        };
-        Object.defineProperty(WorldState.prototype, "triggers", {
-            get: function () {
-                return this._triggers;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        WorldState.prototype.CheckTriggers = function (position) {
-            var _this = this;
-            //console.log("check triggers " + this.triggers.length);
-            this.triggers.forEach(function (value, index, array) { return void _this.CheckTrigger(value, position); });
-            this._triggersToRemove.forEach(function (value, index, array) { return _this.RemoveTrigger(value); });
-            this._triggersToRemove = new Array();
-        };
-        WorldState.prototype.CheckTrigger = function (trigger, position) {
-            //console.log("t=" + trigger.position + " " + position);
-            if (trigger.position <= position) {
-                if (trigger instanceof Waves.EventTrigger) {
-                    this.TriggerEvent(trigger);
-                    this._triggersToRemove.push(trigger);
-                }
-            }
-            if (trigger.position - WorldState.LEAD_DISTANCE <= position) {
-                if (trigger instanceof Waves.ThingTrigger) {
-                    this.TriggerThing(trigger);
-                    this._triggersToRemove.push(trigger);
-                }
-            }
-        };
-        WorldState.prototype.RemoveTrigger = function (trigger) {
-            this.triggers.splice(this.triggers.indexOf(trigger), 1);
-        };
-        WorldState.prototype.TriggerEvent = function (trigger) {
-            console.log(trigger.event.name + " event triggered");
-            this.eventSignal.dispatch(trigger.event);
-        };
-        WorldState.prototype.TriggerThing = function (trigger) {
-            console.log("Thing Triggered");
-            if (this.thingEventCallback != null)
-                this.thingEventCallback(trigger.thing, trigger.position);
-            else
-                throw new Error("ThingEventCallback not set");
-        };
-        WorldState.STARTING_MILES = 48;
-        WorldState.WATER_RATE = 0.001;
-        WorldState.FOOD_RATE = 0.0005;
-        WorldState.HEALTH_NO_WATER_RATE = 0.001;
-        WorldState.HEALTH_NO_FOOD_RATE = 0.0005;
-        WorldState.LEAD_DISTANCE = 0.05;
-        return WorldState;
-    }());
-    Waves.WorldState = WorldState;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
-    var Boot = (function (_super) {
-        __extends(Boot, _super);
-        function Boot() {
-            _super.apply(this, arguments);
-            this.orientated = false;
-        }
-        Boot.prototype.preload = function () {
-            _super.prototype.preload.call(this);
-            this.load.image('preloadBar', 'assets/whiteLoadBar.png');
-        };
-        Boot.prototype.create = function () {
-            _super.prototype.create.call(this);
-            this.input.maxPointers = 1;
-            this.stage.disableVisibilityChange = true;
-            if (this.game.device.desktop) {
-                this.scale.scaleMode = Phaser.ScaleManager.NO_SCALE;
-                this.scale.pageAlignHorizontally = true;
-                this.scale.pageAlignVertically = true;
-            }
-            else {
-                this.scale.fullScreenScaleMode = Phaser.ScaleManager.NO_SCALE;
-                this.scale.pageAlignHorizontally = true;
-                this.scale.pageAlignVertically = true;
-                this.scale.refresh();
-                var gameElement = document.getElementById('game');
-                gameElement.style.overflow = "visible";
-            }
-            this.game.state.start('Preloader', true, false);
-        };
-        return Boot;
-    }(Phaser.State));
-    Waves.Boot = Boot;
-    ;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
@@ -818,13 +434,13 @@ var Waves;
             this.game.model.world.triggers.push(new Waves.ThingTrigger(0.004, new Waves.Thing("duck", "rubber duck")));
             this.game.model.world.triggers.push(new Waves.ThingTrigger(0.007, new Waves.Thing("plank", "wooden plank", { clickSpeed: 0.2, buttonLabel: "Row with the plank" })));
             this.game.model.world.triggers.push(new Waves.ThingTrigger(0.015, new Waves.Thing("oar", "oar", { clickSpeed: 0.8, buttonLabel: "Row with the oar" })));
-            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.03, new Waves.Thing("sail", "sail", { constantSpeed: 0.01 })));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.03, new Waves.Thing("sail", "sail", { constantSpeed: 0.1 })));
             this.game.model.world.triggers.push(new Waves.ThingTrigger(0.1, new Waves.Thing("corpse", "corpse", { clickSpeed: 1, buttonLabel: "Row with the corpse" })));
             this.game.model.world.triggers.push(new Waves.ThingTrigger(0.2, new Waves.Thing("ship-in-bottle", "ship in a bottle")));
             this.game.model.world.triggers.push(new Waves.ThingTrigger(0.0002, new Waves.Thing("motor", "Motor", { speed: 1, fuelChange: -1 })));
-            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.0001, new Waves.Thing("fuel", "fuel", { fuelChangeOnAdd: 0.5 })));
-            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.2, new Waves.Thing("barrel", "barrel of water", { waterChangeOnAdd: 0.5 })));
-            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.2, new Waves.Thing("food", "food", { foodChangeOnAdd: 0.5 })));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.00001, new Waves.Thing("fuel", "fuel", { fuelChangeOnAdd: 0.5 })));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.0001, new Waves.Thing("barrel", "barrel of water", { waterChangeOnAdd: 0.5 })));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.0002, new Waves.Thing("fish", "fish", { foodChangeOnAdd: 0.5 })));
             this.game.model.world.triggers.push(new Waves.ThingTrigger(0.2, new Waves.Thing("hat", "hat")));
             this.game.model.world.triggers.push(new Waves.ThingTrigger(0.2, new Waves.Thing("chest", "chest")));
             this.game.model.world.triggers.push(new Waves.ThingTrigger(0.2, new Waves.Thing("rod", "rod")));
@@ -978,8 +594,414 @@ var Waves;
             }
         };
         return MainGame;
-    }(Phaser.State));
+    })(Phaser.State);
     Waves.MainGame = MainGame;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var Model = (function () {
+        function Model() {
+            this.world = new Waves.WorldState();
+            //inventory: InventoryState = new InventoryState();
+            this.resource = new Waves.ResourceState();
+        }
+        return Model;
+    })();
+    Waves.Model = Model;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var ResourceState = (function () {
+        function ResourceState() {
+        }
+        return ResourceState;
+    })();
+    Waves.ResourceState = ResourceState;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var ChoiceAction = (function () {
+        function ChoiceAction(newResponse) {
+            this.healthChange = 0;
+            this.positionChange = 0;
+            this.waterChange = 0;
+            this.foodChange = 0;
+            this.endGame = false;
+            this.response = newResponse;
+        }
+        ChoiceAction.prototype.changeWorld = function (world) {
+            world.health += this.healthChange;
+            world.position += this.positionChange;
+            world.water += this.waterChange;
+            world.food += this.foodChange;
+        };
+        return ChoiceAction;
+    })();
+    Waves.ChoiceAction = ChoiceAction;
+    var StoryEvent = (function () {
+        function StoryEvent(name, description, button1, button2, onB1, onB2) {
+            if (onB2 === void 0) { onB2 = null; }
+            this._name = name;
+            this._description = description;
+            this._button1 = button1;
+            this._button2 = button2;
+            this._onB1 = onB1;
+            this._onB2 = onB2;
+        }
+        Object.defineProperty(StoryEvent.prototype, "name", {
+            get: function () {
+                return this._name;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(StoryEvent.prototype, "description", {
+            get: function () {
+                return this._description;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(StoryEvent.prototype, "button1", {
+            get: function () {
+                return this._button1;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(StoryEvent.prototype, "button2", {
+            get: function () {
+                return this._button2;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(StoryEvent.prototype, "onB1", {
+            get: function () {
+                return this._onB1;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(StoryEvent.prototype, "onB2", {
+            get: function () {
+                return this._onB2;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return StoryEvent;
+    })();
+    Waves.StoryEvent = StoryEvent;
+    var FlyingFishStoryEvent = (function (_super) {
+        __extends(FlyingFishStoryEvent, _super);
+        function FlyingFishStoryEvent() {
+            _super.call(this, "Flying Fish", "You see some totally sweet flying fish.", "Try and catch them", "Marvel", new ChoiceAction("You waste time and energy"), new ChoiceAction("You feel this is a beautiful world"));
+            this._onB1.healthChange = -10;
+        }
+        return FlyingFishStoryEvent;
+    })(StoryEvent);
+    Waves.FlyingFishStoryEvent = FlyingFishStoryEvent;
+    var LandStoryEvent = (function (_super) {
+        __extends(LandStoryEvent, _super);
+        function LandStoryEvent() {
+            _super.call(this, "You've reached land", "You did it, you've reached land and survived.", "Rejoice", "", new ChoiceAction(""));
+            this._onB1.endGame = true;
+        }
+        return LandStoryEvent;
+    })(StoryEvent);
+    Waves.LandStoryEvent = LandStoryEvent;
+    var DeathEvent = (function (_super) {
+        __extends(DeathEvent, _super);
+        function DeathEvent() {
+            _super.call(this, "You died", "You died of hunger and thirst. You'll float on the sea forever", "Try again", "", new ChoiceAction(""));
+            this._onB1.endGame = true;
+        }
+        return DeathEvent;
+    })(StoryEvent);
+    Waves.DeathEvent = DeathEvent;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var Thing = (function () {
+        function Thing(name, displayName, parameters) {
+            if (parameters === void 0) { parameters = {}; }
+            this.waterChangeOnAdd = 0;
+            this.foodChangeOnAdd = 0;
+            this.fuelChangeOnAdd = 0;
+            this.fuelChange = 0;
+            this.constantSpeed = 0;
+            this.clickSpeed = 0;
+            this.buttonLabel = "";
+            if (parameters.hasOwnProperty("water"))
+                this.waterChangeOnAdd = parameters["water"];
+            if (parameters.hasOwnProperty("food"))
+                this.foodChangeOnAdd = parameters["food"];
+            if (parameters.hasOwnProperty("fuel"))
+                this.fuelChangeOnAdd = parameters["fuel"];
+            if (parameters.hasOwnProperty("fuelChange"))
+                this.fuelChange = parameters["fuelChange"];
+            if (parameters.hasOwnProperty("clickSpeed"))
+                this.clickSpeed = parameters["clickSpeed"];
+            if (parameters.hasOwnProperty("constantSpeed"))
+                this.constantSpeed = parameters["constantSpeed"];
+            if (parameters.hasOwnProperty("buttonLabel"))
+                this.buttonLabel = parameters["buttonLabel"];
+            this._spriteName = name;
+            this._displayName = displayName;
+        }
+        Object.defineProperty(Thing.prototype, "inventoryItem", {
+            get: function () {
+                return this._inventoryItem;
+            },
+            set: function (newItem) {
+                this._inventoryItem = newItem;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Thing.prototype, "spriteName", {
+            get: function () {
+                return this._spriteName;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Thing.prototype, "displayName", {
+            get: function () {
+                return this._displayName;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return Thing;
+    })();
+    Waves.Thing = Thing;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var ThingPosition = (function () {
+        function ThingPosition(thing, position, inventoryItem) {
+            this._thing = thing;
+            this._position = position;
+            this._inventoryItem = inventoryItem;
+        }
+        Object.defineProperty(ThingPosition.prototype, "thing", {
+            get: function () {
+                return this._thing;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ThingPosition.prototype, "position", {
+            get: function () {
+                return this._position;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ThingPosition.prototype, "inventoryItem", {
+            get: function () {
+                return this._inventoryItem;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return ThingPosition;
+    })();
+    Waves.ThingPosition = ThingPosition;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var Trigger = (function () {
+        function Trigger(position) {
+            this._position = position;
+        }
+        Object.defineProperty(Trigger.prototype, "position", {
+            get: function () {
+                return this._position;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return Trigger;
+    })();
+    Waves.Trigger = Trigger;
+    var EventTrigger = (function (_super) {
+        __extends(EventTrigger, _super);
+        function EventTrigger(position, event) {
+            _super.call(this, position);
+            this._event = event;
+        }
+        Object.defineProperty(EventTrigger.prototype, "event", {
+            get: function () {
+                return this._event;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return EventTrigger;
+    })(Trigger);
+    Waves.EventTrigger = EventTrigger;
+    var ThingTrigger = (function (_super) {
+        __extends(ThingTrigger, _super);
+        function ThingTrigger(position, thing) {
+            _super.call(this, position);
+            this._thing = thing;
+        }
+        Object.defineProperty(ThingTrigger.prototype, "thing", {
+            get: function () {
+                return this._thing;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return ThingTrigger;
+    })(Trigger);
+    Waves.ThingTrigger = ThingTrigger;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var WorldState = (function () {
+        function WorldState() {
+            this._position = 0;
+            this._health = 100;
+            this._water = 0;
+            this._food = 0;
+            this._fuel = 0;
+            this._triggers = new Array();
+            this._triggersToRemove = new Array();
+            this.eventSignal = new Phaser.Signal();
+        }
+        Object.defineProperty(WorldState.prototype, "milesRemaining", {
+            get: function () {
+                return WorldState.STARTING_MILES - this.position;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(WorldState.prototype, "position", {
+            get: function () {
+                return this._position;
+            },
+            set: function (value) {
+                this._position = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(WorldState.prototype, "health", {
+            get: function () {
+                return this._health;
+            },
+            set: function (value) {
+                this._health = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(WorldState.prototype, "water", {
+            get: function () {
+                return this._water;
+            },
+            set: function (value) {
+                this._water = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(WorldState.prototype, "food", {
+            get: function () {
+                return this._food;
+            },
+            set: function (value) {
+                this._food = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(WorldState.prototype, "fuel", {
+            get: function () {
+                return this._fuel;
+            },
+            set: function (value) {
+                this._fuel = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(WorldState.prototype, "thingEventCallback", {
+            get: function () {
+                return this._thingEventCallback;
+            },
+            set: function (callback) {
+                this._thingEventCallback = callback;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        WorldState.prototype.getEventSignal = function (onEvent) {
+            this.eventSignal.add(onEvent);
+        };
+        WorldState.prototype.MoveDistance = function (miles) {
+            this.position += miles;
+            this.CheckTriggers(this.position);
+        };
+        WorldState.prototype.MoveMeters = function (meters) {
+            this.MoveDistance(meters / 1609);
+        };
+        Object.defineProperty(WorldState.prototype, "triggers", {
+            get: function () {
+                return this._triggers;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        WorldState.prototype.CheckTriggers = function (position) {
+            var _this = this;
+            //console.log("check triggers " + this.triggers.length);
+            this.triggers.forEach(function (value, index, array) { return void _this.CheckTrigger(value, position); });
+            this._triggersToRemove.forEach(function (value, index, array) { return _this.RemoveTrigger(value); });
+            this._triggersToRemove = new Array();
+        };
+        WorldState.prototype.CheckTrigger = function (trigger, position) {
+            //console.log("t=" + trigger.position + " " + position);
+            if (trigger.position <= position) {
+                if (trigger instanceof Waves.EventTrigger) {
+                    this.TriggerEvent(trigger);
+                    this._triggersToRemove.push(trigger);
+                }
+            }
+            if (trigger.position - WorldState.LEAD_DISTANCE <= position) {
+                if (trigger instanceof Waves.ThingTrigger) {
+                    this.TriggerThing(trigger);
+                    this._triggersToRemove.push(trigger);
+                }
+            }
+        };
+        WorldState.prototype.RemoveTrigger = function (trigger) {
+            this.triggers.splice(this.triggers.indexOf(trigger), 1);
+        };
+        WorldState.prototype.TriggerEvent = function (trigger) {
+            console.log(trigger.event.name + " event triggered");
+            this.eventSignal.dispatch(trigger.event);
+        };
+        WorldState.prototype.TriggerThing = function (trigger) {
+            console.log("Thing Triggered");
+            if (this.thingEventCallback != null)
+                this.thingEventCallback(trigger.thing, trigger.position);
+            else
+                throw new Error("ThingEventCallback not set");
+        };
+        WorldState.STARTING_MILES = 48;
+        WorldState.WATER_RATE = 0.001;
+        WorldState.FOOD_RATE = 0.0005;
+        WorldState.HEALTH_NO_WATER_RATE = 0.001;
+        WorldState.HEALTH_NO_FOOD_RATE = 0.0005;
+        WorldState.LEAD_DISTANCE = 0.05;
+        return WorldState;
+    })();
+    Waves.WorldState = WorldState;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
@@ -1026,7 +1048,7 @@ var Waves;
             this.game.state.start('MainGame', true, false);
         };
         return Preloader;
-    }(Phaser.State));
+    })(Phaser.State);
     Waves.Preloader = Preloader;
 })(Waves || (Waves = {}));
 var Waves;
@@ -1078,7 +1100,7 @@ var Waves;
             }
         };
         return Sea;
-    }(Phaser.Group));
+    })(Phaser.Group);
     Waves.Sea = Sea;
 })(Waves || (Waves = {}));
 var Waves;
@@ -1174,7 +1196,7 @@ var Waves;
         };
         ThingsInView.THING_ORIGIIN = new Phaser.Point(800, 300);
         return ThingsInView;
-    }());
+    })();
     Waves.ThingsInView = ThingsInView;
 })(Waves || (Waves = {}));
 //# sourceMappingURL=app.js.map
