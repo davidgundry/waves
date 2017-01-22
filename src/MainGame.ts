@@ -53,8 +53,8 @@
             //this.sail = new InventoryItem(this.game, this.inventory, 300, 100, this.onDrop.bind(this), new Thing("sail", { constantSpeed: 5 }));
 
             
-            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.00001, new Thing("plastic-bag", "plastic bag and a stick", { constantSpeed: 0.005 })));
-            //(<Game>this.game).model.world.triggers.push(new ThingTrigger(0.00042, new Thing("plastic-bag", "plastic bag and a stick", { constantSpeed: 0.005 })));
+            //(<Game>this.game).model.world.triggers.push(new ThingTrigger(0.00001, new Thing("plastic-bag", "plastic bag and a stick", { constantSpeed: 0.005 })));
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.00042, new Thing("plastic-bag", "plastic bag and a stick", { constantSpeed: 0.005 })));
             (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.004, new Thing("duck", "rubber duck")));
             (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.009, new Thing("plank", "wooden plank", { clickSpeed: 0.5, buttonLabel: "Row with the plank" })));
 
