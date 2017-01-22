@@ -76,8 +76,11 @@ module Waves {
             super("You've reached land", "You did it, you've reached land and survived.", "Rejoice", "", new ChoiceAction(""));
             this._onB1.endGame = true;
         }
-       
-
-
+    }
+    export class DeathEvent extends StoryEvent {
+        constructor() {
+            super("You died", "You died of hunger and thirst. You'll float on the sea forever", "Try again", "", new ChoiceAction(""));
+            this._onB1.endGame = true;
+        }
     }
 }
