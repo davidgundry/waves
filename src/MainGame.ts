@@ -37,8 +37,8 @@
             graphics.lineStyle(1, 0x0078C2, 1);
 
             // draw a line
-            graphics.moveTo(300, 0);
-            graphics.lineTo(300, 600);
+            graphics.moveTo(300, 5);
+            graphics.lineTo(300, 595);
             graphics.endFill();
             graphics.drawRect(0, 0,960,600);
             this.updateMiles();
