@@ -46,14 +46,19 @@
             (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.004, new Thing("duck", "rubber duck")));
             (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.007,  new Thing("plank", "wooden plank", { clickSpeed: 0.2, buttonLabel: "Row with the plank"  })));
             (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.015, new Thing("oar", "oar", { clickSpeed: 0.8, buttonLabel: "Row with the oar" })));
-
             (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.03, new Thing("sail", "sail", { constantSpeed: 0.01 })));
-
             (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.1, new Thing("corpse", "corpse", { clickSpeed: 1, buttonLabel: "Row with the corpse" })));
 
             (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.2, new Thing("ship-in-bottle", "ship in a bottle")));
 
-            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.2, new Thing("motor", "Motor", { speed: 1, fuelChange: -1 })));
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.0002, new Thing("motor", "Motor", { speed: 1, fuelChange: -1 })));
+
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.0001, new Thing("fuel", "fuel", { fuelChangeOnAdd: 0.5 })));
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.2, new Thing("barrel", "barrel of water", { waterChangeOnAdd: 0.5 })));
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.2, new Thing("food", "food", { foodChangeOnAdd: 0.5 })));
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.2, new Thing("hat", "hat")));
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.2, new Thing("chest", "chest")));
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.2, new Thing("rod", "rod")));
 
             //     (<Game>this.game).model.world.triggers.push(new EventTrigger(0.5, new FlyingFishStoryEvent()));
             (<Game>this.game).model.world.triggers.push(new EventTrigger(47.5, new LandStoryEvent()));
@@ -62,6 +67,8 @@
             this.eventBox = new EventPopup(this.game);
          //   this.eventBox.setListeners(this.press1, this.press2,this);
           //  this.eventBox.show("You found god", "Do you want to keep or throw back?", "Keep", "Throw back");
+
+            (<Game>this.game).model.world.MoveMeters(0.01);
         }
         press1() {
             this.eventBox.hideMessage();
