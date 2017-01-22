@@ -12,6 +12,7 @@
         boat: Boat;
         sail: Boat;
         inventory: Inventory;
+        eventBox: EventPopup;
 
         create() {
             super.create();
@@ -31,9 +32,18 @@
 
           
             this.thingsInView = new ThingsInView((<Game>this.game), this.onDrop.bind(this), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y + this.boat.height), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y));
-
+            this.eventBox = new EventPopup(this.game);
+            this.eventBox.setListeners(this.press1, this.press2,this);
+            this.eventBox.show("You found god", "Do you want to keep or throw back?", "Keep", "Throw back");
         }
-
+        press1() {
+            this.eventBox.hideMessage();
+            alert("Pressed 1");
+        }
+        press2() {
+            this.eventBox.hideMessage();
+            alert("Pressed 2");
+        }
         onPress() {
             this.rowTheBoat()
         }

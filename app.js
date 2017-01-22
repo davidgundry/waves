@@ -24,6 +24,102 @@ window.onload = function () {
 };
 var Waves;
 (function (Waves) {
+    var PopupBox = (function (_super) {
+        __extends(PopupBox, _super);
+        function PopupBox(game) {
+            _super.call(this, game);
+            this.boxWidth = 500;
+            this.boxHeight = 300;
+            this.drawBox();
+            this.visible = false;
+            this.showing = false;
+        }
+        PopupBox.prototype.drawBox = function () {
+            var boxSprite = this.game.add.sprite(0, 0);
+            var graphics = this.game.add.graphics(0, 0);
+            boxSprite.addChild(graphics);
+            graphics.lineStyle(1, 0x000000, 1);
+            graphics.beginFill(0xEEEEEE, 1);
+            graphics.drawRect(0, 0, this.boxWidth, this.boxHeight);
+            graphics.endFill();
+            this.addChild(boxSprite);
+        };
+        PopupBox.prototype.drop = function (newCallback) {
+            if (newCallback === void 0) { newCallback = null; }
+            if (!this.showing) {
+                this.callback = newCallback;
+                this.x = (this.game.world.width - this.boxWidth) / 2;
+                this.y = 0;
+                this.visible = true;
+                this.showing = true;
+                this.dropTween = this.game.add.tween(this);
+                this.dropTween.to({ y: (this.game.world.height - this.boxHeight) / 2 }, 500, Phaser.Easing.Cubic.Out);
+                this.dropTween.start();
+            }
+        };
+        PopupBox.prototype.doneDrop = function () {
+            if (this.callback) {
+                this.callback();
+            }
+        };
+        PopupBox.prototype.hideMessage = function () {
+            this.showing = false;
+            this.visible = false;
+            this.doneDrop();
+        };
+        return PopupBox;
+    }(Phaser.Group));
+    Waves.PopupBox = PopupBox;
+})(Waves || (Waves = {}));
+/// <reference path="PopupBox.ts" />
+var Waves;
+(function (Waves) {
+    var EventPopup = (function (_super) {
+        __extends(EventPopup, _super);
+        function EventPopup(game) {
+            _super.call(this, game);
+            this.createButtons();
+            this.createText();
+        }
+        EventPopup.prototype.setListeners = function (on1, on2, context) {
+            this.button1.pressed.removeAll(context);
+            this.button2.pressed.removeAll(context);
+            this.button1.pressed.add(on1, context);
+            this.button2.pressed.add(on2, context);
+        };
+        EventPopup.prototype.createButtons = function () {
+            this.button1 = new Waves.Button(this.game, "1");
+            this.button2 = new Waves.Button(this.game, "2");
+            this.addChild(this.button1);
+            this.addChild(this.button2);
+            this.button1.position.setTo(this.boxWidth * .1, this.boxHeight * .8);
+            this.button2.position.setTo(this.boxWidth * .6, this.boxHeight * .8);
+        };
+        EventPopup.prototype.createText = function () {
+            this.title = this.game.add.text(this.boxWidth / 2, 50, "Title here", { font: "60px smdin", fill: '#000', align: 'centre' }, this);
+            this.title.anchor.set(0.5, 0.5);
+            this.bodyText = this.game.add.text(this.boxWidth / 2, this.boxHeight / 2, "Body text here", { font: "30px smdin", fill: '#000', align: 'centre' }, this);
+            this.bodyText.anchor.set(0.5, 0.5);
+        };
+        EventPopup.prototype.show = function (titleText, bodyText, button1, button2, newCallback) {
+            if (newCallback === void 0) { newCallback = null; }
+            if (!this.showing) {
+                this.setText(titleText, bodyText, button1, button2);
+            }
+            _super.prototype.drop.call(this, newCallback);
+        };
+        EventPopup.prototype.setText = function (titleText, bodyText, button1, button2) {
+            this.title.text = titleText;
+            this.bodyText.text = bodyText;
+            this.button1.setButtonText(button1);
+            this.button2.setButtonText(button2);
+        };
+        return EventPopup;
+    }(Waves.PopupBox));
+    Waves.EventPopup = EventPopup;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
     var Boat = (function (_super) {
         __extends(Boat, _super);
         function Boat(game, newX, newY) {
@@ -617,6 +713,17 @@ var Waves;
             this.oar = new Waves.InventoryItem(this.game, 200, 100, this.onDrop.bind(this), new Waves.RowThing("oar", 100, "Row with an oar"));
             this.sail = new Waves.InventoryItem(this.game, 300, 100, this.onDrop.bind(this), new Waves.SailThing("sail", 5));
             this.thingsInView = new Waves.ThingsInView(this.game, this.onDrop.bind(this), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y + this.boat.height), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y));
+            this.eventBox = new Waves.EventPopup(this.game);
+            this.eventBox.setListeners(this.press1, this.press2, this);
+            this.eventBox.show("You found god", "Do you want to keep or throw back?", "Keep", "Throw back");
+        };
+        MainGame.prototype.press1 = function () {
+            this.eventBox.hideMessage();
+            alert("Pressed 1");
+        };
+        MainGame.prototype.press2 = function () {
+            this.eventBox.hideMessage();
+            alert("Pressed 2");
         };
         MainGame.prototype.onPress = function () {
             this.rowTheBoat();

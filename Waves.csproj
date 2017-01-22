@@ -38,6 +38,10 @@
     <TypeScriptCompile Include="phaser\p2.d.ts" />
     <TypeScriptCompile Include="phaser\phaser.d.ts" />
     <TypeScriptCompile Include="phaser\pixi.d.ts" />
+    <TypeScriptCompile Include="src\EventPopup.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\PopupBox.ts" />
     <TypeScriptCompile Include="src\Boat.ts" />
     <TypeScriptCompile Include="src\Button.ts" />
     <TypeScriptCompile Include="src\Inventory.ts" />
