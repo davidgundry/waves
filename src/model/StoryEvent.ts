@@ -83,4 +83,9 @@ module Waves {
             this._onB1.endGame = true;
         }
     }
+    export class StartEvent extends StoryEvent {
+        constructor() {
+            super("You're cast adrift", "You're in boat 48 miles from land. Can you get back to dry land", "Maybe not", "", new ChoiceAction(""));
+        }
+    }
 }

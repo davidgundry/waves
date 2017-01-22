@@ -493,6 +493,14 @@ var Waves;
         return DeathEvent;
     }(StoryEvent));
     Waves.DeathEvent = DeathEvent;
+    var StartEvent = (function (_super) {
+        __extends(StartEvent, _super);
+        function StartEvent() {
+            _super.call(this, "You're cast adrift", "You're in boat 48 miles from land. Can you get back to dry land", "Maybe not", "", new ChoiceAction(""));
+        }
+        return StartEvent;
+    }(StoryEvent));
+    Waves.StartEvent = StartEvent;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
@@ -879,6 +887,7 @@ var Waves;
             //   this.eventBox.setListeners(this.press1, this.press2,this);
             //  this.eventBox.show("You found god", "Do you want to keep or throw back?", "Keep", "Throw back");
             this.game.model.world.MoveMeters(0.01);
+            this.onEvent(new Waves.StartEvent());
         };
         MainGame.prototype.press1 = function () {
             this.eventBox.hideMessage();
@@ -889,6 +898,7 @@ var Waves;
             alert("Pressed 2");
         };
         MainGame.prototype.onEvent = function (event) {
+            this.game.world.bringToTop(this.eventBox);
             this.currentEvent = event;
             this.eventBox.setListeners(this.event1.bind(this), this.event2.bind(this), this);
             this.eventBox.show(event.name, event.description, event.button1, event.button2);
