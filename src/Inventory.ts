@@ -57,8 +57,10 @@
 
         getFirstFreeSlot() : number {
             for (var i: number = 0; i < this.slots.length; i++) {
-                if (this.slots[i] === null)
+                if (this.slots[i] == null) {
+                    console.log("Next free slot " + i);
                     return i;
+                }
             }
             return undefined;
         }
@@ -96,10 +98,23 @@
         }
 
         public SetInUse(usedThing: Thing) {
+            console.log("set in use " + usedThing.displayName);
+            console.log("before filled slots " + this.filledSlots());
             this._thingUsed = usedThing;
             this.unsetAllItems();
             if (usedThing.inventoryItem != null)
                 usedThing.inventoryItem.setInUse(true);
+            console.log("after filled slots " + this.filledSlots());
+        }
+
+        public filledSlots(): number {
+            var filled = 0;
+            for (var i = 0; i < this.slots.length; i++) {
+                if (this.slots[i] != null) {
+                    filled++;
+                }
+            }
+            return filled;
         }
 
         public setHandsInUse() {
@@ -108,7 +123,7 @@
 
         unsetAllItems() {
             for (var i = 0; i < this.slots.length; i++) {
-                if (this.slots[i] !== null)
+                if (this.slots[i] != null)
                     this.slots[i].setInUse(false);
             }
         }
