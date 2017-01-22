@@ -149,6 +149,7 @@
 
         tossItem(item: InventoryItem) {
             this.eventBox.hideMessage();
+            item.sink();
         }
 
         thingFoundCallback(thingPosition: ThingPosition) {

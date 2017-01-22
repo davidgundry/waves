@@ -525,6 +525,7 @@ var Waves;
         };
         MainGame.prototype.tossItem = function (item) {
             this.eventBox.hideMessage();
+            item.sink();
         };
         MainGame.prototype.thingFoundCallback = function (thingPosition) {
             this.eventBox = new Waves.EventPopup(this.game);
@@ -814,6 +815,7 @@ var Waves;
             this._water = 0;
             this._food = 0;
             this._triggers = new Array();
+            this._triggersToRemove = new Array();
             this.eventSignal = new Phaser.Signal();
         }
         Object.defineProperty(WorldState.prototype, "milesRemaining", {
@@ -892,26 +894,28 @@ var Waves;
         });
         WorldState.prototype.CheckTriggers = function (position) {
             var _this = this;
-            console.log("check triggers " + this.triggers.length);
+            //console.log("check triggers " + this.triggers.length);
             this.triggers.forEach(function (value, index, array) { return void _this.CheckTrigger(value, position); });
+            this._triggersToRemove.forEach(function (value, index, array) { return _this.RemoveTrigger(value); });
+            this._triggersToRemove = new Array();
         };
         WorldState.prototype.CheckTrigger = function (trigger, position) {
-            console.log("t=" + trigger.position + " " + position);
+            //console.log("t=" + trigger.position + " " + position);
             if (trigger.position <= position) {
                 if (trigger instanceof Waves.EventTrigger) {
                     this.TriggerEvent(trigger);
-                    this.RemoveTrigger(trigger);
+                    this._triggersToRemove.push(trigger);
                 }
             }
             if (trigger.position - WorldState.LEAD_DISTANCE <= position) {
                 if (trigger instanceof Waves.ThingTrigger) {
                     this.TriggerThing(trigger);
-                    this.RemoveTrigger(trigger);
+                    this._triggersToRemove.push(trigger);
                 }
             }
         };
         WorldState.prototype.RemoveTrigger = function (trigger) {
-            this.triggers.splice(this.triggers.indexOf(trigger));
+            this.triggers.splice(this.triggers.indexOf(trigger), 1);
         };
         WorldState.prototype.TriggerEvent = function (trigger) {
             console.log(trigger.event.name + " event triggered");
@@ -1027,6 +1031,7 @@ var Waves;
     var ThingsInView = (function () {
         function ThingsInView(game, inventory, itemFoundHandler, dropHandler, boatSide, boatFrontSide) {
             this.thingsInView = new Array();
+            this.thingsInViewToRemove = new Array();
             this._game = game;
             this._boatSide = boatSide;
             this._boatFrontSide = boatFrontSide;
@@ -1068,7 +1073,10 @@ var Waves;
         };
         ThingsInView.prototype.update = function () {
             var _this = this;
-            this.thingsInView.forEach(function (value, index, array) { return void _this.updateThingInView(value); });
+            console.log("things in view count: " + this.thingsInView.length);
+            this.thingsInView.forEach(function (value) { return void _this.updateThingInView(value); });
+            this.thingsInViewToRemove.forEach(function (value) { return void _this.removeThingInView(value); });
+            this.thingsInViewToRemove = new Array();
         };
         ThingsInView.prototype.addThingInView = function (thing, position) {
             var screenPosition = this.screenPosition(position);
@@ -1093,24 +1101,21 @@ var Waves;
             return (relativePosition <= 0);
         };
         ThingsInView.prototype.updateThingInView = function (thingPosition) {
+            this.updateThingWorldPosition(thingPosition);
+            if (this.isAlongside(thingPosition)) {
+                this.itemFoundHandler(thingPosition);
+                this.thingsInViewToRemove.push(thingPosition);
+            }
+        };
+        ThingsInView.prototype.updateThingWorldPosition = function (thingPosition) {
             var screenPosition = this.screenPosition(thingPosition.position);
             thingPosition.inventoryItem.position.x = screenPosition.x;
             thingPosition.inventoryItem.position.y = screenPosition.y;
             var proportionalDistance = this.proportionalDistance(thingPosition.position);
             thingPosition.inventoryItem.scale = new Phaser.Point(1 - proportionalDistance, 1 - proportionalDistance);
-            if (this.isAlongside(thingPosition)) {
-                this.itemFoundHandler(thingPosition);
-                /*thingPosition.inventoryItem.setDrag(true);
-                //thingPosition.inventoryItem.position.x = this.boatSide.x;
-                thingPosition.inventoryItem.position.y = this.boatSide.y;*/
-                this.removeThingInView(thingPosition);
-            }
         };
         ThingsInView.prototype.removeThingInView = function (thingPosition) {
-            if (this.thingsInView.indexOf(thingPosition) >= 0)
-                this.thingsInView.splice(this.thingsInView.indexOf(thingPosition));
-            else
-                throw new Error("ThingPosition not found");
+            this.thingsInView.splice(this.thingsInView.indexOf(thingPosition), 1);
         };
         ThingsInView.THING_ORIGIIN = new Phaser.Point(800, 300);
         return ThingsInView;

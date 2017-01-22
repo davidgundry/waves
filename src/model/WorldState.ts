@@ -75,36 +75,39 @@ module Waves {
         }
 
 
-        private _triggers: Trigger[]= new Array<Trigger>();
+        private _triggers: Trigger[] = new Array<Trigger>();
+        private _triggersToRemove: Trigger[] = new Array<Trigger>();
         
         public get triggers(): Trigger[] {
             return this._triggers;
         }
         
         private CheckTriggers(position: number) {
-            console.log("check triggers " + this.triggers.length);
-           this.triggers.forEach((value: Trigger, index: number, array: Trigger[]) => void this.CheckTrigger(value, position));
+            //console.log("check triggers " + this.triggers.length);
+            this.triggers.forEach((value: Trigger, index: number, array: Trigger[]) => void this.CheckTrigger(value, position));
+            this._triggersToRemove.forEach((value: Trigger, index: number, array: Trigger[]) => this.RemoveTrigger(value));
+            this._triggersToRemove = new Array<Trigger>();
         }
 
         private CheckTrigger(trigger: Trigger, position: number) {
-            console.log("t=" + trigger.position + " " + position);
+            //console.log("t=" + trigger.position + " " + position);
             if (trigger.position <= position) {
                 if (trigger instanceof EventTrigger) {
                     this.TriggerEvent(trigger as EventTrigger);
-                    this.RemoveTrigger(trigger);
+                    this._triggersToRemove.push(trigger);
                 }
             }
 
             if (trigger.position - WorldState.LEAD_DISTANCE <= position) {
                 if (trigger instanceof ThingTrigger) {
                     this.TriggerThing(trigger as ThingTrigger);
-                    this.RemoveTrigger(trigger);
+                    this._triggersToRemove.push(trigger);
                 }
             }
         }
 
         private RemoveTrigger(trigger: Trigger) {
-            this.triggers.splice(this.triggers.indexOf(trigger));
+            this.triggers.splice(this.triggers.indexOf(trigger),1);
         }
 
         private TriggerEvent(trigger: EventTrigger) {
