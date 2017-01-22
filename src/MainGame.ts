@@ -37,7 +37,7 @@
             this.sail = new InventoryItem(this.game, 300, 100, this.onDrop.bind(this), new SailThing("sail",5));
 
             
-            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.00062, new SailThing("test", 0.5)));
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.00032, new SailThing("test", 0.1)));
             (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.0062, new SailThing("sail", 0.5)));
             (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.0248, new RowThing("oar", 1, "Row with an oar")));
             (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.087, new SailThing("sail", 3)));
@@ -62,7 +62,7 @@
 
         onDrop(dropData: Object) {
             var item: InventoryItem = <InventoryItem>dropData["dropItem"]
-            if (!this.inventory.acceptItem(item)) {
+            if (!this.inventory.acceptItemFromDrag(item)) {
                 if (this.sea.thrownIntheSea(item)) {
                     this.inventory.removeItem(item);
                     item.sink()
@@ -122,10 +122,26 @@
                 this.milesDisplay.text = "You are " + (<Game>this.game).model.world.milesRemaining.toFixed(4) + " miles from land";   
         }
 
-        thingFoundCallback(thing: Thing) {
+        getItem(item: InventoryItem) {
+            this.inventory.acceptItemFromEvent(item);
+            this.eventBox.hideMessage();
+            item.setDrag(true);
+        }
+
+        tossItem(item: InventoryItem) {
+            this.eventBox.hideMessage();
+        }
+
+        thingFoundCallback(thingPosition: ThingPosition) {
             this.eventBox = new EventPopup(this.game);
-            this.eventBox.setListeners(this.press1, this.press2, this);
-            this.eventBox.show("You found a " + thing.displayName, "Do you want to keep or throw back?", "Keep", "Throw back");
+            if (!this.inventory.full) {
+                this.eventBox.setListeners(this.getItem.bind(this, thingPosition.inventoryItem), this.tossItem.bind(this, thingPosition.inventoryItem), this);
+                this.eventBox.show("You found a " + thingPosition.thing.displayName, "Do you want to keep or throw back?", "Keep", "Throw back");
+            }
+            else {
+                this.eventBox.setListeners(this.tossItem.bind(this, thingPosition.inventoryItem),null, this);
+                this.eventBox.show("You found a " + thingPosition.thing.displayName, "Oh no! You have no space in your boat!","Throw back","");
+            }
         }
 
     }

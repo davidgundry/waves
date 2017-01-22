@@ -82,7 +82,7 @@ module Waves {
             thingPosition.inventoryItem.scale = new Phaser.Point(1 - proportionalDistance, 1 - proportionalDistance);
 
             if (this.isAlongside(thingPosition)) {
-                this.itemFoundHandler(thingPosition.thing);
+                this.itemFoundHandler(thingPosition);
                 /*thingPosition.inventoryItem.setDrag(true);
                 //thingPosition.inventoryItem.position.x = this.boatSide.x;
                 thingPosition.inventoryItem.position.y = this.boatSide.y;*/
