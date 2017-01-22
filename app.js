@@ -274,8 +274,8 @@ var Waves;
         };
         Inventory.prototype.getFirstFreeSlot = function () {
             for (var i = 0; i < this.slots.length; i++) {
-                (this.slots[i] === null);
-                return i;
+                if (this.slots[i] === null)
+                    return i;
             }
             return undefined;
         };
@@ -310,11 +310,18 @@ var Waves;
         };
         Inventory.prototype.SetInUse = function (usedThing) {
             this._thingUsed = usedThing;
+            this.unsetAllItems();
+            if (usedThing.inventoryItem != null)
+                usedThing.inventoryItem.setInUse(true);
+        };
+        Inventory.prototype.setHandsInUse = function () {
+            this.SetInUse(this.yourHands);
+        };
+        Inventory.prototype.unsetAllItems = function () {
             for (var i = 0; i < this.slots.length; i++) {
                 if (this.slots[i] != null)
                     this.slots[i].setInUse(false);
             }
-            usedThing.inventoryItem.setInUse(true);
         };
         return Inventory;
     })(Phaser.Group);
@@ -326,6 +333,7 @@ var Waves;
         __extends(InventoryItem, _super);
         function InventoryItem(game, inventory, newX, newY, dropHandler, thing) {
             _super.call(this, game);
+            this._isUsed = false;
             this.baseThing = thing;
             thing.inventoryItem = this;
             this.baseSprite = this.create(0, 0, thing.spriteName);
@@ -345,9 +353,12 @@ var Waves;
             this.baseSprite.inputEnabled = isEnabled;
             if (isEnabled) {
                 this.baseSprite.input.enableDrag();
+                this.baseSprite.events.onDragStart.removeAll();
                 this.baseSprite.events.onDragStart.add(this.onDragStart.bind(this), this);
+                this.baseSprite.events.onDragStop.removeAll();
                 this.baseSprite.events.onDragStop.add(this.onDragStop.bind(this), this);
-                this.baseSprite.events.onInputDown.add(this.onClick.bind(this), this);
+                this.baseSprite.events.onInputUp.removeAll();
+                this.baseSprite.events.onInputUp.add(this.onClick.bind(this), this);
             }
             else {
                 this.baseSprite.input.disableDrag();
@@ -355,10 +366,21 @@ var Waves;
         };
         InventoryItem.prototype.onClick = function () {
             if (this.inventorySlot !== null) {
-                this.inventory.SetInUse(this.baseThing);
+                if (this.isUsed)
+                    this.inventory.setHandsInUse();
+                else
+                    this.inventory.SetInUse(this.baseThing);
             }
         };
+        Object.defineProperty(InventoryItem.prototype, "isUsed", {
+            get: function () {
+                return this._isUsed;
+            },
+            enumerable: true,
+            configurable: true
+        });
         InventoryItem.prototype.setInUse = function (isUsed) {
+            this._isUsed = isUsed;
             this.inUseSprite.visible = isUsed;
         };
         InventoryItem.prototype.onDragStart = function () {
@@ -410,13 +432,13 @@ var Waves;
             this.game.model.world.triggers.push(new Waves.ThingTrigger(0.004, new Waves.Thing("duck", "rubber duck")));
             this.game.model.world.triggers.push(new Waves.ThingTrigger(0.007, new Waves.Thing("plank", "wooden plank", { clickSpeed: 0.2, buttonLabel: "Row with the plank" })));
             this.game.model.world.triggers.push(new Waves.ThingTrigger(0.015, new Waves.Thing("oar", "oar", { clickSpeed: 0.8, buttonLabel: "Row with the oar" })));
-            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.03, new Waves.Thing("sail", "sail", { constantSpeed: 0.01 })));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.03, new Waves.Thing("sail", "sail", { constantSpeed: 0.1 })));
             this.game.model.world.triggers.push(new Waves.ThingTrigger(0.1, new Waves.Thing("corpse", "corpse", { clickSpeed: 1, buttonLabel: "Row with the corpse" })));
             this.game.model.world.triggers.push(new Waves.ThingTrigger(0.2, new Waves.Thing("ship-in-bottle", "ship in a bottle")));
             this.game.model.world.triggers.push(new Waves.ThingTrigger(0.0002, new Waves.Thing("motor", "Motor", { speed: 1, fuelChange: -1 })));
-            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.0001, new Waves.Thing("fuel", "fuel", { fuelChangeOnAdd: 0.5 })));
-            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.2, new Waves.Thing("barrel", "barrel of water", { waterChangeOnAdd: 0.5 })));
-            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.2, new Waves.Thing("food", "food", { foodChangeOnAdd: 0.5 })));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.00001, new Waves.Thing("fuel", "fuel", { fuelChangeOnAdd: 0.5 })));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.0001, new Waves.Thing("barrel", "barrel of water", { waterChangeOnAdd: 0.5 })));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.0002, new Waves.Thing("fish", "fish", { foodChangeOnAdd: 0.5 })));
             this.game.model.world.triggers.push(new Waves.ThingTrigger(0.2, new Waves.Thing("hat", "hat")));
             this.game.model.world.triggers.push(new Waves.ThingTrigger(0.2, new Waves.Thing("chest", "chest")));
             this.game.model.world.triggers.push(new Waves.ThingTrigger(0.2, new Waves.Thing("rod", "rod")));

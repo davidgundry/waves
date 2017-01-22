@@ -8,6 +8,7 @@
         inUseSprite: Phaser.Sprite;
         baseThing: Thing;
         inventory: Inventory;
+        private _isUsed: boolean = false;
 
         constructor(game: Phaser.Game, inventory: Inventory, newX: number, newY: number, dropHandler: Function, thing: Thing) {
             super(game);
@@ -30,9 +31,13 @@
             this.baseSprite.inputEnabled = isEnabled;
             if (isEnabled) {
                 this.baseSprite.input.enableDrag();
+                this.baseSprite.events.onDragStart.removeAll();
                 this.baseSprite.events.onDragStart.add(this.onDragStart.bind(this), this);
+                this.baseSprite.events.onDragStop.removeAll();
                 this.baseSprite.events.onDragStop.add(this.onDragStop.bind(this), this);
-                this.baseSprite.events.onInputDown.add(this.onClick.bind(this),this);
+                this.baseSprite.events.onInputUp.removeAll();
+                this.baseSprite.events.onInputUp.add(this.onClick.bind(this), this);
+
             } else {
                 this.baseSprite.input.disableDrag();
             }
@@ -40,11 +45,17 @@
         }
         onClick() {
             if (this.inventorySlot !== null) {
-                
-                this.inventory.SetInUse(this.baseThing);
+                if (this.isUsed)
+                    this.inventory.setHandsInUse();
+                else
+                    this.inventory.SetInUse(this.baseThing);
             }
         }
+        get isUsed(): boolean {
+            return this._isUsed;
+        }
         setInUse(isUsed: boolean) {
+            this._isUsed = isUsed;
             this.inUseSprite.visible = isUsed;
         }
         onDragStart() {

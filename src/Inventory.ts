@@ -6,7 +6,7 @@
         slotHeight: number = 100;
         boundsRect: Phaser.Rectangle;
 
-        private yourHands: Thing = new Thing("hands", "hands", { clickSpeed: 0.01, buttonLabel: "Row with your hands"});
+        public yourHands: Thing = new Thing("hands", "hands", { clickSpeed: 0.01, buttonLabel: "Row with your hands"});
         private _thingUsed = this.yourHands;
 
         public get thingUsed(): Thing {
@@ -57,7 +57,7 @@
 
         getFirstFreeSlot() : number {
             for (var i: number = 0; i < this.slots.length; i++) {
-                (this.slots[i] === null)
+                if (this.slots[i] === null)
                 return i;
             }
             return undefined;
@@ -97,11 +97,20 @@
 
         public SetInUse(usedThing: Thing) {
             this._thingUsed = usedThing;
+            this.unsetAllItems();
+            if (usedThing.inventoryItem != null)
+                usedThing.inventoryItem.setInUse(true);
+        }
+
+        public setHandsInUse() {
+            this.SetInUse(this.yourHands);
+        }
+
+        unsetAllItems() {
             for (var i = 0; i < this.slots.length; i++) {
                 if (this.slots[i] != null)
                     this.slots[i].setInUse(false);
             }
-            usedThing.inventoryItem.setInUse(true);
         }
 
     }
