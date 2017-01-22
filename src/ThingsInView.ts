@@ -47,7 +47,6 @@ module Waves {
         }
 
         update() {
-            console.log("things in view count: " + this.thingsInView.length);
             this.thingsInView.forEach((value: ThingPosition) => void this.updateThingInView(value));
             this.thingsInViewToRemove.forEach((value: ThingPosition) => void this.removeThingInView(value));
             this.thingsInViewToRemove = new Array<ThingPosition>();
