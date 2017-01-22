@@ -51,11 +51,11 @@
 
             (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.2, new Thing("ship-in-bottle", "ship in a bottle")));
 
-            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.0002, new Thing("motor", "Motor", { speed: 1, fuelChange: -1 })));
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.0002, new Thing("motor", "Motor", { constantSpeed: 1, fuelChange: -1 })));
 
-            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.00001, new Thing("fuel", "fuel", { fuelChangeOnAdd: 0.5 })));
-            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.0001, new Thing("barrel", "barrel of water", { waterChangeOnAdd: 0.5 })));
-            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.0002, new Thing("fish", "fish", { foodChangeOnAdd: 0.5 })));
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.00001, new Thing("fuel", "fuel", { fuel: 50 })));
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.0001, new Thing("barrel", "barrel of water", { water: 50 })));
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.0002, new Thing("fish", "fish", { food: 50 })));
             (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.2, new Thing("hat", "hat")));
             (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.2, new Thing("chest", "chest")));
             (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.2, new Thing("rod", "rod")));
