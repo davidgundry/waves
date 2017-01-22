@@ -18,7 +18,23 @@
             this.slots = [null, null, null, null, null, null, null, null, null];
             this.position.x = newX;
             this.position.y = newY;
-            this.create(0, 0, "inventory");
+            var graphics = this.game.add.graphics(0, 0);
+            this.addChild(graphics);
+            // set a fill and line style
+            graphics.beginFill(0xFF3300);
+            graphics.lineStyle(1, 0x0078C2, 1);
+
+            // draw a line
+            graphics.moveTo(90, 0);
+            graphics.lineTo(90, 270);
+            graphics.moveTo(180, 0);
+            graphics.lineTo(180, 270);
+            graphics.moveTo(0, 90);
+            graphics.lineTo(270, 90);
+            graphics.moveTo(0, 180);
+            graphics.lineTo(270, 180);
+            graphics.endFill();
+          //  this.create(0, 0, "inventory");
             this.boundsRect = new Phaser.Rectangle(this.position.x, this.position.y, this.width, this.height);
         }
 
