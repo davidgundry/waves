@@ -7,6 +7,7 @@ module Waves {
         private _boatFrontSide: Phaser.Point;
         private static THING_ORIGIIN: Phaser.Point = new Phaser.Point(800, 300)
         private _dropHandler: Function;
+        private _itemFoundHandler: Function;
 
         private thingsInView: ThingPosition[] = new Array<ThingPosition>();
 
@@ -22,12 +23,17 @@ module Waves {
             return this._boatFrontSide;
         }
 
+        private get itemFoundHandler(): Function {
+            return this._itemFoundHandler;
+        }
 
-        constructor(game: Game, dropHandler: Function, boatSide: Phaser.Point, boatFrontSide: Phaser.Point) {
+
+        constructor(game: Game, itemFoundHandler: Function, dropHandler: Function, boatSide: Phaser.Point, boatFrontSide: Phaser.Point) {
             this._game = game;
             this._boatSide = boatSide;
             this._boatFrontSide = boatFrontSide;
             this._dropHandler = dropHandler;
+            this._itemFoundHandler = itemFoundHandler;
 
             (<Game>this.game).model.world.thingEventCallback = this.thingEventCallback.bind(this);
         }   
@@ -43,7 +49,7 @@ module Waves {
 
         addThingInView(thing: Thing, position: number) {
             var screenPosition: Phaser.Point = this.screenPosition(position);
-            var item: InventoryItem = new InventoryItem(this.game, screenPosition.x, screenPosition.y, this._dropHandler, new Thing("thing"));
+            var item: InventoryItem = new InventoryItem(this.game, screenPosition.x, screenPosition.y, this._dropHandler, thing);
             item.setDrag(false);
             this.thingsInView.push(new ThingPosition(thing, position, item));
         }
@@ -55,12 +61,12 @@ module Waves {
             }
 
             var rPos : number = (relativePosition / WorldState.LEAD_DISTANCE);
-            return 1-(Math.pow(100, 1-rPos) - 1) / 100;
+            return 1 - (Math.pow(100000000000000, 1 - rPos) - 1) / 100000000000000;
         }
 
         screenPosition(position: number): Phaser.Point{
             var proportion: number = this.proportionalDistance(position);
-            return new Phaser.Point(proportion * (ThingsInView.THING_ORIGIIN.x - this.boatFrontSide.x) + this.boatFrontSide.x, proportion * (ThingsInView.THING_ORIGIIN.y - this.boatFrontSide.y) + this.boatFrontSide.y);
+            return new Phaser.Point(proportion * (ThingsInView.THING_ORIGIIN.x - this.boatSide.x) + this.boatSide.x, proportion * (ThingsInView.THING_ORIGIIN.y - this.boatSide.y) + this.boatSide.y);
         }
 
         isAlongside(thingPosition: ThingPosition) : boolean {
@@ -76,10 +82,10 @@ module Waves {
             thingPosition.inventoryItem.scale = new Phaser.Point(1 - proportionalDistance, 1 - proportionalDistance);
 
             if (this.isAlongside(thingPosition)) {
-
-                thingPosition.inventoryItem.setDrag(true);
-                thingPosition.inventoryItem.position.x = this.boatSide.x;
-                thingPosition.inventoryItem.position.y = this.boatSide.y;
+                this.itemFoundHandler(thingPosition.thing);
+                /*thingPosition.inventoryItem.setDrag(true);
+                //thingPosition.inventoryItem.position.x = this.boatSide.x;
+                thingPosition.inventoryItem.position.y = this.boatSide.y;*/
                 this.removeThingInView(thingPosition);
             }
         }

@@ -2,10 +2,12 @@ module Waves {
 
     export class Thing {
         private _spriteName: string;
+        private _displayName: string;
         private _inventoryItem: InventoryItem;
 
         constructor(name: string) {
             this._spriteName = name;
+            this._displayName = name;
 
         }
         public get inventoryItem(): InventoryItem {
@@ -18,6 +20,10 @@ module Waves {
         
         public get spriteName() : string {
             return this._spriteName;
+        }
+
+        public get displayName(): string {
+            return this._displayName;
         }
 
     }

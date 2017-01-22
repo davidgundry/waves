@@ -38,8 +38,14 @@
             this.oar = new InventoryItem(this.game, 200, 100, this.onDrop.bind(this), new RowThing("oar",100, "Row with an oar"));
             this.sail = new InventoryItem(this.game, 300, 100, this.onDrop.bind(this), new SailThing("sail",5));
 
+            
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.00062, new SailThing("test", 0.5)));
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.0062, new SailThing("sail", 0.5)));
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.0248, new RowThing("oar", 1, "Row with an oar")));
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.087, new SailThing("sail", 3)));
+            (<Game>this.game).model.world.triggers.push(new EventTrigger(0.5, new FlyingFishStoryEvent()));
           
-            this.thingsInView = new ThingsInView((<Game>this.game), this.onDrop.bind(this), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y + this.boat.height), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y));
+            this.thingsInView = new ThingsInView((<Game>this.game), this.thingFoundCallback.bind(this), this.onDrop.bind(this), new Phaser.Point(this.boat.x + this.boat.width + 30, this.boat.y + this.boat.height/2), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y));
             this.eventBox = new EventPopup(this.game);
             this.eventBox.setListeners(this.press1, this.press2,this);
             this.eventBox.show("You found god", "Do you want to keep or throw back?", "Keep", "Throw back");
@@ -93,8 +99,8 @@
             if ((<Game>this.game).model.inventory.hasPlayerRowThing())
                 (<Game>this.game).model.world.MoveMeters((<Game>this.game).model.inventory.playerRowThing.speed);
             else
-                (<Game>this.game).model.world.MoveMeters(0.5); // speed with your hands
-        } 
+                (<Game>this.game).model.world.MoveMeters(0.1);
+        }
 
         sailTheBoat() {
             if ((<Game>this.game).model.inventory.hasSailThing())
@@ -125,7 +131,11 @@
                 this.milesDisplay.text = "You are " + (<Game>this.game).model.world.milesRemaining.toFixed(4) + " miles from land";   
         }
 
-
+        thingFoundCallback(thing: Thing) {
+            this.eventBox = new EventPopup(this.game);
+            this.eventBox.setListeners(this.press1, this.press2, this);
+            this.eventBox.show("You found a " + thing.displayName, "Do you want to keep or throw back?", "Keep", "Throw back");
+        }
 
     }
 
