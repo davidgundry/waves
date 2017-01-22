@@ -203,6 +203,12 @@
                 (<Game>this.game).model.world.MoveMeters(this.inventory.thingUsed.constantSpeed);
 
             world.fuel += this.inventory.thingUsed.fuelChange;
+            console.log("used thing=" + this.inventory.thingUsed.spriteName)
+            if (this.inventory.thingUsed.spriteName == "plastic-bag") {
+                this.boat.setSail(true);
+            } else {
+                this.boat.setSail(false);
+            }
            // if (this.inventory.hasSailThing())
              //   (<Game>this.game).model.world.MoveMeters(this.inventory.sailThing.speed);
         }
