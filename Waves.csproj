@@ -60,6 +60,8 @@
     <TypeScriptCompile Include="src\ThingsInView.ts" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="biro_script_reduced-webfont.woff" />
+    <Content Include="biro_script_reduced-webfont.woff2" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

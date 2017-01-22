@@ -58,7 +58,7 @@
         getFirstFreeSlot() : number {
             for (var i: number = 0; i < this.slots.length; i++) {
                 if (this.slots[i] === null)
-                return i;
+                    return i;
             }
             return undefined;
         }

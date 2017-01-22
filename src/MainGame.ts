@@ -23,20 +23,20 @@
             super.create();
             (<Game>this.game).model.world.getEventSignal(this.onEvent.bind(this));
             this.mainButton = new Button(this.game, "Paddle with your hands")
-            this.mainButton.setButtonText("Paddle with your nose");
+            this.mainButton.position.setTo(10, 550);
             this.mainButton.pressed.add(this.onPress.bind(this));
-            this.milesDisplay = this.game.add.text(300, 10, "Testing 12 12", { font: "30px Arial", fill: '#00f', align: 'right' })
-            this.healthDisplay = this.game.add.text(10, 50, "Health: 100%", { font: "20px Arial", fill: '#00f', align: 'left' })
-            this.waterDisplay = this.game.add.text(10, 90, "Water", { font: "20px Arial", fill: '#00f', align: 'left' })
-            this.foodDisplay = this.game.add.text(10, 120, "Food", { font: "20px Arial", fill: '#00f', align: 'left' })
-            this.fuelDisplay = this.game.add.text(10, 140, "Fuel", { font: "20px Arial", fill: '#00f', align: 'left' })
+            this.milesDisplay = this.game.add.text(300, 10, "Testing 12 12", { font: "60px biro_script_reducedregular", fill: '#0078C2', align: 'right' })
+            this.healthDisplay = this.game.add.text(10, 10, "HEALTH: 100%", { font: "28px biro_script_reducedregular", fill: '#0078C2', align: 'left' })
+            this.waterDisplay = this.game.add.text(10, 40, "WATER", { font: "28px biro_script_reducedregular", fill: '#0078C2', align: 'left' })
+            this.foodDisplay = this.game.add.text(10, 70, "FOOD", { font: "28px biro_script_reducedregular", fill: '#0078C2', align: 'left' })
+            this.fuelDisplay = this.game.add.text(10, 110, "FUEL", { font: "28px biro_script_reducedregular", fill: '#0078C2', align: 'left' })
             this.updateMiles();
 
             
             this.sea = new Sea(this.game, 320, 280);
             
             this.boat = new Boat(this.game, 550, 400);
-            this.inventory = new Inventory(this.game, 10, 280);
+            this.inventory = new Inventory(this.game, 10, 220);
           //  this.person = new InventoryItem(this.game, this.inventory, 100, 100, this.onDrop.bind(this), new Thing("person"));
          //   this.oar = new InventoryItem(this.game, this.inventory, 200, 100, this.onDrop.bind(this), new RowThing("oar",100, "Row with an oar"));
             //this.sail = new InventoryItem(this.game, this.inventory, 300, 100, this.onDrop.bind(this), new Thing("sail", { constantSpeed: 5 }));
@@ -181,18 +181,24 @@
         }
         updateHealthFoodAndWater() {
             var world: WorldState = (<Game>this.game).model.world;
-            this.healthDisplay.text = "Health: " + Math.ceil(world.health) + "%";
-            this.foodDisplay.text = "Food: " + Math.ceil(world.food)
-            this.waterDisplay.text = "Water: " + Math.ceil(world.water)
-            this.fuelDisplay.text = "Fuel: " + Math.ceil(world.fuel);
+            this.healthDisplay.text = "HEALTH: " + Math.ceil(world.health) + "%";
+            this.foodDisplay.text = "FOOD: " + Math.ceil(world.food)
+            this.waterDisplay.text = "WATER: " + Math.ceil(world.water)
+            this.fuelDisplay.text = "FUEL: " + Math.ceil(world.fuel);
             this.fuelDisplay.visible = (world.fuel > 0);
         }
            
         updateMiles() {
-                this.milesDisplay.text = "You are " + (<Game>this.game).model.world.milesRemaining.toFixed(4) + " miles from land";   
+          //  this.milesDisplay.text = "You are " + (<Game>this.game).model.world.milesRemaining.toFixed(4) + " miles from land"; 
+            this.milesDisplay.text = "Miles from land:" + (<Game>this.game).model.world.milesRemaining.toFixed(4) 
         }
 
         getItem(item: InventoryItem) {
+            var thing: Thing = item.baseThing;
+            var world: WorldState = (<Game>this.game).model.world;
+            world.fuel += thing.fuelChangeOnAdd;
+            world.food += thing.foodChangeOnAdd;
+            world.water += thing.waterChangeOnAdd;
             this.inventory.acceptItemFromEvent(item);
             this.eventBox.hideMessage();
             item.setDrag(true);
