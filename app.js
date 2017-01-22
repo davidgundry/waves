@@ -16,12 +16,103 @@ var Waves;
             this.state.start('Boot');
         }
         return Game;
-    }(Phaser.Game));
+    })(Phaser.Game);
     Waves.Game = Game;
 })(Waves || (Waves = {}));
 window.onload = function () {
     var game = new Waves.Game();
 };
+var Waves;
+(function (Waves) {
+    var Boat = (function (_super) {
+        __extends(Boat, _super);
+        function Boat(game, newX, newY) {
+            _super.call(this, game);
+            this.position.x = newX;
+            this.position.y = newY;
+            this.create(0, 0, "boat");
+            this.game.add.tween(this).to({ rotation: -0.03 }, 1000, "Sine.easeInOut", true, 0, -1, true);
+        }
+        return Boat;
+    })(Phaser.Group);
+    Waves.Boat = Boat;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var Boot = (function (_super) {
+        __extends(Boot, _super);
+        function Boot() {
+            _super.apply(this, arguments);
+            this.orientated = false;
+        }
+        Boot.prototype.preload = function () {
+            _super.prototype.preload.call(this);
+            this.load.image('preloadBar', 'assets/whiteLoadBar.png');
+        };
+        Boot.prototype.create = function () {
+            _super.prototype.create.call(this);
+            this.input.maxPointers = 1;
+            this.stage.disableVisibilityChange = true;
+            if (this.game.device.desktop) {
+                this.scale.scaleMode = Phaser.ScaleManager.NO_SCALE;
+                this.scale.pageAlignHorizontally = true;
+                this.scale.pageAlignVertically = true;
+            }
+            else {
+                this.scale.fullScreenScaleMode = Phaser.ScaleManager.NO_SCALE;
+                this.scale.pageAlignHorizontally = true;
+                this.scale.pageAlignVertically = true;
+                this.scale.refresh();
+                var gameElement = document.getElementById('game');
+                gameElement.style.overflow = "visible";
+            }
+            this.game.state.start('Preloader', true, false);
+        };
+        return Boot;
+    })(Phaser.State);
+    Waves.Boot = Boot;
+    ;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var Button = (function (_super) {
+        __extends(Button, _super);
+        function Button(game, label) {
+            _super.call(this, game);
+            this.boxWidth = 300;
+            this.boxHeight = 40;
+            this.drawBox();
+            this.createText(label);
+            this.pressed = new Phaser.Signal();
+        }
+        Button.prototype.drawBox = function () {
+            var boxSprite = this.game.add.sprite(0, 0);
+            var graphics = this.game.add.graphics(0, 0);
+            boxSprite.addChild(graphics);
+            graphics.lineStyle(1, 0x000000, 1);
+            graphics.beginFill(0xffffff, 1);
+            graphics.drawRect(0, 0, this.boxWidth, this.boxHeight);
+            graphics.endFill();
+            this.addChild(boxSprite);
+            boxSprite.inputEnabled = true;
+            boxSprite.input.priorityID = 2;
+            boxSprite.events.onInputDown.add(this.onPressed, this);
+        };
+        Button.prototype.setButtonText = function (newText) {
+            this.text.text = newText;
+        };
+        Button.prototype.createText = function (label) {
+            this.text = this.game.add.text(10, this.boxHeight / 2, label, { font: "20px Arial", fill: '#00f', align: 'left' }, this);
+            this.text.anchor.set(0, 0.5);
+        };
+        Button.prototype.onPressed = function () {
+            //alert("button " + this.text.text + " pressed");
+            this.pressed.dispatch();
+        };
+        return Button;
+    })(Phaser.Group);
+    Waves.Button = Button;
+})(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
     var PopupBox = (function (_super) {
@@ -68,7 +159,7 @@ var Waves;
             this.doneDrop();
         };
         return PopupBox;
-    }(Phaser.Group));
+    })(Phaser.Group);
     Waves.PopupBox = PopupBox;
 })(Waves || (Waves = {}));
 /// <reference path="PopupBox.ts" />
@@ -115,63 +206,8 @@ var Waves;
             this.button2.setButtonText(button2);
         };
         return EventPopup;
-    }(Waves.PopupBox));
+    })(Waves.PopupBox);
     Waves.EventPopup = EventPopup;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
-    var Boat = (function (_super) {
-        __extends(Boat, _super);
-        function Boat(game, newX, newY) {
-            _super.call(this, game);
-            this.position.x = newX;
-            this.position.y = newY;
-            this.create(0, 0, "boat");
-            this.game.add.tween(this).to({ rotation: -0.03 }, 1000, "Sine.easeInOut", true, 0, -1, true);
-        }
-        return Boat;
-    }(Phaser.Group));
-    Waves.Boat = Boat;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
-    var Button = (function (_super) {
-        __extends(Button, _super);
-        function Button(game, label) {
-            _super.call(this, game);
-            this.boxWidth = 300;
-            this.boxHeight = 40;
-            this.drawBox();
-            this.createText(label);
-            this.pressed = new Phaser.Signal();
-        }
-        Button.prototype.drawBox = function () {
-            var boxSprite = this.game.add.sprite(0, 0);
-            var graphics = this.game.add.graphics(0, 0);
-            boxSprite.addChild(graphics);
-            graphics.lineStyle(1, 0x000000, 1);
-            graphics.beginFill(0xffffff, 1);
-            graphics.drawRect(0, 0, this.boxWidth, this.boxHeight);
-            graphics.endFill();
-            this.addChild(boxSprite);
-            boxSprite.inputEnabled = true;
-            boxSprite.input.priorityID = 2;
-            boxSprite.events.onInputDown.add(this.onPressed, this);
-        };
-        Button.prototype.setButtonText = function (newText) {
-            this.text.text = newText;
-        };
-        Button.prototype.createText = function (label) {
-            this.text = this.game.add.text(10, this.boxHeight / 2, label, { font: "20px Arial", fill: '#00f', align: 'left' }, this);
-            this.text.anchor.set(0, 0.5);
-        };
-        Button.prototype.onPressed = function () {
-            //alert("button " + this.text.text + " pressed");
-            this.pressed.dispatch();
-        };
-        return Button;
-    }(Phaser.Group));
-    Waves.Button = Button;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
@@ -227,7 +263,7 @@ var Waves;
             return new Phaser.Point(x, y);
         };
         return Inventory;
-    }(Phaser.Group));
+    })(Phaser.Group);
     Waves.Inventory = Inventory;
 })(Waves || (Waves = {}));
 var Waves;
@@ -287,53 +323,121 @@ var Waves;
             this.game.add.tween(this.position).to({ y: 1000 }, 2000, "Sine.easeIn", true);
         };
         return InventoryItem;
-    }(Phaser.Group));
+    })(Phaser.Group);
     Waves.InventoryItem = InventoryItem;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
-    var StoryEvent = (function () {
-        function StoryEvent(name, description) {
-            this._name = name;
-            this._description = description;
+    var MainGame = (function (_super) {
+        __extends(MainGame, _super);
+        function MainGame() {
+            _super.apply(this, arguments);
         }
-        Object.defineProperty(StoryEvent.prototype, "name", {
-            get: function () {
-                return this._name;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(StoryEvent.prototype, "description", {
-            get: function () {
-                return this._description;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return StoryEvent;
-    }());
-    Waves.StoryEvent = StoryEvent;
-    var FlyingFishStoryEvent = (function (_super) {
-        __extends(FlyingFishStoryEvent, _super);
-        function FlyingFishStoryEvent() {
-            _super.call(this, "Flying Fish", "You see some totally sweet flying fish.");
-        }
-        return FlyingFishStoryEvent;
-    }(StoryEvent));
-    Waves.FlyingFishStoryEvent = FlyingFishStoryEvent;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
-    var Model = (function () {
-        function Model() {
-            this.world = new Waves.WorldState();
-            this.inventory = new Waves.InventoryState();
-            this.resource = new Waves.ResourceState();
-        }
-        return Model;
-    }());
-    Waves.Model = Model;
+        MainGame.prototype.create = function () {
+            _super.prototype.create.call(this);
+            this.mainButton = new Waves.Button(this.game, "Paddle with your hands");
+            this.mainButton.setButtonText("Paddle with your nose");
+            this.mainButton.pressed.add(this.onPress.bind(this));
+            this.milesDisplay = this.game.add.text(300, 10, "Testing 12 12", { font: "30px Arial", fill: '#00f', align: 'right' });
+            this.healthDisplay = this.game.add.text(10, 50, "Health: 100%", { font: "20px Arial", fill: '#00f', align: 'left' });
+            this.waterDisplay = this.game.add.text(10, 80, "Water", { font: "20px Arial", fill: '#00f', align: 'left' });
+            this.foodDisplay = this.game.add.text(10, 110, "Food", { font: "20px Arial", fill: '#00f', align: 'left' });
+            this.updateMiles();
+            this.sea = new Waves.Sea(this.game, 320, 280);
+            this.boat = new Waves.Boat(this.game, 550, 400);
+            this.inventory = new Waves.Inventory(this.game, 10, 280);
+            this.person = new Waves.InventoryItem(this.game, 100, 100, this.onDrop.bind(this), new Waves.Thing("person"));
+            this.oar = new Waves.InventoryItem(this.game, 200, 100, this.onDrop.bind(this), new Waves.RowThing("oar", 100, "Row with an oar"));
+            this.sail = new Waves.InventoryItem(this.game, 300, 100, this.onDrop.bind(this), new Waves.SailThing("sail", 5));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.00062, new Waves.SailThing("test", 0.5)));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.0062, new Waves.SailThing("sail", 0.5)));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.0248, new Waves.RowThing("oar", 1, "Row with an oar")));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.087, new Waves.SailThing("sail", 3)));
+            this.game.model.world.triggers.push(new Waves.EventTrigger(0.5, new Waves.FlyingFishStoryEvent()));
+            this.thingsInView = new Waves.ThingsInView(this.game, this.thingFoundCallback.bind(this), this.onDrop.bind(this), new Phaser.Point(this.boat.x + this.boat.width + 30, this.boat.y + this.boat.height / 2), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y));
+            this.eventBox = new Waves.EventPopup(this.game);
+            this.eventBox.setListeners(this.press1, this.press2, this);
+            this.eventBox.show("You found god", "Do you want to keep or throw back?", "Keep", "Throw back");
+        };
+        MainGame.prototype.press1 = function () {
+            this.eventBox.hideMessage();
+            alert("Pressed 1");
+        };
+        MainGame.prototype.press2 = function () {
+            this.eventBox.hideMessage();
+            alert("Pressed 2");
+        };
+        MainGame.prototype.onPress = function () {
+            this.rowTheBoat();
+        };
+        MainGame.prototype.onDrop = function (dropData) {
+            var item = dropData["dropItem"];
+            if (!this.inventory.acceptItem(item)) {
+                if (this.sea.thrownIntheSea(item)) {
+                    this.inventory.removeItem(item);
+                    item.sink();
+                }
+                else {
+                    item.returnToPlace();
+                }
+            }
+        };
+        MainGame.prototype.update = function () {
+            this.sailTheBoat();
+            if (this.game.model.inventory.hasPlayerRowThing()) {
+                this.mainButton.setButtonText(this.game.model.inventory.playerRowThing.buttonLabel);
+            }
+            else {
+                this.mainButton.setButtonText("Row with your hands");
+            }
+            this.sea.update();
+            this.updateMiles();
+            this.foodAndHealth();
+            this.updateHealthFoodAndWater();
+            this.thingsInView.update();
+        };
+        MainGame.prototype.rowTheBoat = function () {
+            if (this.game.model.inventory.hasPlayerRowThing())
+                this.game.model.world.MoveMeters(this.game.model.inventory.playerRowThing.speed);
+            else
+                this.game.model.world.MoveMeters(0.1);
+        };
+        MainGame.prototype.sailTheBoat = function () {
+            if (this.game.model.inventory.hasSailThing())
+                this.game.model.world.MoveMeters(this.game.model.inventory.sailThing.speed);
+        };
+        MainGame.prototype.foodAndHealth = function () {
+            var world = this.game.model.world;
+            if (world.water > 0) {
+                world.water -= Waves.WorldState.WATER_RATE;
+            }
+            else {
+                world.health -= Waves.WorldState.HEALTH_NO_WATER_RATE;
+            }
+            if (world.food > 0) {
+                world.food -= Waves.WorldState.FOOD_RATE;
+            }
+            else {
+                world.health -= Waves.WorldState.HEALTH_NO_FOOD_RATE;
+            }
+        };
+        MainGame.prototype.updateHealthFoodAndWater = function () {
+            var world = this.game.model.world;
+            this.healthDisplay.text = "Health: " + Math.ceil(world.health) + "%";
+            this.foodDisplay.text = "Food: " + Math.ceil(world.food);
+            this.waterDisplay.text = "Water: " + Math.ceil(world.water);
+        };
+        MainGame.prototype.updateMiles = function () {
+            this.milesDisplay.text = "You are " + this.game.model.world.milesRemaining.toFixed(4) + " miles from land";
+        };
+        MainGame.prototype.thingFoundCallback = function (thing) {
+            this.eventBox = new Waves.EventPopup(this.game);
+            this.eventBox.setListeners(this.press1, this.press2, this);
+            this.eventBox.show("You found a " + thing.displayName, "Do you want to keep or throw back?", "Keep", "Throw back");
+        };
+        return MainGame;
+    })(Phaser.State);
+    Waves.MainGame = MainGame;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
@@ -410,8 +514,20 @@ var Waves;
         });
         InventoryState.STARTING_TOTAL_SPACE = 10;
         return InventoryState;
-    }());
+    })();
     Waves.InventoryState = InventoryState;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var Model = (function () {
+        function Model() {
+            this.world = new Waves.WorldState();
+            this.inventory = new Waves.InventoryState();
+            this.resource = new Waves.ResourceState();
+        }
+        return Model;
+    })();
+    Waves.Model = Model;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
@@ -419,14 +535,48 @@ var Waves;
         function ResourceState() {
         }
         return ResourceState;
-    }());
+    })();
     Waves.ResourceState = ResourceState;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var StoryEvent = (function () {
+        function StoryEvent(name, description) {
+            this._name = name;
+            this._description = description;
+        }
+        Object.defineProperty(StoryEvent.prototype, "name", {
+            get: function () {
+                return this._name;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(StoryEvent.prototype, "description", {
+            get: function () {
+                return this._description;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return StoryEvent;
+    })();
+    Waves.StoryEvent = StoryEvent;
+    var FlyingFishStoryEvent = (function (_super) {
+        __extends(FlyingFishStoryEvent, _super);
+        function FlyingFishStoryEvent() {
+            _super.call(this, "Flying Fish", "You see some totally sweet flying fish.");
+        }
+        return FlyingFishStoryEvent;
+    })(StoryEvent);
+    Waves.FlyingFishStoryEvent = FlyingFishStoryEvent;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
     var Thing = (function () {
         function Thing(name) {
             this._spriteName = name;
+            this._displayName = name;
         }
         Object.defineProperty(Thing.prototype, "inventoryItem", {
             get: function () {
@@ -445,8 +595,15 @@ var Waves;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(Thing.prototype, "displayName", {
+            get: function () {
+                return this._displayName;
+            },
+            enumerable: true,
+            configurable: true
+        });
         return Thing;
-    }());
+    })();
     Waves.Thing = Thing;
     var RowThing = (function (_super) {
         __extends(RowThing, _super);
@@ -470,7 +627,7 @@ var Waves;
             configurable: true
         });
         return RowThing;
-    }(Thing));
+    })(Thing);
     Waves.RowThing = RowThing;
     var SailThing = (function (_super) {
         __extends(SailThing, _super);
@@ -486,7 +643,7 @@ var Waves;
             configurable: true
         });
         return SailThing;
-    }(Thing));
+    })(Thing);
     Waves.SailThing = SailThing;
 })(Waves || (Waves = {}));
 var Waves;
@@ -499,7 +656,7 @@ var Waves;
         }
         Object.defineProperty(ThingPosition.prototype, "thing", {
             get: function () {
-                return this.thing;
+                return this._thing;
             },
             enumerable: true,
             configurable: true
@@ -519,7 +676,7 @@ var Waves;
             configurable: true
         });
         return ThingPosition;
-    }());
+    })();
     Waves.ThingPosition = ThingPosition;
 })(Waves || (Waves = {}));
 var Waves;
@@ -536,7 +693,7 @@ var Waves;
             configurable: true
         });
         return Trigger;
-    }());
+    })();
     Waves.Trigger = Trigger;
     var EventTrigger = (function (_super) {
         __extends(EventTrigger, _super);
@@ -552,7 +709,7 @@ var Waves;
             configurable: true
         });
         return EventTrigger;
-    }(Trigger));
+    })(Trigger);
     Waves.EventTrigger = EventTrigger;
     var ThingTrigger = (function (_super) {
         __extends(ThingTrigger, _super);
@@ -568,7 +725,7 @@ var Waves;
             configurable: true
         });
         return ThingTrigger;
-    }(Trigger));
+    })(Trigger);
     Waves.ThingTrigger = ThingTrigger;
 })(Waves || (Waves = {}));
 var Waves;
@@ -580,8 +737,6 @@ var Waves;
             this._water = 0;
             this._food = 0;
             this._triggers = new Array();
-            this.triggers.push(new Waves.ThingTrigger(1, new Waves.Thing("paddle")));
-            this.triggers.push(new Waves.EventTrigger(0.5, new Waves.FlyingFishStoryEvent()));
         }
         Object.defineProperty(WorldState.prototype, "milesRemaining", {
             get: function () {
@@ -688,147 +843,10 @@ var Waves;
         WorldState.FOOD_RATE = 0.0005;
         WorldState.HEALTH_NO_WATER_RATE = 0.001;
         WorldState.HEALTH_NO_FOOD_RATE = 0.0005;
-        WorldState.LEAD_DISTANCE = 1;
+        WorldState.LEAD_DISTANCE = 0.2;
         return WorldState;
-    }());
+    })();
     Waves.WorldState = WorldState;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
-    var Boot = (function (_super) {
-        __extends(Boot, _super);
-        function Boot() {
-            _super.apply(this, arguments);
-            this.orientated = false;
-        }
-        Boot.prototype.preload = function () {
-            _super.prototype.preload.call(this);
-            this.load.image('preloadBar', 'assets/whiteLoadBar.png');
-        };
-        Boot.prototype.create = function () {
-            _super.prototype.create.call(this);
-            this.input.maxPointers = 1;
-            this.stage.disableVisibilityChange = true;
-            if (this.game.device.desktop) {
-                this.scale.scaleMode = Phaser.ScaleManager.NO_SCALE;
-                this.scale.pageAlignHorizontally = true;
-                this.scale.pageAlignVertically = true;
-            }
-            else {
-                this.scale.fullScreenScaleMode = Phaser.ScaleManager.NO_SCALE;
-                this.scale.pageAlignHorizontally = true;
-                this.scale.pageAlignVertically = true;
-                this.scale.refresh();
-                var gameElement = document.getElementById('game');
-                gameElement.style.overflow = "visible";
-            }
-            this.game.state.start('Preloader', true, false);
-        };
-        return Boot;
-    }(Phaser.State));
-    Waves.Boot = Boot;
-    ;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
-    var MainGame = (function (_super) {
-        __extends(MainGame, _super);
-        function MainGame() {
-            _super.apply(this, arguments);
-        }
-        MainGame.prototype.create = function () {
-            _super.prototype.create.call(this);
-            this.mainButton = new Waves.Button(this.game, "Paddle with your hands");
-            this.mainButton.setButtonText("Paddle with your nose");
-            this.mainButton.pressed.add(this.onPress.bind(this));
-            this.milesDisplay = this.game.add.text(300, 10, "Testing 12 12", { font: "30px Arial", fill: '#00f', align: 'right' });
-            this.healthDisplay = this.game.add.text(10, 50, "Health: 100%", { font: "20px Arial", fill: '#00f', align: 'left' });
-            this.waterDisplay = this.game.add.text(10, 80, "Water", { font: "20px Arial", fill: '#00f', align: 'left' });
-            this.foodDisplay = this.game.add.text(10, 110, "Food", { font: "20px Arial", fill: '#00f', align: 'left' });
-            this.updateMiles();
-            this.sea = new Waves.Sea(this.game, 320, 280);
-            this.boat = new Waves.Boat(this.game, 550, 400);
-            this.inventory = new Waves.Inventory(this.game, 10, 280);
-            this.person = new Waves.InventoryItem(this.game, 100, 100, this.onDrop.bind(this), new Waves.Thing("person"));
-            this.oar = new Waves.InventoryItem(this.game, 200, 100, this.onDrop.bind(this), new Waves.RowThing("oar", 100, "Row with an oar"));
-            this.sail = new Waves.InventoryItem(this.game, 300, 100, this.onDrop.bind(this), new Waves.SailThing("sail", 5));
-            this.thingsInView = new Waves.ThingsInView(this.game, this.onDrop.bind(this), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y + this.boat.height), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y));
-            this.eventBox = new Waves.EventPopup(this.game);
-            this.eventBox.setListeners(this.press1, this.press2, this);
-            this.eventBox.show("You found god", "Do you want to keep or throw back?", "Keep", "Throw back");
-        };
-        MainGame.prototype.press1 = function () {
-            this.eventBox.hideMessage();
-            alert("Pressed 1");
-        };
-        MainGame.prototype.press2 = function () {
-            this.eventBox.hideMessage();
-            alert("Pressed 2");
-        };
-        MainGame.prototype.onPress = function () {
-            this.rowTheBoat();
-        };
-        MainGame.prototype.onDrop = function (dropData) {
-            var item = dropData["dropItem"];
-            if (!this.inventory.acceptItem(item)) {
-                if (this.sea.thrownIntheSea(item)) {
-                    this.inventory.removeItem(item);
-                    item.sink();
-                }
-                else {
-                    item.returnToPlace();
-                }
-            }
-        };
-        MainGame.prototype.update = function () {
-            this.sailTheBoat();
-            if (this.game.model.inventory.hasPlayerRowThing()) {
-                this.mainButton.setButtonText(this.game.model.inventory.playerRowThing.buttonLabel);
-            }
-            else {
-                this.mainButton.setButtonText("Row with your hands");
-            }
-            this.sea.update();
-            this.updateMiles();
-            this.foodAndHealth();
-            this.updateHealthFoodAndWater();
-            this.thingsInView.update();
-        };
-        MainGame.prototype.rowTheBoat = function () {
-            if (this.game.model.inventory.hasPlayerRowThing())
-                this.game.model.world.MoveMeters(this.game.model.inventory.playerRowThing.speed);
-        };
-        MainGame.prototype.sailTheBoat = function () {
-            if (this.game.model.inventory.hasSailThing())
-                this.game.model.world.MoveMeters(this.game.model.inventory.sailThing.speed);
-        };
-        MainGame.prototype.foodAndHealth = function () {
-            var world = this.game.model.world;
-            if (world.water > 0) {
-                world.water -= Waves.WorldState.WATER_RATE;
-            }
-            else {
-                world.health -= Waves.WorldState.HEALTH_NO_WATER_RATE;
-            }
-            if (world.food > 0) {
-                world.food -= Waves.WorldState.FOOD_RATE;
-            }
-            else {
-                world.health -= Waves.WorldState.HEALTH_NO_FOOD_RATE;
-            }
-        };
-        MainGame.prototype.updateHealthFoodAndWater = function () {
-            var world = this.game.model.world;
-            this.healthDisplay.text = "Health: " + Math.ceil(world.health) + "%";
-            this.foodDisplay.text = "Food: " + Math.ceil(world.food);
-            this.waterDisplay.text = "Water: " + Math.ceil(world.water);
-        };
-        MainGame.prototype.updateMiles = function () {
-            this.milesDisplay.text = "You are " + this.game.model.world.milesRemaining.toFixed(4) + " miles from land";
-        };
-        return MainGame;
-    }(Phaser.State));
-    Waves.MainGame = MainGame;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
@@ -863,7 +881,7 @@ var Waves;
             this.game.state.start('MainGame', true, false);
         };
         return Preloader;
-    }(Phaser.State));
+    })(Phaser.State);
     Waves.Preloader = Preloader;
 })(Waves || (Waves = {}));
 var Waves;
@@ -915,18 +933,19 @@ var Waves;
             }
         };
         return Sea;
-    }(Phaser.Group));
+    })(Phaser.Group);
     Waves.Sea = Sea;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
     var ThingsInView = (function () {
-        function ThingsInView(game, dropHandler, boatSide, boatFrontSide) {
+        function ThingsInView(game, itemFoundHandler, dropHandler, boatSide, boatFrontSide) {
             this.thingsInView = new Array();
             this._game = game;
             this._boatSide = boatSide;
             this._boatFrontSide = boatFrontSide;
             this._dropHandler = dropHandler;
+            this._itemFoundHandler = itemFoundHandler;
             this.game.model.world.thingEventCallback = this.thingEventCallback.bind(this);
         }
         Object.defineProperty(ThingsInView.prototype, "game", {
@@ -950,6 +969,13 @@ var Waves;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(ThingsInView.prototype, "itemFoundHandler", {
+            get: function () {
+                return this._itemFoundHandler;
+            },
+            enumerable: true,
+            configurable: true
+        });
         ThingsInView.prototype.thingEventCallback = function (thing, position) {
             this.addThingInView(thing, position);
         };
@@ -959,7 +985,7 @@ var Waves;
         };
         ThingsInView.prototype.addThingInView = function (thing, position) {
             var screenPosition = this.screenPosition(position);
-            var item = new Waves.InventoryItem(this.game, screenPosition.x, screenPosition.y, this._dropHandler, new Waves.Thing("thing"));
+            var item = new Waves.InventoryItem(this.game, screenPosition.x, screenPosition.y, this._dropHandler, thing);
             item.setDrag(false);
             this.thingsInView.push(new Waves.ThingPosition(thing, position, item));
         };
@@ -969,11 +995,11 @@ var Waves;
                 relativePosition = 0;
             }
             var rPos = (relativePosition / Waves.WorldState.LEAD_DISTANCE);
-            return 1 - (Math.pow(100, 1 - rPos) - 1) / 100;
+            return 1 - (Math.pow(100000000000000, 1 - rPos) - 1) / 100000000000000;
         };
         ThingsInView.prototype.screenPosition = function (position) {
             var proportion = this.proportionalDistance(position);
-            return new Phaser.Point(proportion * (ThingsInView.THING_ORIGIIN.x - this.boatFrontSide.x) + this.boatFrontSide.x, proportion * (ThingsInView.THING_ORIGIIN.y - this.boatFrontSide.y) + this.boatFrontSide.y);
+            return new Phaser.Point(proportion * (ThingsInView.THING_ORIGIIN.x - this.boatSide.x) + this.boatSide.x, proportion * (ThingsInView.THING_ORIGIIN.y - this.boatSide.y) + this.boatSide.y);
         };
         ThingsInView.prototype.isAlongside = function (thingPosition) {
             var relativePosition = thingPosition.position - this.game.model.world.position;
@@ -986,9 +1012,10 @@ var Waves;
             var proportionalDistance = this.proportionalDistance(thingPosition.position);
             thingPosition.inventoryItem.scale = new Phaser.Point(1 - proportionalDistance, 1 - proportionalDistance);
             if (this.isAlongside(thingPosition)) {
-                thingPosition.inventoryItem.setDrag(true);
-                thingPosition.inventoryItem.position.x = this.boatSide.x;
-                thingPosition.inventoryItem.position.y = this.boatSide.y;
+                this.itemFoundHandler(thingPosition.thing);
+                /*thingPosition.inventoryItem.setDrag(true);
+                //thingPosition.inventoryItem.position.x = this.boatSide.x;
+                thingPosition.inventoryItem.position.y = this.boatSide.y;*/
                 this.removeThingInView(thingPosition);
             }
         };
@@ -1000,7 +1027,7 @@ var Waves;
         };
         ThingsInView.THING_ORIGIIN = new Phaser.Point(800, 300);
         return ThingsInView;
-    }());
+    })();
     Waves.ThingsInView = ThingsInView;
 })(Waves || (Waves = {}));
 //# sourceMappingURL=app.js.map

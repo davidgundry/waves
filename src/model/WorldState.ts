@@ -7,7 +7,7 @@ module Waves {
         static FOOD_RATE: number = 0.0005;
         static HEALTH_NO_WATER_RATE: number = 0.001;
         static HEALTH_NO_FOOD_RATE: number = 0.0005;
-        public static LEAD_DISTANCE: number = 1;
+        public static LEAD_DISTANCE: number = 0.2;
         private _position: number = 0;
         private _health: number = 100;
         private _water: number = 0;
@@ -56,12 +56,6 @@ module Waves {
             this._thingEventCallback = callback;
         }
       
-
-        constructor() {
-            this.triggers.push(new ThingTrigger(1, new Thing("paddle")));
-            this.triggers.push(new EventTrigger(0.5, new FlyingFishStoryEvent()));
-        }
-
         private MoveDistance(miles: number) {
             this.position += miles;
             this.CheckTriggers(this.position);
@@ -74,7 +68,7 @@ module Waves {
 
         private _triggers: Trigger[]= new Array<Trigger>();
         
-        private get triggers(): Trigger[] {
+        public get triggers(): Trigger[] {
             return this._triggers;
         }
         

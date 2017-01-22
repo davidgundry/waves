@@ -12,8 +12,8 @@ module Waves {
         private _position: number;
         private _inventoryItem: InventoryItem;
 
-        public get thing(): ThingPosition {
-            return this.thing;
+        public get thing(): Thing {
+            return this._thing;
         }
 
         public get position(): number {
