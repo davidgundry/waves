@@ -3,9 +3,29 @@ module Waves {
     export class Thing {
         private _spriteName: string;
         private _displayName: string;
+        public waterChangeOnAdd: number = 0;
+        public foodChangeOnAdd: number = 0;
+        public fuelChangeOnAdd: number = 0;
+        public fuelChange: number = 0;
+        public constantSpeed: number = 0;
+        public clickSpeed: number = 0;
+
         private _inventoryItem: InventoryItem;
 
-        constructor(name: string) {
+        constructor(name: string, parameters: Object = {}) {
+            if (parameters.hasOwnProperty("water")) 
+                this.waterChangeOnAdd = parameters["water"];
+            if (parameters.hasOwnProperty("food"))
+                this.waterChangeOnAdd = parameters["food"];
+            if (parameters.hasOwnProperty("fuel"))
+                this.waterChangeOnAdd = parameters["fuel"];
+            if (parameters.hasOwnProperty("fuelChange"))
+                this.waterChangeOnAdd = parameters["fuelChange"];
+            if (parameters.hasOwnProperty("clickSpeed"))
+                this.waterChangeOnAdd = parameters["clickSpeed"];
+            if (parameters.hasOwnProperty("constantSpeed"))
+                this.waterChangeOnAdd = parameters["constantSpeed"];
+            
             this._spriteName = name;
             this._displayName = name;
 

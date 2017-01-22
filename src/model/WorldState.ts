@@ -12,6 +12,7 @@ module Waves {
         private _health: number = 100;
         private _water: number = 0;
         private _food: number = 0;
+        private _fuel: number = 0;
         private eventSignal: Phaser.Signal;
 
         public get milesRemaining(): number {
@@ -46,6 +47,13 @@ module Waves {
 
         public set food(value: number) {
             this._food= value;
+        }
+        public get fuel(): number {
+            return this._fuel;
+        }
+
+        public set fuel(value: number) {
+            this._fuel = value;
         }
 
         private _thingEventCallback: (thing: Thing, position: number) => void;
