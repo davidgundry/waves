@@ -6,7 +6,7 @@
         slotHeight: number = 100;
         boundsRect: Phaser.Rectangle;
 
-        private _thingUsed: Thing = new Thing("hands");
+        private _thingUsed: Thing = new Thing("hands","hands");
 
         public get thingUsed(): Thing {
             return this._thingUsed;
@@ -84,7 +84,7 @@
             this.slots[item.inventorySlot] = null;
             item.inventorySlot = null;
             if (this._thingUsed == item.baseThing)
-                this._thingUsed = new Thing("hands");
+                this._thingUsed = new Thing("hands","hands");
         }
         getSlot(x: number, y: number): number {
             var slotX: number = Math.floor((x - this.position.x) / this.slotWidth);
@@ -105,25 +105,6 @@
             }
             usedThing.inventoryItem.setInUse(true);
         }
-
-
-        public hasPlayerRowThing(): boolean {
-            return (this.thingUsed instanceof RowThing)
-        }
-
-        public hasSailThing(): boolean {
-            return (this.thingUsed instanceof SailThing)
-        }
-
-        public get playerRowThing(): RowThing {
-            return this.thingUsed as RowThing;
-        }
-
-        public get sailThing(): SailThing {
-            return this.thingUsed as SailThing;
-        }
-
-
 
     }
 

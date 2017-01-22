@@ -39,15 +39,23 @@
             this.inventory = new Inventory(this.game, 10, 280);
           //  this.person = new InventoryItem(this.game, this.inventory, 100, 100, this.onDrop.bind(this), new Thing("person"));
          //   this.oar = new InventoryItem(this.game, this.inventory, 200, 100, this.onDrop.bind(this), new RowThing("oar",100, "Row with an oar"));
-            this.sail = new InventoryItem(this.game, this.inventory, 300, 100, this.onDrop.bind(this), new Thing("sail", { constantSpeed: 5 }));
-            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.1, new Thing("motor", { speed: 1, fuelChange: -1 })));
+            //this.sail = new InventoryItem(this.game, this.inventory, 300, 100, this.onDrop.bind(this), new Thing("sail", { constantSpeed: 5 }));
+
             
-         //   (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.00032, new SailThing("test", 0.1)));
-       //     (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.0062, new SailThing("sail", 0.5)));
-       //     (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.0248, new RowThing("oar", 1, "Row with an oar")));
-       //     (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.087, new SailThing("sail", 3)));
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.00032, new Thing("plastic-bag", "plastic bag and a stick", { constantSpeed: 0.1 })));
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.0034, new Thing("duck", "rubber duck")));
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.0062,  new Thing("plank", "wooden plank", { clickSpeed: 0.1, buttonLabel: "Row with the plank"  })));
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.0248,  new Thing("sail", "sail", { constantSpeed: 0.3 })));
+
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.087, new Thing("oar", "oar", { clickSpeed: 0.3, buttonLabel: "Row with the oar" })));
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.1, new Thing("corpse", "corpse", { clickSpeed: 1, buttonLabel: "Row with the corpse" })));
+
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.2, new Thing("ship-in-bottle", "ship in a bottle")));
+
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.2, new Thing("motor", "Motor", { speed: 1, fuelChange: -1 })));
+
             //     (<Game>this.game).model.world.triggers.push(new EventTrigger(0.5, new FlyingFishStoryEvent()));
-            (<Game>this.game).model.world.triggers.push(new EventTrigger(49.5, new LandStoryEvent()));
+            (<Game>this.game).model.world.triggers.push(new EventTrigger(47.5, new LandStoryEvent()));
           
             this.thingsInView = new ThingsInView((<Game>this.game), this.inventory, this.thingFoundCallback.bind(this), this.onDrop.bind(this), new Phaser.Point(this.boat.x + this.boat.width + 30, this.boat.y + this.boat.height/2), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y));
             this.eventBox = new EventPopup(this.game);
@@ -114,8 +122,8 @@
 
         update() {
             this.sailTheBoat();
-            if (this.inventory.hasPlayerRowThing()) {
-                this.mainButton.setButtonText(this.inventory.playerRowThing.buttonLabel);
+            if (this.inventory.thingUsed.clickSpeed > 0) {
+                this.mainButton.setButtonText(this.inventory.thingUsed.buttonLabel);
             } else {
                 this.mainButton.setButtonText("Row with your hands");
             }
@@ -128,8 +136,8 @@
         }
 
         rowTheBoat() {
-            if (this.inventory.hasPlayerRowThing())
-                (<Game>this.game).model.world.MoveMeters(this.inventory.playerRowThing.speed);
+            if (this.inventory.thingUsed.clickSpeed > 0)
+                (<Game>this.game).model.world.MoveMeters(this.inventory.thingUsed.clickSpeed);
             else
                 (<Game>this.game).model.world.MoveMeters(0.1);
         }

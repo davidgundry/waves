@@ -2,12 +2,12 @@ module Waves {
 
     export class WorldState {
 
-        static STARTING_MILES: number = 50;
+        static STARTING_MILES: number = 48;
         static WATER_RATE: number = 0.001;
         static FOOD_RATE: number = 0.0005;
         static HEALTH_NO_WATER_RATE: number = 0.001;
         static HEALTH_NO_FOOD_RATE: number = 0.0005;
-        public static LEAD_DISTANCE: number = 0.2;
+        public static LEAD_DISTANCE: number = 0.05;
         private _position: number = 0;
         private _health: number = 100;
         private _water: number = 0;

@@ -9,10 +9,11 @@ module Waves {
         public fuelChange: number = 0;
         public constantSpeed: number = 0;
         public clickSpeed: number = 0;
+        public buttonLabel: string = "";
 
         private _inventoryItem: InventoryItem;
 
-        constructor(name: string, parameters: Object = {}) {
+        constructor(name: string, displayName: string, parameters: Object = {}) {
             if (parameters.hasOwnProperty("water")) 
                 this.waterChangeOnAdd = parameters["water"];
             if (parameters.hasOwnProperty("food"))
@@ -25,9 +26,11 @@ module Waves {
                 this.clickSpeed = parameters["clickSpeed"];
             if (parameters.hasOwnProperty("constantSpeed"))
                 this.constantSpeed = parameters["constantSpeed"];
+            if (parameters.hasOwnProperty("buttonLabel"))
+                this.buttonLabel = parameters["buttonLabel"];
             
             this._spriteName = name;
-            this._displayName = name;
+            this._displayName = displayName;
 
         }
         public get inventoryItem(): InventoryItem {
@@ -46,38 +49,5 @@ module Waves {
             return this._displayName;
         }
 
-    }
-
-    export class RowThing extends Thing {
-
-        constructor(name: string, speed : number, buttonLabel: string) {
-            super(name)
-            this._speed = speed;
-            this._buttonLabel = buttonLabel;
-        }
-
-        private _speed: number;
-        public get speed(): number {
-            return this._speed;
-        }
-
-        private _buttonLabel: string;
-        public get buttonLabel(): string {
-            return this._buttonLabel;
-        }
-
-    }
-
-    export class SailThing extends Thing {
-
-        constructor(name: string, speed: number) {
-            super(name)
-            this._speed = speed;
-        }
-
-        private _speed: number;
-        public get speed(): number {
-            return this._speed;
-        }
     }
 }

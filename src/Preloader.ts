@@ -20,11 +20,28 @@
 
 
             //  Load our actual games assets
-            this.game.load.image("sail", "assets/sailPlaceHolder.png");
+            this.game.load.image("plastic-bag", "assets/plastic-bag.png");
+            this.game.load.image("sail", "assets/sail.png");
+
+            this.game.load.image("plank", "assets/plank.png");
+            this.game.load.image("oar", "assets/oar.png");
+            this.game.load.image("corpse", "assets/corpse.png");
+
+            this.game.load.image("motor", "assets/motor.png");
+            this.game.load.image("fuel", "assets/fuel.png");
+
+            this.game.load.image("rod", "assets/rod.png");
+            this.game.load.image("hat", "assets/hat.png");
+            this.game.load.image("ship-in-bottle", "assets/ship-in-bottle.png");
+            this.game.load.image("duck", "assets/duck.png");
+            this.game.load.image("chest", "assets/chest.png");
+            this.game.load.image("food", "assets/food.png");
+            this.game.load.image("barrel", "assets/barrel.png");
+
             this.game.load.image("inUse", "assets/InUse.png");
             this.game.load.image("inventory", "assets/inventory.png");
             this.game.load.image("person", "assets/placeholderMan.png");
-            this.game.load.image("oar", "assets/oarPlaceHolder.png");
+            
             this.game.load.image("sea1", "assets/sea-top.png");
             this.game.load.image("sea2", "assets/sea-middle.png");
             this.game.load.image("sea3", "assets/sea-bottom.png");
