@@ -7,7 +7,7 @@ module Waves {
         static FOOD_RATE: number = 0.0025;
         static HEALTH_NO_WATER_RATE: number = 0.003;
         static HEALTH_NO_FOOD_RATE: number = 0.001;
-        public static LEAD_DISTANCE: number = 0.05;
+        public static LEAD_DISTANCE: number = 0.1;
         private _position: number = 0;
         private _health: number = 100;
         private _water: number = 5;
