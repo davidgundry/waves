@@ -35,7 +35,7 @@
             this.game.load.image("ship-in-bottle", "assets/ship-in-bottle.png");
             this.game.load.image("duck", "assets/duck.png");
             this.game.load.image("chest", "assets/chest.png");
-            this.game.load.image("food", "assets/food.png");
+            this.game.load.image("fish", "assets/fish.png");
             this.game.load.image("barrel", "assets/barrel.png");
 
             this.game.load.image("inUse", "assets/InUse.png");
