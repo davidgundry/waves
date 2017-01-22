@@ -63,14 +63,43 @@ module Waves {
 
     export class FlyingFishStoryEvent extends StoryEvent
     {
-        constructor()
-        {
+        constructor() {
             super("Flying Fish", "You see some totally sweet flying fish.", "Try and catch them", "Marvel", new ChoiceAction("You waste time and energy"), new ChoiceAction("You feel this is a beautiful world"));
             this._onB1.healthChange = -10;
         }
-
-
     }
+
+    export class NightTimeStoryEvent extends StoryEvent {
+        constructor() {
+            super("Night Falls", "It's getting dark", "Sleep", "Keep going", new ChoiceAction("You wake up refreshed"), new ChoiceAction("You keep going"));
+            this._onB1.healthChange = +10;
+            this._onB1.foodChange = -5;
+            this._onB1.waterChange = -10;
+        }
+    }
+
+    export class SailingStoryEvent extends StoryEvent {
+        constructor() {
+            super("", "You decide you don't like sailing any more.", "It sucks.", "", new ChoiceAction(""));
+        }
+    }
+
+    export class WonderStoryEvent extends StoryEvent {
+        constructor() {
+            super("", "You wonder if your family misses you", "Yeah", "No", new ChoiceAction("Yeah, they probably do"), new ChoiceAction("They probably haven't noticed"));
+        }
+    }
+
+    export class SharksStoryEvent extends StoryEvent {
+        constructor() {
+            super("Sharks", "You see some sharks", "Cool", "", new ChoiceAction("Oh no! They shoot lasers at your from their eyes!"));
+            this._onB1.healthChange = -10;
+        }
+    }
+
+
+
+
     export class LandStoryEvent extends StoryEvent {
         constructor() {
             super("You've reached land", "You did it, you've reached land and survived.", "Rejoice", "", new ChoiceAction(""));
