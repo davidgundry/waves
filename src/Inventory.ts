@@ -6,7 +6,7 @@
         slotHeight: number = 100;
         boundsRect: Phaser.Rectangle;
 
-        private _thingUsed: Thing;
+        private _thingUsed: Thing = new Thing("hands");
 
         public get thingUsed(): Thing {
             return this._thingUsed;
