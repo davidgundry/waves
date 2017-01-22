@@ -186,6 +186,11 @@
         }
 
         getItem(item: InventoryItem) {
+            var thing: Thing = item.baseThing;
+            var world: WorldState = (<Game>this.game).model.world;
+            world.fuel += thing.fuelChangeOnAdd;
+            world.food += thing.foodChangeOnAdd;
+            world.water += thing.waterChangeOnAdd;
             this.inventory.acceptItemFromEvent(item);
             this.eventBox.hideMessage();
             item.setDrag(true);
