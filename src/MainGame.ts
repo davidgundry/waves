@@ -15,6 +15,7 @@
         boat: Boat;
         sail: Boat;
         inventory: Inventory;
+        currentEvent: StoryEvent;
         eventBox: EventPopup;
 
         create() {
@@ -47,8 +48,8 @@
           
             this.thingsInView = new ThingsInView((<Game>this.game), this.inventory, this.thingFoundCallback.bind(this), this.onDrop.bind(this), new Phaser.Point(this.boat.x + this.boat.width + 30, this.boat.y + this.boat.height/2), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y));
             this.eventBox = new EventPopup(this.game);
-            this.eventBox.setListeners(this.press1, this.press2,this);
-            this.eventBox.show("You found god", "Do you want to keep or throw back?", "Keep", "Throw back");
+         //   this.eventBox.setListeners(this.press1, this.press2,this);
+          //  this.eventBox.show("You found god", "Do you want to keep or throw back?", "Keep", "Throw back");
         }
         press1() {
             this.eventBox.hideMessage();
@@ -59,11 +60,20 @@
             alert("Pressed 2");
         }
         onEvent(event: StoryEvent) {
-            
-            this.eventBox.show(event.name, event.description, event.button1, event.button2);
-            //this.eventBox.setListeners(this.event1, this.event2, this);
-
-            alert("Event " + event.name);
+            this.currentEvent = event;
+            this.eventBox.setListeners(this.event1.bind(this), this.event2.bind(this), this);
+            this.eventBox.show(event.name, event.description, event.button1, event.button2);   
+        }
+        event1() {
+            this.eventBox.setListeners(this.hideEvent, this.hideEvent, this);
+            this.eventBox.setText(this.currentEvent.name, this.currentEvent.onB1.response, "Ok","");
+        }
+        event2() {
+            this.eventBox.setListeners(this.hideEvent, this.hideEvent, this);
+            this.eventBox.setText(this.currentEvent.name, this.currentEvent.onB2.response, "Ok", "");
+        }
+        hideEvent() {
+            this.eventBox.hideMessage();
         }
         onPress() {
             this.rowTheBoat()

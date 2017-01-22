@@ -175,8 +175,10 @@ var Waves;
         EventPopup.prototype.setListeners = function (on1, on2, context) {
             this.button1.pressed.removeAll(context);
             this.button2.pressed.removeAll(context);
-            this.button1.pressed.add(on1, context);
-            this.button2.pressed.add(on2, context);
+            if (on1)
+                this.button1.pressed.add(on1, context);
+            if (on2)
+                this.button2.pressed.add(on2, context);
         };
         EventPopup.prototype.createButtons = function () {
             this.button1 = new Waves.Button(this.game, "1");
@@ -426,8 +428,8 @@ var Waves;
             this.game.model.world.triggers.push(new Waves.EventTrigger(0.5, new Waves.FlyingFishStoryEvent()));
             this.thingsInView = new Waves.ThingsInView(this.game, this.inventory, this.thingFoundCallback.bind(this), this.onDrop.bind(this), new Phaser.Point(this.boat.x + this.boat.width + 30, this.boat.y + this.boat.height / 2), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y));
             this.eventBox = new Waves.EventPopup(this.game);
-            this.eventBox.setListeners(this.press1, this.press2, this);
-            this.eventBox.show("You found god", "Do you want to keep or throw back?", "Keep", "Throw back");
+            //   this.eventBox.setListeners(this.press1, this.press2,this);
+            //  this.eventBox.show("You found god", "Do you want to keep or throw back?", "Keep", "Throw back");
         };
         MainGame.prototype.press1 = function () {
             this.eventBox.hideMessage();
@@ -438,9 +440,20 @@ var Waves;
             alert("Pressed 2");
         };
         MainGame.prototype.onEvent = function (event) {
+            this.currentEvent = event;
+            this.eventBox.setListeners(this.event1.bind(this), this.event2.bind(this), this);
             this.eventBox.show(event.name, event.description, event.button1, event.button2);
-            //this.eventBox.setListeners(this.event1, this.event2, this);
-            alert("Event " + event.name);
+        };
+        MainGame.prototype.event1 = function () {
+            this.eventBox.setListeners(this.hideEvent, this.hideEvent, this);
+            this.eventBox.setText(this.currentEvent.name, this.currentEvent.onB1.response, "Ok", "");
+        };
+        MainGame.prototype.event2 = function () {
+            this.eventBox.setListeners(this.hideEvent, this.hideEvent, this);
+            this.eventBox.setText(this.currentEvent.name, this.currentEvent.onB2.response, "Ok", "");
+        };
+        MainGame.prototype.hideEvent = function () {
+            this.eventBox.hideMessage();
         };
         MainGame.prototype.onPress = function () {
             this.rowTheBoat();
@@ -598,14 +611,14 @@ var Waves;
         });
         Object.defineProperty(StoryEvent.prototype, "onB1", {
             get: function () {
-                return this._button1;
+                return this._onB1;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(StoryEvent.prototype, "onB2", {
             get: function () {
-                return this._button2;
+                return this._onB2;
             },
             enumerable: true,
             configurable: true

@@ -25,8 +25,10 @@ module Waves {
         setListeners(on1: Function, on2: Function, context) {
             this.button1.pressed.removeAll(context);
             this.button2.pressed.removeAll(context);
-            this.button1.pressed.add(on1, context);
-            this.button2.pressed.add(on2, context);
+            if (on1)
+                this.button1.pressed.add(on1, context);
+            if (on2)
+                this.button2.pressed.add(on2, context);
         }
 
         createButtons() {
