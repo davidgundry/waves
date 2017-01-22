@@ -25,11 +25,11 @@
             this.mainButton = new Button(this.game, "Paddle with your hands")
             this.mainButton.setButtonText("Paddle with your nose");
             this.mainButton.pressed.add(this.onPress.bind(this));
-            this.milesDisplay = this.game.add.text(300, 10, "Testing 12 12", { font: "30px Arial", fill: '#00f', align: 'right' })
-            this.healthDisplay = this.game.add.text(10, 50, "Health: 100%", { font: "20px Arial", fill: '#00f', align: 'left' })
-            this.waterDisplay = this.game.add.text(10, 90, "Water", { font: "20px Arial", fill: '#00f', align: 'left' })
-            this.foodDisplay = this.game.add.text(10, 120, "Food", { font: "20px Arial", fill: '#00f', align: 'left' })
-            this.fuelDisplay = this.game.add.text(10, 140, "Fuel", { font: "20px Arial", fill: '#00f', align: 'left' })
+            this.milesDisplay = this.game.add.text(300, 10, "Testing 12 12", { font: "40px biro_script_reducedregular", fill: '#005796', align: 'right' })
+            this.healthDisplay = this.game.add.text(10, 50, "HEALTH: 100%", { font: "28px biro_script_reducedregular", fill: '#005796', align: 'left' })
+            this.waterDisplay = this.game.add.text(10, 90, "WATER", { font: "28px biro_script_reducedregular", fill: '#005796', align: 'left' })
+            this.foodDisplay = this.game.add.text(10, 130, "FOOD", { font: "28px biro_script_reducedregular", fill: '#005796', align: 'left' })
+            this.fuelDisplay = this.game.add.text(10, 170, "FUEL", { font: "28px biro_script_reducedregular", fill: '#005796', align: 'left' })
             this.updateMiles();
 
             
@@ -173,10 +173,10 @@
         }
         updateHealthFoodAndWater() {
             var world: WorldState = (<Game>this.game).model.world;
-            this.healthDisplay.text = "Health: " + Math.ceil(world.health) + "%";
-            this.foodDisplay.text = "Food: " + Math.ceil(world.food)
-            this.waterDisplay.text = "Water: " + Math.ceil(world.water)
-            this.fuelDisplay.text = "Fuel: " + Math.ceil(world.fuel);
+            this.healthDisplay.text = "HEALTH: " + Math.ceil(world.health) + "%";
+            this.foodDisplay.text = "FOOD: " + Math.ceil(world.food)
+            this.waterDisplay.text = "WATER: " + Math.ceil(world.water)
+            this.fuelDisplay.text = "FUEL: " + Math.ceil(world.fuel);
             this.fuelDisplay.visible = (world.fuel > 0);
         }
            
