@@ -7,8 +7,9 @@
         inventorySlot: number;
         inUseSprite: Phaser.Sprite;
         baseThing: Thing;
+        inventory: Inventory;
 
-        constructor(game: Phaser.Game,  newX: number, newY: number,dropHandler:Function,thing:Thing) {
+        constructor(game: Phaser.Game, inventory: Inventory, newX: number, newY: number, dropHandler: Function, thing: Thing) {
             super(game);
             this.baseThing = thing;
             thing.inventoryItem = this;
@@ -23,6 +24,7 @@
             this.dropped.add(dropHandler);
             this.inventorySlot = null;
             this.setDrag(true)
+            this.inventory = inventory;
         }
         setDrag(isEnabled: boolean) {
             this.baseSprite.inputEnabled = isEnabled;
@@ -39,7 +41,7 @@
         onClick() {
             if (this.inventorySlot !== null) {
                 
-                (<Game>this.game).model.inventory.SetInUse(this.baseThing);
+                this.inventory.SetInUse(this.baseThing);
             }
         }
         setInUse(isUsed: boolean) {

@@ -227,6 +227,13 @@ var Waves;
             this.create(0, 0, "inventory");
             this.boundsRect = new Phaser.Rectangle(this.position.x, this.position.y, this.width, this.height);
         }
+        Object.defineProperty(Inventory.prototype, "thingUsed", {
+            get: function () {
+                return this._thingUsed;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(Inventory.prototype, "full", {
             get: function () {
                 return this.getFirstFreeSlot() == undefined;
@@ -268,22 +275,22 @@ var Waves;
         Inventory.prototype.putItemInSlot = function (item, slot) {
             this.setItem(item, slot);
             var centre = this.getSlotMiddle(slot);
-            this.game.add.tween(item).to({ x: centre.x, y: centre.y }, 1000, "Sine.easeIn", true);
+            this.game.add.tween(item).to({ x: centre.x, y: centre.y }, 100, "Sine.easeIn", true);
         };
         Inventory.prototype.setItem = function (item, slot) {
             this.slots[slot] = item;
             if (item.inventorySlot) {
                 this.slots[item.inventorySlot] = null;
             }
-            else {
-                this.game.model.inventory.AddItem(item.baseThing);
-            }
             item.inventorySlot = slot;
         };
         Inventory.prototype.removeItem = function (item) {
-            this.game.model.inventory.DiscardItem(item.baseThing);
+            //(<Game>this.game).model.inventory.DiscardItem(item.baseThing);
+            item.setInUse(false);
             this.slots[item.inventorySlot] = null;
             item.inventorySlot = null;
+            if (this._thingUsed == item.baseThing)
+                this._thingUsed = null;
         };
         Inventory.prototype.getSlot = function (x, y) {
             var slotX = Math.floor((x - this.position.x) / this.slotWidth);
@@ -295,6 +302,34 @@ var Waves;
             var y = this.position.y + (Math.floor(slotNumber / 3) + 0.5) * this.slotHeight;
             return new Phaser.Point(x, y);
         };
+        Inventory.prototype.SetInUse = function (usedThing) {
+            this._thingUsed = usedThing;
+            for (var i = 0; i < this.slots.length; i++) {
+                if (this.slots[i] != null)
+                    this.slots[i].setInUse(false);
+            }
+            usedThing.inventoryItem.setInUse(true);
+        };
+        Inventory.prototype.hasPlayerRowThing = function () {
+            return (this.thingUsed instanceof Waves.RowThing);
+        };
+        Inventory.prototype.hasSailThing = function () {
+            return (this.thingUsed instanceof Waves.SailThing);
+        };
+        Object.defineProperty(Inventory.prototype, "playerRowThing", {
+            get: function () {
+                return this.thingUsed;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Inventory.prototype, "sailThing", {
+            get: function () {
+                return this.thingUsed;
+            },
+            enumerable: true,
+            configurable: true
+        });
         return Inventory;
     })(Phaser.Group);
     Waves.Inventory = Inventory;
@@ -303,7 +338,7 @@ var Waves;
 (function (Waves) {
     var InventoryItem = (function (_super) {
         __extends(InventoryItem, _super);
-        function InventoryItem(game, newX, newY, dropHandler, thing) {
+        function InventoryItem(game, inventory, newX, newY, dropHandler, thing) {
             _super.call(this, game);
             this.baseThing = thing;
             thing.inventoryItem = this;
@@ -318,6 +353,7 @@ var Waves;
             this.dropped.add(dropHandler);
             this.inventorySlot = null;
             this.setDrag(true);
+            this.inventory = inventory;
         }
         InventoryItem.prototype.setDrag = function (isEnabled) {
             this.baseSprite.inputEnabled = isEnabled;
@@ -333,7 +369,7 @@ var Waves;
         };
         InventoryItem.prototype.onClick = function () {
             if (this.inventorySlot !== null) {
-                this.game.model.inventory.SetInUse(this.baseThing);
+                this.inventory.SetInUse(this.baseThing);
             }
         };
         InventoryItem.prototype.setInUse = function (isUsed) {
@@ -368,6 +404,7 @@ var Waves;
         }
         MainGame.prototype.create = function () {
             _super.prototype.create.call(this);
+            this.game.model.world.getEventSignal(this.onEvent.bind(this));
             this.mainButton = new Waves.Button(this.game, "Paddle with your hands");
             this.mainButton.setButtonText("Paddle with your nose");
             this.mainButton.pressed.add(this.onPress.bind(this));
@@ -379,15 +416,15 @@ var Waves;
             this.sea = new Waves.Sea(this.game, 320, 280);
             this.boat = new Waves.Boat(this.game, 550, 400);
             this.inventory = new Waves.Inventory(this.game, 10, 280);
-            this.person = new Waves.InventoryItem(this.game, 100, 100, this.onDrop.bind(this), new Waves.Thing("person"));
-            this.oar = new Waves.InventoryItem(this.game, 200, 100, this.onDrop.bind(this), new Waves.RowThing("oar", 100, "Row with an oar"));
-            this.sail = new Waves.InventoryItem(this.game, 300, 100, this.onDrop.bind(this), new Waves.SailThing("sail", 5));
+            this.person = new Waves.InventoryItem(this.game, this.inventory, 100, 100, this.onDrop.bind(this), new Waves.Thing("person"));
+            this.oar = new Waves.InventoryItem(this.game, this.inventory, 200, 100, this.onDrop.bind(this), new Waves.RowThing("oar", 100, "Row with an oar"));
+            this.sail = new Waves.InventoryItem(this.game, this.inventory, 300, 100, this.onDrop.bind(this), new Waves.SailThing("sail", 5));
             this.game.model.world.triggers.push(new Waves.ThingTrigger(0.00032, new Waves.SailThing("test", 0.1)));
             this.game.model.world.triggers.push(new Waves.ThingTrigger(0.0062, new Waves.SailThing("sail", 0.5)));
             this.game.model.world.triggers.push(new Waves.ThingTrigger(0.0248, new Waves.RowThing("oar", 1, "Row with an oar")));
             this.game.model.world.triggers.push(new Waves.ThingTrigger(0.087, new Waves.SailThing("sail", 3)));
             this.game.model.world.triggers.push(new Waves.EventTrigger(0.5, new Waves.FlyingFishStoryEvent()));
-            this.thingsInView = new Waves.ThingsInView(this.game, this.thingFoundCallback.bind(this), this.onDrop.bind(this), new Phaser.Point(this.boat.x + this.boat.width + 30, this.boat.y + this.boat.height / 2), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y));
+            this.thingsInView = new Waves.ThingsInView(this.game, this.inventory, this.thingFoundCallback.bind(this), this.onDrop.bind(this), new Phaser.Point(this.boat.x + this.boat.width + 30, this.boat.y + this.boat.height / 2), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y));
             this.eventBox = new Waves.EventPopup(this.game);
             this.eventBox.setListeners(this.press1, this.press2, this);
             this.eventBox.show("You found god", "Do you want to keep or throw back?", "Keep", "Throw back");
@@ -399,6 +436,11 @@ var Waves;
         MainGame.prototype.press2 = function () {
             this.eventBox.hideMessage();
             alert("Pressed 2");
+        };
+        MainGame.prototype.onEvent = function (event) {
+            this.eventBox.show(event.name, event.description, event.button1, event.button2);
+            //this.eventBox.setListeners(this.event1, this.event2, this);
+            alert("Event " + event.name);
         };
         MainGame.prototype.onPress = function () {
             this.rowTheBoat();
@@ -417,8 +459,8 @@ var Waves;
         };
         MainGame.prototype.update = function () {
             this.sailTheBoat();
-            if (this.game.model.inventory.hasPlayerRowThing()) {
-                this.mainButton.setButtonText(this.game.model.inventory.playerRowThing.buttonLabel);
+            if (this.inventory.hasPlayerRowThing()) {
+                this.mainButton.setButtonText(this.inventory.playerRowThing.buttonLabel);
             }
             else {
                 this.mainButton.setButtonText("Row with your hands");
@@ -430,14 +472,14 @@ var Waves;
             this.thingsInView.update();
         };
         MainGame.prototype.rowTheBoat = function () {
-            if (this.game.model.inventory.hasPlayerRowThing())
-                this.game.model.world.MoveMeters(this.game.model.inventory.playerRowThing.speed);
+            if (this.inventory.hasPlayerRowThing())
+                this.game.model.world.MoveMeters(this.inventory.playerRowThing.speed);
             else
                 this.game.model.world.MoveMeters(0.1);
         };
         MainGame.prototype.sailTheBoat = function () {
-            if (this.game.model.inventory.hasSailThing())
-                this.game.model.world.MoveMeters(this.game.model.inventory.sailThing.speed);
+            if (this.inventory.hasSailThing())
+                this.game.model.world.MoveMeters(this.inventory.sailThing.speed);
         };
         MainGame.prototype.foodAndHealth = function () {
             var world = this.game.model.world;
@@ -488,88 +530,10 @@ var Waves;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
-    var InventoryState = (function () {
-        function InventoryState() {
-            this._things = new Array();
-            this._totalSpace = InventoryState.STARTING_TOTAL_SPACE;
-        }
-        Object.defineProperty(InventoryState.prototype, "things", {
-            get: function () {
-                return this._things;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(InventoryState.prototype, "thingUsed", {
-            get: function () {
-                return this._thingUsed;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(InventoryState.prototype, "totalSpace", {
-            get: function () {
-                return this._totalSpace;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        InventoryState.prototype.SpaceRemaining = function () {
-            return (this.totalSpace - this.things.length > 0);
-        };
-        InventoryState.prototype.ContainsItem = function (thing) {
-            return (this.things.indexOf(thing) >= 0);
-        };
-        InventoryState.prototype.AddItem = function (newThing) {
-            if (this.SpaceRemaining)
-                this.things.push(newThing);
-            else
-                throw new Error("Inventory full");
-        };
-        InventoryState.prototype.SetInUse = function (usedThing) {
-            this._thingUsed = usedThing;
-            for (var i = 0; i < this._things.length; i++) {
-                this.things[i].inventoryItem.setInUse(false);
-            }
-            usedThing.inventoryItem.setInUse(true);
-        };
-        InventoryState.prototype.DiscardItem = function (thing) {
-            if (this.ContainsItem(thing))
-                this.things.splice(this.things.indexOf(thing));
-            else
-                throw new Error("Thing not in inventory");
-        };
-        InventoryState.prototype.hasPlayerRowThing = function () {
-            return (this.thingUsed instanceof Waves.RowThing);
-        };
-        InventoryState.prototype.hasSailThing = function () {
-            return (this.thingUsed instanceof Waves.SailThing);
-        };
-        Object.defineProperty(InventoryState.prototype, "playerRowThing", {
-            get: function () {
-                return this.thingUsed;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(InventoryState.prototype, "sailThing", {
-            get: function () {
-                return this.thingUsed;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        InventoryState.STARTING_TOTAL_SPACE = 10;
-        return InventoryState;
-    })();
-    Waves.InventoryState = InventoryState;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
     var Model = (function () {
         function Model() {
             this.world = new Waves.WorldState();
-            this.inventory = new Waves.InventoryState();
+            //inventory: InventoryState = new InventoryState();
             this.resource = new Waves.ResourceState();
         }
         return Model;
@@ -837,8 +801,7 @@ var Waves;
             this._water = 0;
             this._food = 0;
             this._triggers = new Array();
-            this.triggers.push(new Waves.ThingTrigger(0.1, new Waves.Thing("paddle")));
-            this.triggers.push(new Waves.EventTrigger(0.5, new Waves.FlyingFishStoryEvent()));
+            this.eventSignal = new Phaser.Signal();
         }
         Object.defineProperty(WorldState.prototype, "milesRemaining", {
             get: function () {
@@ -1049,13 +1012,14 @@ var Waves;
 var Waves;
 (function (Waves) {
     var ThingsInView = (function () {
-        function ThingsInView(game, itemFoundHandler, dropHandler, boatSide, boatFrontSide) {
+        function ThingsInView(game, inventory, itemFoundHandler, dropHandler, boatSide, boatFrontSide) {
             this.thingsInView = new Array();
             this._game = game;
             this._boatSide = boatSide;
             this._boatFrontSide = boatFrontSide;
             this._dropHandler = dropHandler;
             this._itemFoundHandler = itemFoundHandler;
+            this.inventory = inventory;
             this.game.model.world.thingEventCallback = this.thingEventCallback.bind(this);
         }
         Object.defineProperty(ThingsInView.prototype, "game", {
@@ -1095,7 +1059,7 @@ var Waves;
         };
         ThingsInView.prototype.addThingInView = function (thing, position) {
             var screenPosition = this.screenPosition(position);
-            var item = new Waves.InventoryItem(this.game, screenPosition.x, screenPosition.y, this._dropHandler, thing);
+            var item = new Waves.InventoryItem(this.game, this.inventory, screenPosition.x, screenPosition.y, this._dropHandler, thing);
             item.setDrag(false);
             this.thingsInView.push(new Waves.ThingPosition(thing, position, item));
         };

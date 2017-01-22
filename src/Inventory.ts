@@ -6,6 +6,12 @@
         slotHeight: number = 100;
         boundsRect: Phaser.Rectangle;
 
+        private _thingUsed: Thing;
+
+        public get thingUsed(): Thing {
+            return this._thingUsed;
+        }
+
         constructor(game: Phaser.Game, newX: number, newY: number) {
             super(game);
             this.slots = [null, null, null, null, null, null, null, null, null];
@@ -59,23 +65,26 @@
         putItemInSlot(item: InventoryItem, slot: number) {
             this.setItem(item, slot);
             var centre: Phaser.Point = this.getSlotMiddle(slot);
-            this.game.add.tween(item).to({ x: centre.x, y: centre.y }, 1000, "Sine.easeIn", true);
+            this.game.add.tween(item).to({ x: centre.x, y: centre.y }, 100, "Sine.easeIn", true);
         }
 
         setItem(item: InventoryItem, slot: number) {
             this.slots[slot] = item;
             if (item.inventorySlot) {
                 this.slots[item.inventorySlot] = null;
-            } else {
-                (<Game>this.game).model.inventory.AddItem(item.baseThing);
+            //} else {
+            //    (<Game>this.game).model.inventory.AddItem(item.baseThing);
             }
             item.inventorySlot = slot;
             
         }
         removeItem(item: InventoryItem) {
-            (<Game>this.game).model.inventory.DiscardItem(item.baseThing);
+            //(<Game>this.game).model.inventory.DiscardItem(item.baseThing);
+            item.setInUse(false);
             this.slots[item.inventorySlot] = null;
             item.inventorySlot = null;
+            if (this._thingUsed == item.baseThing)
+                this._thingUsed = null;
         }
         getSlot(x: number, y: number): number {
             var slotX: number = Math.floor((x - this.position.x) / this.slotWidth);
@@ -88,9 +97,31 @@
             return new Phaser.Point(x, y);
         }
 
+        public SetInUse(usedThing: Thing) {
+            this._thingUsed = usedThing;
+            for (var i = 0; i < this.slots.length; i++) {
+                if (this.slots[i] != null)
+                    this.slots[i].setInUse(false);
+            }
+            usedThing.inventoryItem.setInUse(true);
+        }
 
 
+        public hasPlayerRowThing(): boolean {
+            return (this.thingUsed instanceof RowThing)
+        }
 
+        public hasSailThing(): boolean {
+            return (this.thingUsed instanceof SailThing)
+        }
+
+        public get playerRowThing(): RowThing {
+            return this.thingUsed as RowThing;
+        }
+
+        public get sailThing(): SailThing {
+            return this.thingUsed as SailThing;
+        }
 
 
 

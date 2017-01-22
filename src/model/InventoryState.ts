@@ -1,6 +1,6 @@
 module Waves {
 
-    export class InventoryState {
+    /*export class InventoryState {
 
         static STARTING_TOTAL_SPACE = 10;
 
@@ -24,8 +24,8 @@ module Waves {
             return (this.totalSpace - this.things.length > 0);
         }
 
-        public ContainsItem(thing: Thing) : boolean {
-            return (this.things.indexOf(thing) >= 0);
+        public ContainsItem(thing: Thing): boolean {
+            return this.things.some((item: Thing, index: number, array: Thing[]) => item.spriteName == thing.spriteName);
         }
 
         public AddItem(newThing: Thing) {
@@ -34,13 +34,7 @@ module Waves {
             else
                 throw new Error("Inventory full");
         }
-        public SetInUse(usedThing: Thing) {
-            this._thingUsed = usedThing;
-            for (var i = 0; i < this._things.length; i++) {
-                this.things[i].inventoryItem.setInUse(false);
-            }
-            usedThing.inventoryItem.setInUse(true);
-        }
+
 
 
         public DiscardItem(thing: Thing) {
@@ -50,22 +44,8 @@ module Waves {
                 throw new Error("Thing not in inventory");
         }
 
-        public hasPlayerRowThing(): boolean {
-            return (this.thingUsed instanceof RowThing)
-        }
 
-        public hasSailThing(): boolean {
-            return (this.thingUsed instanceof SailThing)
-        }
 
-        public get playerRowThing(): RowThing {
-            return this.thingUsed as RowThing;
-        }
-
-        public get sailThing(): SailThing {
-            return this.thingUsed as SailThing;
-        }
-
-    }
+    }*/
 
 }
