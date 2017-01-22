@@ -368,10 +368,14 @@ var Waves;
         };
         InventoryItem.prototype.onClick = function () {
             if (this.inventorySlot !== null) {
-                if (this.isUsed)
+                if (this.isUsed) {
                     this.inventory.setHandsInUse();
-                else
+                    this.setInUse(false);
+                }
+                else {
                     this.inventory.SetInUse(this.baseThing);
+                    this.setInUse(true);
+                }
             }
         };
         Object.defineProperty(InventoryItem.prototype, "isUsed", {
@@ -430,20 +434,26 @@ var Waves;
             //  this.person = new InventoryItem(this.game, this.inventory, 100, 100, this.onDrop.bind(this), new Thing("person"));
             //   this.oar = new InventoryItem(this.game, this.inventory, 200, 100, this.onDrop.bind(this), new RowThing("oar",100, "Row with an oar"));
             //this.sail = new InventoryItem(this.game, this.inventory, 300, 100, this.onDrop.bind(this), new Thing("sail", { constantSpeed: 5 }));
-            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.00042, new Waves.Thing("plastic-bag", "plastic bag and a stick", { constantSpeed: 0.005 })));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.00001, new Waves.Thing("plastic-bag", "plastic bag and a stick", { constantSpeed: 0.005 })));
+            //(<Game>this.game).model.world.triggers.push(new ThingTrigger(0.00042, new Thing("plastic-bag", "plastic bag and a stick", { constantSpeed: 0.005 })));
             this.game.model.world.triggers.push(new Waves.ThingTrigger(0.004, new Waves.Thing("duck", "rubber duck")));
-            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.007, new Waves.Thing("plank", "wooden plank", { clickSpeed: 0.2, buttonLabel: "Row with the plank" })));
-            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.015, new Waves.Thing("oar", "oar", { clickSpeed: 0.8, buttonLabel: "Row with the oar" })));
-            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.03, new Waves.Thing("sail", "sail", { constantSpeed: 0.1 })));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.009, new Waves.Thing("plank", "wooden plank", { clickSpeed: 0.5, buttonLabel: "Row with the plank" })));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.05, new Waves.Thing("barrel", "barrel of water", { water: 50 })));
             this.game.model.world.triggers.push(new Waves.ThingTrigger(0.1, new Waves.Thing("corpse", "corpse", { clickSpeed: 1, buttonLabel: "Row with the corpse" })));
-            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.2, new Waves.Thing("ship-in-bottle", "ship in a bottle")));
-            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.0002, new Waves.Thing("motor", "Motor", { constantSpeed: 1, fuelChange: -1 })));
-            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.00001, new Waves.Thing("fuel", "fuel", { fuel: 50 })));
-            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.0001, new Waves.Thing("barrel", "barrel of water", { water: 50 })));
-            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.0002, new Waves.Thing("fish", "fish", { food: 50 })));
-            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.2, new Waves.Thing("hat", "hat")));
-            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.2, new Waves.Thing("chest", "chest")));
-            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.2, new Waves.Thing("rod", "rod")));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.15, new Waves.Thing("fuel", "fuel", { fuel: 50 })));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.22, new Waves.Thing("sail", "sail", { constantSpeed: 0.4 })));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(1, new Waves.Thing("oar", "oar", { clickSpeed: 4, buttonLabel: "Row with the oar" })));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(1.4, new Waves.Thing("motor", "Motor", { constantSpeed: 1, fuelChange: -0.01 })));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(1.8, new Waves.Thing("fish", "fish", { food: 50 })));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(3, new Waves.Thing("ship-in-bottle", "ship in a bottle")));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(7, new Waves.Thing("fuel", "fuel", { fuel: 50 })));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(10.4, new Waves.Thing("hat", "hat")));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(15, new Waves.Thing("fuel", "fuel", { fuel: 50 })));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(17, new Waves.Thing("rod", "rod")));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(24, new Waves.Thing("fuel", "fuel", { fuel: 50 })));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(27, new Waves.Thing("chest", "chest")));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(36, new Waves.Thing("fuel", "fuel", { fuel: 50 })));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(44, new Waves.Thing("fuel", "fuel", { fuel: 50 })));
             //     (<Game>this.game).model.world.triggers.push(new EventTrigger(0.5, new FlyingFishStoryEvent()));
             this.game.model.world.triggers.push(new Waves.EventTrigger(47.5, new Waves.LandStoryEvent()));
             this.thingsInView = new Waves.ThingsInView(this.game, this.inventory, this.thingFoundCallback.bind(this), this.onDrop.bind(this), new Phaser.Point(this.boat.x + this.boat.width + 30, this.boat.y + this.boat.height / 2), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y));
@@ -866,8 +876,8 @@ var Waves;
         function WorldState() {
             this._position = 0;
             this._health = 100;
-            this._water = 0;
-            this._food = 0;
+            this._water = 5;
+            this._food = 5;
             this._fuel = 0;
             this._triggers = new Array();
             this._triggersToRemove = new Array();
@@ -994,10 +1004,10 @@ var Waves;
                 throw new Error("ThingEventCallback not set");
         };
         WorldState.STARTING_MILES = 48;
-        WorldState.WATER_RATE = 0.001;
-        WorldState.FOOD_RATE = 0.0005;
-        WorldState.HEALTH_NO_WATER_RATE = 0.001;
-        WorldState.HEALTH_NO_FOOD_RATE = 0.0005;
+        WorldState.WATER_RATE = 0.005;
+        WorldState.FOOD_RATE = 0.0025;
+        WorldState.HEALTH_NO_WATER_RATE = 0.003;
+        WorldState.HEALTH_NO_FOOD_RATE = 0.001;
         WorldState.LEAD_DISTANCE = 0.05;
         return WorldState;
     })();

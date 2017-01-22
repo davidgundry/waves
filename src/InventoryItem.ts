@@ -46,9 +46,15 @@
         onClick() {
             if (this.inventorySlot !== null) {
                 if (this.isUsed)
+                {
                     this.inventory.setHandsInUse();
+                    this.setInUse(false)
+                }
                 else
+                {
                     this.inventory.SetInUse(this.baseThing);
+                    this.setInUse(true)
+            }
             }
         }
         get isUsed(): boolean {

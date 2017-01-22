@@ -42,23 +42,46 @@
             //this.sail = new InventoryItem(this.game, this.inventory, 300, 100, this.onDrop.bind(this), new Thing("sail", { constantSpeed: 5 }));
 
             
-            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.00042, new Thing("plastic-bag", "plastic bag and a stick", { constantSpeed: 0.005 })));
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.00001, new Thing("plastic-bag", "plastic bag and a stick", { constantSpeed: 0.005 })));
+            //(<Game>this.game).model.world.triggers.push(new ThingTrigger(0.00042, new Thing("plastic-bag", "plastic bag and a stick", { constantSpeed: 0.005 })));
             (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.004, new Thing("duck", "rubber duck")));
-            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.007,  new Thing("plank", "wooden plank", { clickSpeed: 0.2, buttonLabel: "Row with the plank"  })));
-            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.015, new Thing("oar", "oar", { clickSpeed: 0.8, buttonLabel: "Row with the oar" })));
-            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.03, new Thing("sail", "sail", { constantSpeed: 0.1 })));
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.009, new Thing("plank", "wooden plank", { clickSpeed: 0.5, buttonLabel: "Row with the plank" })));
+
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.05, new Thing("barrel", "barrel of water", { water: 50 })));
             (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.1, new Thing("corpse", "corpse", { clickSpeed: 1, buttonLabel: "Row with the corpse" })));
 
-            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.2, new Thing("ship-in-bottle", "ship in a bottle")));
 
-            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.0002, new Thing("motor", "Motor", { constantSpeed: 1, fuelChange: -1 })));
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.15, new Thing("fuel", "fuel", { fuel: 50 })));
 
-            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.00001, new Thing("fuel", "fuel", { fuel: 50 })));
-            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.0001, new Thing("barrel", "barrel of water", { water: 50 })));
-            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.0002, new Thing("fish", "fish", { food: 50 })));
-            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.2, new Thing("hat", "hat")));
-            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.2, new Thing("chest", "chest")));
-            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.2, new Thing("rod", "rod")));
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.22, new Thing("sail", "sail", { constantSpeed: 0.4 })));
+
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(1, new Thing("oar", "oar", { clickSpeed: 4, buttonLabel: "Row with the oar" })));
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(1.4, new Thing("motor", "Motor", { constantSpeed: 1, fuelChange: -0.01 })));
+
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(1.8, new Thing("fish", "fish", { food: 50 })));
+
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(3, new Thing("ship-in-bottle", "ship in a bottle")));
+
+
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(7, new Thing("fuel", "fuel", { fuel: 50 })));
+
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(10.4, new Thing("hat", "hat")));
+
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(15, new Thing("fuel", "fuel", { fuel: 50 })));
+
+
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(17, new Thing("rod", "rod")));
+
+
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(24, new Thing("fuel", "fuel", { fuel: 50 })));
+
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(27, new Thing("chest", "chest")));
+
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(36, new Thing("fuel", "fuel", { fuel: 50 })));
+
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(44, new Thing("fuel", "fuel", { fuel: 50 })));
+
+
 
             //     (<Game>this.game).model.world.triggers.push(new EventTrigger(0.5, new FlyingFishStoryEvent()));
             (<Game>this.game).model.world.triggers.push(new EventTrigger(47.5, new LandStoryEvent()));
