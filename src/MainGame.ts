@@ -42,12 +42,13 @@
             //this.sail = new InventoryItem(this.game, this.inventory, 300, 100, this.onDrop.bind(this), new Thing("sail", { constantSpeed: 5 }));
 
             
-            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.00032, new Thing("plastic-bag", "plastic bag and a stick", { constantSpeed: 0.1 })));
-            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.0034, new Thing("duck", "rubber duck")));
-            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.0062,  new Thing("plank", "wooden plank", { clickSpeed: 0.1, buttonLabel: "Row with the plank"  })));
-            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.0248,  new Thing("sail", "sail", { constantSpeed: 0.3 })));
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.00042, new Thing("plastic-bag", "plastic bag and a stick", { constantSpeed: 0.005 })));
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.004, new Thing("duck", "rubber duck")));
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.007,  new Thing("plank", "wooden plank", { clickSpeed: 0.2, buttonLabel: "Row with the plank"  })));
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.015, new Thing("oar", "oar", { clickSpeed: 0.8, buttonLabel: "Row with the oar" })));
 
-            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.087, new Thing("oar", "oar", { clickSpeed: 0.3, buttonLabel: "Row with the oar" })));
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.03, new Thing("sail", "sail", { constantSpeed: 0.01 })));
+
             (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.1, new Thing("corpse", "corpse", { clickSpeed: 1, buttonLabel: "Row with the corpse" })));
 
             (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.2, new Thing("ship-in-bottle", "ship in a bottle")));
