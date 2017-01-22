@@ -27,105 +27,12 @@ window.onload = function () {
 };
 var Waves;
 (function (Waves) {
-    var Boat = (function (_super) {
-        __extends(Boat, _super);
-        function Boat(game, newX, newY) {
-            _super.call(this, game);
-            this.position.x = newX;
-            this.position.y = newY;
-            this.create(0, 0, "boat");
-            this.game.add.tween(this).to({ rotation: -0.03 }, 1000, "Sine.easeInOut", true, 0, -1, true);
-        }
-        return Boat;
-    }(Phaser.Group));
-    Waves.Boat = Boat;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
-    var Boot = (function (_super) {
-        __extends(Boot, _super);
-        function Boot() {
-            _super.apply(this, arguments);
-            this.orientated = false;
-        }
-        Boot.prototype.preload = function () {
-            _super.prototype.preload.call(this);
-            this.load.image('preloadBar', 'assets/whiteLoadBar.png');
-        };
-        Boot.prototype.create = function () {
-            _super.prototype.create.call(this);
-            this.input.maxPointers = 1;
-            this.stage.disableVisibilityChange = true;
-            if (this.game.device.desktop) {
-                this.scale.scaleMode = Phaser.ScaleManager.NO_SCALE;
-                this.scale.pageAlignHorizontally = true;
-                this.scale.pageAlignVertically = true;
-            }
-            else {
-                this.scale.fullScreenScaleMode = Phaser.ScaleManager.NO_SCALE;
-                this.scale.pageAlignHorizontally = true;
-                this.scale.pageAlignVertically = true;
-                this.scale.refresh();
-                var gameElement = document.getElementById('game');
-                gameElement.style.overflow = "visible";
-            }
-            this.game.state.start('Preloader', true, false);
-        };
-        return Boot;
-    }(Phaser.State));
-    Waves.Boot = Boot;
-    ;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
-    var Button = (function (_super) {
-        __extends(Button, _super);
-        function Button(game, label) {
-            _super.call(this, game);
-            this.boxWidth = 250;
-            this.boxHeight = 50;
-            this.drawBox();
-            this.createText(label);
-            this.pressed = new Phaser.Signal();
-        }
-        Button.prototype.drawBox = function () {
-            var boxSprite = this.game.add.sprite(0, 0);
-            var graphics = this.game.add.graphics(0, 0);
-            boxSprite.addChild(graphics);
-            graphics.lineStyle(1, 0x0078C2, 1);
-            graphics.beginFill(0xffffff, 1);
-            graphics.drawRect(0, 0, this.boxWidth, this.boxHeight);
-            graphics.endFill();
-            this.addChild(boxSprite);
-            boxSprite.inputEnabled = true;
-            boxSprite.input.priorityID = 2;
-            boxSprite.events.onInputDown.add(this.onPressed, this);
-        };
-        Button.prototype.setButtonText = function (newText) {
-            this.text.text = newText;
-        };
-        Button.prototype.createText = function (label) {
-            this.text = this.game.add.text(10, this.boxHeight * .6, label, { font: "25px biro_script_reducedregular", fill: '#000000', align: 'left' }, this);
-            this.text.fontWeight = 'bold';
-            //this.text = this.game.add.text(10, this.boxHeight / 2, label, { font: "20px Arial", fill: '#00f', align: 'left' }, this);
-            this.text.anchor.set(0, 0.5);
-        };
-        Button.prototype.onPressed = function () {
-            //alert("button " + this.text.text + " pressed");
-            this.pressed.dispatch();
-        };
-        return Button;
-    }(Phaser.Group));
-    Waves.Button = Button;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
     var PopupBox = (function (_super) {
         __extends(PopupBox, _super);
         function PopupBox(game) {
             _super.call(this, game);
-            this.boxWidth = 500;
-            this.boxHeight = 300;
+            this.boxWidth = 600;
+            this.boxHeight = 400;
             this.drawBox();
             this.visible = false;
             this.showing = false;
@@ -135,7 +42,7 @@ var Waves;
             var graphics = this.game.add.graphics(0, 0);
             boxSprite.addChild(graphics);
             graphics.lineStyle(1, 0x000000, 1);
-            graphics.beginFill(0xEEEEEE, 1);
+            graphics.beginFill(0xffffff, 1);
             graphics.drawRect(0, 0, this.boxWidth, this.boxHeight);
             graphics.endFill();
             this.addChild(boxSprite);
@@ -186,18 +93,18 @@ var Waves;
                 this.button2.pressed.add(on2, context);
         };
         EventPopup.prototype.createButtons = function () {
-            this.button1 = new Waves.Button(this.game, "1");
-            this.button2 = new Waves.Button(this.game, "2");
+            this.button1 = new Waves.Button(this.game, "1", 150, 50);
+            this.button2 = new Waves.Button(this.game, "2", 150, 50);
             this.addChild(this.button1);
             this.addChild(this.button2);
-            this.button1.position.setTo(this.boxWidth * .1, this.boxHeight * .8);
-            this.button2.position.setTo(this.boxWidth * .6, this.boxHeight * .8);
+            this.button1.position.setTo(100, this.boxHeight * .8);
+            this.button2.position.setTo(300, this.boxHeight * .8);
         };
         EventPopup.prototype.createText = function () {
-            this.title = this.game.add.text(this.boxWidth / 2, 50, "Title here", { font: "60px smdin", fill: '#000', align: 'centre' }, this);
-            this.title.anchor.set(0.5, 0.5);
-            this.bodyText = this.game.add.text(this.boxWidth / 2, this.boxHeight / 2, "Body text here", { font: "30px smdin", fill: '#000', align: 'centre' }, this);
-            this.bodyText.anchor.set(0.5, 0.5);
+            this.title = this.game.add.text(this.boxWidth / 2, 30, "Title here", { font: "60px biro_script_reducedregular", fill: '#000', align: 'centre', wordWrap: true, wordWrapWidth: 500 }, this);
+            this.title.anchor.set(0.5, 0);
+            this.bodyText = this.game.add.text(this.boxWidth / 2, this.boxHeight / 2, "Body text here", { font: "30px biro_script_reducedregular", fill: '#000', align: 'centre', wordWrap: true, wordWrapWidth: 500 }, this);
+            this.bodyText.anchor.set(0.5, 0);
         };
         EventPopup.prototype.show = function (titleText, bodyText, button1, button2, newCallback) {
             if (newCallback === void 0) { newCallback = null; }
@@ -219,6 +126,65 @@ var Waves;
         return EventPopup;
     }(Waves.PopupBox));
     Waves.EventPopup = EventPopup;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var Boat = (function (_super) {
+        __extends(Boat, _super);
+        function Boat(game, newX, newY) {
+            _super.call(this, game);
+            this.position.x = newX;
+            this.position.y = newY;
+            this.create(0, 0, "boat");
+            this.game.add.tween(this).to({ rotation: -0.03 }, 1000, "Sine.easeInOut", true, 0, -1, true);
+        }
+        return Boat;
+    }(Phaser.Group));
+    Waves.Boat = Boat;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var Button = (function (_super) {
+        __extends(Button, _super);
+        function Button(game, label, width, height) {
+            if (width === void 0) { width = 250; }
+            if (height === void 0) { height = 50; }
+            _super.call(this, game);
+            this.boxWidth = width;
+            this.boxHeight = height;
+            this.drawBox();
+            this.createText(label);
+            this.pressed = new Phaser.Signal();
+        }
+        Button.prototype.drawBox = function () {
+            var boxSprite = this.game.add.sprite(0, 0);
+            var graphics = this.game.add.graphics(0, 0);
+            boxSprite.addChild(graphics);
+            graphics.lineStyle(1, 0x0078C2, 1);
+            graphics.beginFill(0xffffff, 1);
+            graphics.drawRect(0, 0, this.boxWidth, this.boxHeight);
+            graphics.endFill();
+            this.addChild(boxSprite);
+            boxSprite.inputEnabled = true;
+            boxSprite.input.priorityID = 2;
+            boxSprite.events.onInputDown.add(this.onPressed, this);
+        };
+        Button.prototype.setButtonText = function (newText) {
+            this.text.text = newText;
+        };
+        Button.prototype.createText = function (label) {
+            this.text = this.game.add.text(10, this.boxHeight * .6, label, { font: "25px biro_script_reducedregular", fill: '#000000', align: 'left' }, this);
+            this.text.fontWeight = 'bold';
+            //this.text = this.game.add.text(10, this.boxHeight / 2, label, { font: "20px Arial", fill: '#00f', align: 'left' }, this);
+            this.text.anchor.set(0, 0.5);
+        };
+        Button.prototype.onPressed = function () {
+            //alert("button " + this.text.text + " pressed");
+            this.pressed.dispatch();
+        };
+        return Button;
+    }(Phaser.Group));
+    Waves.Button = Button;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
@@ -427,219 +393,6 @@ var Waves;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
-    var MainGame = (function (_super) {
-        __extends(MainGame, _super);
-        function MainGame() {
-            _super.apply(this, arguments);
-        }
-        MainGame.prototype.create = function () {
-            _super.prototype.create.call(this);
-            this.game.model.world.getEventSignal(this.onEvent.bind(this));
-            this.mainButton = new Waves.Button(this.game, "Paddle with your hands");
-            this.mainButton.position.setTo(10, 550);
-            this.mainButton.pressed.add(this.onPress.bind(this));
-            this.milesDisplay = this.game.add.text(300, 10, "Testing 12 12", { font: "60px biro_script_reducedregular", fill: '#0078C2', align: 'right' });
-            this.healthDisplay = this.game.add.text(10, 10, "HEALTH: 100%", { font: "28px biro_script_reducedregular", fill: '#0078C2', align: 'left' });
-            this.waterDisplay = this.game.add.text(10, 40, "WATER", { font: "28px biro_script_reducedregular", fill: '#0078C2', align: 'left' });
-            this.foodDisplay = this.game.add.text(10, 70, "FOOD", { font: "28px biro_script_reducedregular", fill: '#0078C2', align: 'left' });
-            this.fuelDisplay = this.game.add.text(10, 110, "FUEL", { font: "28px biro_script_reducedregular", fill: '#0078C2', align: 'left' });
-            this.updateMiles();
-            this.sea = new Waves.Sea(this.game, 320, 280);
-            this.boat = new Waves.Boat(this.game, 550, 400);
-            this.inventory = new Waves.Inventory(this.game, 10, 220);
-            //  this.person = new InventoryItem(this.game, this.inventory, 100, 100, this.onDrop.bind(this), new Thing("person"));
-            //   this.oar = new InventoryItem(this.game, this.inventory, 200, 100, this.onDrop.bind(this), new RowThing("oar",100, "Row with an oar"));
-            //this.sail = new InventoryItem(this.game, this.inventory, 300, 100, this.onDrop.bind(this), new Thing("sail", { constantSpeed: 5 }));
-            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.00042, new Waves.Thing("plastic-bag", "plastic bag and a stick", { constantSpeed: 0.005 })));
-            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.004, new Waves.Thing("duck", "rubber duck")));
-            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.007, new Waves.Thing("plank", "wooden plank", { clickSpeed: 0.2, buttonLabel: "Row with the plank" })));
-            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.015, new Waves.Thing("oar", "oar", { clickSpeed: 0.8, buttonLabel: "Row with the oar" })));
-            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.03, new Waves.Thing("sail", "sail", { constantSpeed: 0.1 })));
-            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.1, new Waves.Thing("corpse", "corpse", { clickSpeed: 1, buttonLabel: "Row with the corpse" })));
-            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.2, new Waves.Thing("ship-in-bottle", "ship in a bottle")));
-            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.0002, new Waves.Thing("motor", "Motor", { constantSpeed: 1, fuelChange: -1 })));
-            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.00001, new Waves.Thing("fuel", "fuel", { fuel: 50 })));
-            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.0001, new Waves.Thing("barrel", "barrel of water", { water: 50 })));
-            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.0002, new Waves.Thing("fish", "fish", { food: 50 })));
-            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.2, new Waves.Thing("hat", "hat")));
-            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.2, new Waves.Thing("chest", "chest")));
-            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.2, new Waves.Thing("rod", "rod")));
-            //     (<Game>this.game).model.world.triggers.push(new EventTrigger(0.5, new FlyingFishStoryEvent()));
-            this.game.model.world.triggers.push(new Waves.EventTrigger(47.5, new Waves.LandStoryEvent()));
-            this.thingsInView = new Waves.ThingsInView(this.game, this.inventory, this.thingFoundCallback.bind(this), this.onDrop.bind(this), new Phaser.Point(this.boat.x + this.boat.width + 30, this.boat.y + this.boat.height / 2), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y));
-            this.eventBox = new Waves.EventPopup(this.game);
-            //   this.eventBox.setListeners(this.press1, this.press2,this);
-            //  this.eventBox.show("You found god", "Do you want to keep or throw back?", "Keep", "Throw back");
-            this.game.model.world.MoveMeters(0.01);
-        };
-        MainGame.prototype.press1 = function () {
-            this.eventBox.hideMessage();
-            alert("Pressed 1");
-        };
-        MainGame.prototype.press2 = function () {
-            this.eventBox.hideMessage();
-            alert("Pressed 2");
-        };
-        MainGame.prototype.onEvent = function (event) {
-            this.currentEvent = event;
-            this.eventBox.setListeners(this.event1.bind(this), this.event2.bind(this), this);
-            this.eventBox.show(event.name, event.description, event.button1, event.button2);
-        };
-        MainGame.prototype.event1 = function () {
-            this.doneEvent(this.currentEvent.onB1);
-        };
-        MainGame.prototype.event2 = function () {
-            this.doneEvent(this.currentEvent.onB2);
-        };
-        MainGame.prototype.resetGame = function () {
-        };
-        MainGame.prototype.doneEvent = function (choice) {
-            choice.changeWorld(this.game.model.world);
-            if (choice.response != "") {
-                this.eventBox.setListeners(this.hideEvent, this.hideEvent, this);
-                this.eventBox.setText(this.currentEvent.name, this.currentEvent.onB1.response, "Ok", "");
-            }
-            else {
-                this.hideEvent();
-            }
-            if (choice.callBack) {
-                choice.callBack();
-            }
-            if (choice.endGame) {
-                this.game.state.start('MainGame', true, false);
-            }
-        };
-        MainGame.prototype.hideEvent = function () {
-            this.eventBox.hideMessage();
-        };
-        MainGame.prototype.onPress = function () {
-            this.rowTheBoat();
-        };
-        MainGame.prototype.onDrop = function (dropData) {
-            var item = dropData["dropItem"];
-            if (!this.inventory.acceptItemFromDrag(item)) {
-                if (this.sea.thrownIntheSea(item)) {
-                    this.inventory.removeItem(item);
-                    item.sink();
-                }
-                else {
-                    item.returnToPlace();
-                }
-            }
-        };
-        MainGame.prototype.update = function () {
-            if (!this.eventBox.showing) {
-                this.sailTheBoat();
-                if (this.inventory.thingUsed.clickSpeed > 0) {
-                    this.mainButton.setButtonText(this.inventory.thingUsed.buttonLabel);
-                    this.mainButton.visible = true;
-                }
-                else {
-                    this.mainButton.visible = false;
-                }
-                this.sea.update();
-                this.updateMiles();
-                this.foodAndHealth();
-                this.updateHealthFoodAndWater();
-                this.thingsInView.update();
-            }
-        };
-        MainGame.prototype.rowTheBoat = function () {
-            if (this.inventory.thingUsed.clickSpeed > 0)
-                this.game.model.world.MoveMeters(this.inventory.thingUsed.clickSpeed);
-            else
-                this.game.model.world.MoveMeters(0.01);
-        };
-        MainGame.prototype.sailTheBoat = function () {
-            var world = this.game.model.world;
-            if ((this.inventory.thingUsed.fuelChange == 0) || (world.fuel > 0))
-                this.game.model.world.MoveMeters(this.inventory.thingUsed.constantSpeed);
-            world.fuel += this.inventory.thingUsed.fuelChange;
-            // if (this.inventory.hasSailThing())
-            //   (<Game>this.game).model.world.MoveMeters(this.inventory.sailThing.speed);
-        };
-        MainGame.prototype.foodAndHealth = function () {
-            var world = this.game.model.world;
-            if (world.water > 0) {
-                world.water -= Waves.WorldState.WATER_RATE;
-            }
-            else {
-                world.health -= Waves.WorldState.HEALTH_NO_WATER_RATE;
-            }
-            if (world.food > 0) {
-                world.food -= Waves.WorldState.FOOD_RATE;
-            }
-            else {
-                world.health -= Waves.WorldState.HEALTH_NO_FOOD_RATE;
-            }
-            if (world.health <= 0) {
-                this.onEvent(new Waves.DeathEvent());
-            }
-        };
-        MainGame.prototype.updateHealthFoodAndWater = function () {
-            var world = this.game.model.world;
-            this.healthDisplay.text = "HEALTH: " + Math.ceil(world.health) + "%";
-            this.foodDisplay.text = "FOOD: " + Math.ceil(world.food);
-            this.waterDisplay.text = "WATER: " + Math.ceil(world.water);
-            this.fuelDisplay.text = "FUEL: " + Math.ceil(world.fuel);
-            this.fuelDisplay.visible = (world.fuel > 0);
-        };
-        MainGame.prototype.updateMiles = function () {
-            //  this.milesDisplay.text = "You are " + (<Game>this.game).model.world.milesRemaining.toFixed(4) + " miles from land"; 
-            this.milesDisplay.text = "Miles from land:" + this.game.model.world.milesRemaining.toFixed(4);
-        };
-        MainGame.prototype.getItem = function (item) {
-            var thing = item.baseThing;
-            var world = this.game.model.world;
-            world.fuel += thing.fuelChangeOnAdd;
-            world.food += thing.foodChangeOnAdd;
-            world.water += thing.waterChangeOnAdd;
-            this.inventory.acceptItemFromEvent(item);
-            this.eventBox.hideMessage();
-            item.setDrag(true);
-        };
-        MainGame.prototype.tossItem = function (item) {
-            this.eventBox.hideMessage();
-            item.sink();
-        };
-        MainGame.prototype.thingFoundCallback = function (thingPosition) {
-            this.eventBox = new Waves.EventPopup(this.game);
-            if (!this.inventory.full) {
-                this.eventBox.setListeners(this.getItem.bind(this, thingPosition.inventoryItem), this.tossItem.bind(this, thingPosition.inventoryItem), this);
-                this.eventBox.show("You found a " + thingPosition.thing.displayName, "Do you want to keep or throw back?", "Keep", "Throw back");
-            }
-            else {
-                this.eventBox.setListeners(this.tossItem.bind(this, thingPosition.inventoryItem), null, this);
-                this.eventBox.show("You found a " + thingPosition.thing.displayName, "Oh no! You have no space in your boat!", "Throw back", "");
-            }
-        };
-        return MainGame;
-    }(Phaser.State));
-    Waves.MainGame = MainGame;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
-    var Model = (function () {
-        function Model() {
-            this.world = new Waves.WorldState();
-            //inventory: InventoryState = new InventoryState();
-            this.resource = new Waves.ResourceState();
-        }
-        return Model;
-    }());
-    Waves.Model = Model;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
-    var ResourceState = (function () {
-        function ResourceState() {
-        }
-        return ResourceState;
-    }());
-    Waves.ResourceState = ResourceState;
-})(Waves || (Waves = {}));
-var Waves;
-(function (Waves) {
     var ChoiceAction = (function () {
         function ChoiceAction(newResponse) {
             this.healthChange = 0;
@@ -740,6 +493,27 @@ var Waves;
         return DeathEvent;
     }(StoryEvent));
     Waves.DeathEvent = DeathEvent;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var Model = (function () {
+        function Model() {
+            this.world = new Waves.WorldState();
+            //inventory: InventoryState = new InventoryState();
+            this.resource = new Waves.ResourceState();
+        }
+        return Model;
+    }());
+    Waves.Model = Model;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var ResourceState = (function () {
+        function ResourceState() {
+        }
+        return ResourceState;
+    }());
+    Waves.ResourceState = ResourceState;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
@@ -1022,6 +796,234 @@ var Waves;
         return WorldState;
     }());
     Waves.WorldState = WorldState;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var Boot = (function (_super) {
+        __extends(Boot, _super);
+        function Boot() {
+            _super.apply(this, arguments);
+            this.orientated = false;
+        }
+        Boot.prototype.preload = function () {
+            _super.prototype.preload.call(this);
+            this.load.image('preloadBar', 'assets/whiteLoadBar.png');
+        };
+        Boot.prototype.create = function () {
+            _super.prototype.create.call(this);
+            this.input.maxPointers = 1;
+            this.stage.disableVisibilityChange = true;
+            if (this.game.device.desktop) {
+                this.scale.scaleMode = Phaser.ScaleManager.NO_SCALE;
+                this.scale.pageAlignHorizontally = true;
+                this.scale.pageAlignVertically = true;
+            }
+            else {
+                this.scale.fullScreenScaleMode = Phaser.ScaleManager.NO_SCALE;
+                this.scale.pageAlignHorizontally = true;
+                this.scale.pageAlignVertically = true;
+                this.scale.refresh();
+                var gameElement = document.getElementById('game');
+                gameElement.style.overflow = "visible";
+            }
+            this.game.state.start('Preloader', true, false);
+        };
+        return Boot;
+    }(Phaser.State));
+    Waves.Boot = Boot;
+    ;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var MainGame = (function (_super) {
+        __extends(MainGame, _super);
+        function MainGame() {
+            _super.apply(this, arguments);
+        }
+        MainGame.prototype.create = function () {
+            _super.prototype.create.call(this);
+            this.game.model.world.getEventSignal(this.onEvent.bind(this));
+            this.mainButton = new Waves.Button(this.game, "Paddle with your hands");
+            this.mainButton.position.setTo(10, 550);
+            this.mainButton.pressed.add(this.onPress.bind(this));
+            this.milesDisplay = this.game.add.text(300, 10, "Testing 12 12", { font: "60px biro_script_reducedregular", fill: '#0078C2', align: 'right' });
+            this.healthDisplay = this.game.add.text(10, 10, "HEALTH: 100%", { font: "28px biro_script_reducedregular", fill: '#0078C2', align: 'left' });
+            this.waterDisplay = this.game.add.text(10, 40, "WATER", { font: "28px biro_script_reducedregular", fill: '#0078C2', align: 'left' });
+            this.foodDisplay = this.game.add.text(10, 70, "FOOD", { font: "28px biro_script_reducedregular", fill: '#0078C2', align: 'left' });
+            this.fuelDisplay = this.game.add.text(10, 110, "FUEL", { font: "28px biro_script_reducedregular", fill: '#0078C2', align: 'left' });
+            this.updateMiles();
+            this.sea = new Waves.Sea(this.game, 320, 280);
+            this.boat = new Waves.Boat(this.game, 550, 400);
+            this.inventory = new Waves.Inventory(this.game, 10, 220);
+            //  this.person = new InventoryItem(this.game, this.inventory, 100, 100, this.onDrop.bind(this), new Thing("person"));
+            //   this.oar = new InventoryItem(this.game, this.inventory, 200, 100, this.onDrop.bind(this), new RowThing("oar",100, "Row with an oar"));
+            //this.sail = new InventoryItem(this.game, this.inventory, 300, 100, this.onDrop.bind(this), new Thing("sail", { constantSpeed: 5 }));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.00042, new Waves.Thing("plastic-bag", "plastic bag and a stick", { constantSpeed: 0.005 })));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.004, new Waves.Thing("duck", "rubber duck")));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.007, new Waves.Thing("plank", "wooden plank", { clickSpeed: 0.2, buttonLabel: "Row with the plank" })));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.015, new Waves.Thing("oar", "oar", { clickSpeed: 0.8, buttonLabel: "Row with the oar" })));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.03, new Waves.Thing("sail", "sail", { constantSpeed: 0.1 })));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.1, new Waves.Thing("corpse", "corpse", { clickSpeed: 1, buttonLabel: "Row with the corpse" })));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.2, new Waves.Thing("ship-in-bottle", "ship in a bottle")));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.0002, new Waves.Thing("motor", "Motor", { constantSpeed: 1, fuelChange: -1 })));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.00001, new Waves.Thing("fuel", "fuel", { fuel: 50 })));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.0001, new Waves.Thing("barrel", "barrel of water", { water: 50 })));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.0002, new Waves.Thing("fish", "fish", { food: 50 })));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.2, new Waves.Thing("hat", "hat")));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.2, new Waves.Thing("chest", "chest")));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.2, new Waves.Thing("rod", "rod")));
+            //     (<Game>this.game).model.world.triggers.push(new EventTrigger(0.5, new FlyingFishStoryEvent()));
+            this.game.model.world.triggers.push(new Waves.EventTrigger(47.5, new Waves.LandStoryEvent()));
+            this.thingsInView = new Waves.ThingsInView(this.game, this.inventory, this.thingFoundCallback.bind(this), this.onDrop.bind(this), new Phaser.Point(this.boat.x + this.boat.width + 30, this.boat.y + this.boat.height / 2), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y));
+            this.eventBox = new Waves.EventPopup(this.game);
+            //   this.eventBox.setListeners(this.press1, this.press2,this);
+            //  this.eventBox.show("You found god", "Do you want to keep or throw back?", "Keep", "Throw back");
+            this.game.model.world.MoveMeters(0.01);
+        };
+        MainGame.prototype.press1 = function () {
+            this.eventBox.hideMessage();
+            alert("Pressed 1");
+        };
+        MainGame.prototype.press2 = function () {
+            this.eventBox.hideMessage();
+            alert("Pressed 2");
+        };
+        MainGame.prototype.onEvent = function (event) {
+            this.currentEvent = event;
+            this.eventBox.setListeners(this.event1.bind(this), this.event2.bind(this), this);
+            this.eventBox.show(event.name, event.description, event.button1, event.button2);
+        };
+        MainGame.prototype.event1 = function () {
+            this.doneEvent(this.currentEvent.onB1);
+        };
+        MainGame.prototype.event2 = function () {
+            this.doneEvent(this.currentEvent.onB2);
+        };
+        MainGame.prototype.resetGame = function () {
+        };
+        MainGame.prototype.doneEvent = function (choice) {
+            choice.changeWorld(this.game.model.world);
+            if (choice.response != "") {
+                this.eventBox.setListeners(this.hideEvent, this.hideEvent, this);
+                this.eventBox.setText(this.currentEvent.name, this.currentEvent.onB1.response, "Ok", "");
+            }
+            else {
+                this.hideEvent();
+            }
+            if (choice.callBack) {
+                choice.callBack();
+            }
+            if (choice.endGame) {
+                this.game.state.start('MainGame', true, false);
+            }
+        };
+        MainGame.prototype.hideEvent = function () {
+            this.eventBox.hideMessage();
+        };
+        MainGame.prototype.onPress = function () {
+            this.rowTheBoat();
+        };
+        MainGame.prototype.onDrop = function (dropData) {
+            var item = dropData["dropItem"];
+            if (!this.inventory.acceptItemFromDrag(item)) {
+                if (this.sea.thrownIntheSea(item)) {
+                    this.inventory.removeItem(item);
+                    item.sink();
+                }
+                else {
+                    item.returnToPlace();
+                }
+            }
+        };
+        MainGame.prototype.update = function () {
+            if (!this.eventBox.showing) {
+                this.sailTheBoat();
+                if (this.inventory.thingUsed.clickSpeed > 0) {
+                    this.mainButton.setButtonText(this.inventory.thingUsed.buttonLabel);
+                    this.mainButton.visible = true;
+                }
+                else {
+                    this.mainButton.visible = false;
+                }
+                this.sea.update();
+                this.updateMiles();
+                this.foodAndHealth();
+                this.updateHealthFoodAndWater();
+                this.thingsInView.update();
+            }
+        };
+        MainGame.prototype.rowTheBoat = function () {
+            if (this.inventory.thingUsed.clickSpeed > 0)
+                this.game.model.world.MoveMeters(this.inventory.thingUsed.clickSpeed);
+            else
+                this.game.model.world.MoveMeters(0.01);
+        };
+        MainGame.prototype.sailTheBoat = function () {
+            var world = this.game.model.world;
+            if ((this.inventory.thingUsed.fuelChange == 0) || (world.fuel > 0))
+                this.game.model.world.MoveMeters(this.inventory.thingUsed.constantSpeed);
+            world.fuel += this.inventory.thingUsed.fuelChange;
+            // if (this.inventory.hasSailThing())
+            //   (<Game>this.game).model.world.MoveMeters(this.inventory.sailThing.speed);
+        };
+        MainGame.prototype.foodAndHealth = function () {
+            var world = this.game.model.world;
+            if (world.water > 0) {
+                world.water -= Waves.WorldState.WATER_RATE;
+            }
+            else {
+                world.health -= Waves.WorldState.HEALTH_NO_WATER_RATE;
+            }
+            if (world.food > 0) {
+                world.food -= Waves.WorldState.FOOD_RATE;
+            }
+            else {
+                world.health -= Waves.WorldState.HEALTH_NO_FOOD_RATE;
+            }
+            if (world.health <= 0) {
+                this.onEvent(new Waves.DeathEvent());
+            }
+        };
+        MainGame.prototype.updateHealthFoodAndWater = function () {
+            var world = this.game.model.world;
+            this.healthDisplay.text = "HEALTH: " + Math.ceil(world.health) + "%";
+            this.foodDisplay.text = "FOOD: " + Math.ceil(world.food);
+            this.waterDisplay.text = "WATER: " + Math.ceil(world.water);
+            this.fuelDisplay.text = "FUEL: " + Math.ceil(world.fuel);
+            this.fuelDisplay.visible = (world.fuel > 0);
+        };
+        MainGame.prototype.updateMiles = function () {
+            //  this.milesDisplay.text = "You are " + (<Game>this.game).model.world.milesRemaining.toFixed(4) + " miles from land"; 
+            this.milesDisplay.text = "Miles from land:" + this.game.model.world.milesRemaining.toFixed(4);
+        };
+        MainGame.prototype.getItem = function (item) {
+            var thing = item.baseThing;
+            var world = this.game.model.world;
+            world.fuel += thing.fuelChangeOnAdd;
+            world.food += thing.foodChangeOnAdd;
+            world.water += thing.waterChangeOnAdd;
+            this.inventory.acceptItemFromEvent(item);
+            this.eventBox.hideMessage();
+            item.setDrag(true);
+        };
+        MainGame.prototype.tossItem = function (item) {
+            this.eventBox.hideMessage();
+            item.sink();
+        };
+        MainGame.prototype.thingFoundCallback = function (thingPosition) {
+            this.eventBox = new Waves.EventPopup(this.game);
+            if (!this.inventory.full) {
+                this.eventBox.setListeners(this.getItem.bind(this, thingPosition.inventoryItem), this.tossItem.bind(this, thingPosition.inventoryItem), this);
+                this.eventBox.show("You found a " + thingPosition.thing.displayName, "Do you want to keep or throw back?", "Keep", "Throw back");
+            }
+            else {
+                this.eventBox.setListeners(this.tossItem.bind(this, thingPosition.inventoryItem), null, this);
+                this.eventBox.show("You found a " + thingPosition.thing.displayName, "Oh no! You have no space in your boat!", "Throw back", "");
+            }
+        };
+        return MainGame;
+    }(Phaser.State));
+    Waves.MainGame = MainGame;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
