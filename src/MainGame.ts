@@ -37,9 +37,9 @@
             
             this.boat = new Boat(this.game, 550, 400);
             this.inventory = new Inventory(this.game, 10, 280);
-            this.person = new InventoryItem(this.game, this.inventory, 100, 100, this.onDrop.bind(this), new Thing("person"));
-            this.oar = new InventoryItem(this.game, this.inventory, 200, 100, this.onDrop.bind(this), new RowThing("oar",100, "Row with an oar"));
-            this.sail = new InventoryItem(this.game, this.inventory, 300, 100, this.onDrop.bind(this), new SailThing("sail",5));
+          //  this.person = new InventoryItem(this.game, this.inventory, 100, 100, this.onDrop.bind(this), new Thing("person"));
+         //   this.oar = new InventoryItem(this.game, this.inventory, 200, 100, this.onDrop.bind(this), new RowThing("oar",100, "Row with an oar"));
+            this.sail = new InventoryItem(this.game, this.inventory, 300, 100, this.onDrop.bind(this), new Thing("sail", { constantSpeed: 5 }));
             (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.1, new Thing("motor", { speed: 1, fuelChange: -1 })));
             
          //   (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.00032, new SailThing("test", 0.1)));
@@ -122,6 +122,7 @@
             this.sea.update();
             this.updateMiles();
             this.foodAndHealth();
+     
             this.updateHealthFoodAndWater();
             this.thingsInView.update();
         }
@@ -134,8 +135,11 @@
         }
 
         sailTheBoat() {
-            if ((this.inventory.thingUsed.fuelChange == 0) || ((<Game>this.game).model.world.fuel>0))
+            var world: WorldState = (<Game>this.game).model.world;
+            if ((this.inventory.thingUsed.fuelChange == 0) || (world.fuel>0))
                 (<Game>this.game).model.world.MoveMeters(this.inventory.thingUsed.constantSpeed);
+
+            world.fuel += this.inventory.thingUsed.fuelChange;
            // if (this.inventory.hasSailThing())
              //   (<Game>this.game).model.world.MoveMeters(this.inventory.sailThing.speed);
         }
