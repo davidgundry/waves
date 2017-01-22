@@ -54,7 +54,6 @@
 
             
             (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.00001, new Thing("plastic-bag", "plastic bag and a stick", { constantSpeed: 0.005 })));
-            (<Game>this.game).model.world.triggers.push(new EventTrigger(0.00003, new WonderStoryEvent()));
             //(<Game>this.game).model.world.triggers.push(new ThingTrigger(0.00042, new Thing("plastic-bag", "plastic bag and a stick", { constantSpeed: 0.005 })));
             (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.004, new Thing("duck", "rubber duck")));
             (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.009, new Thing("plank", "wooden plank", { clickSpeed: 0.5, buttonLabel: "Row with the plank" })));
@@ -71,9 +70,9 @@
             (<Game>this.game).model.world.triggers.push(new EventTrigger(0.7, new NightTimeStoryEvent()));
 
             (<Game>this.game).model.world.triggers.push(new ThingTrigger(1, new Thing("oar", "oar", { clickSpeed: 4, buttonLabel: "Row with the oar" })));
-            (<Game>this.game).model.world.triggers.push(new ThingTrigger(1.4, new Thing("motor", "Motor", { constantSpeed: 1, fuelChange: -0.01 })));
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(1.4, new Thing("motor", "Motor", { constantSpeed: 2, fuelChange: -0.02 })));
 
-            (<Game>this.game).model.world.triggers.push(new EventTrigger(4, new IcebergStoryEvent()));
+            (<Game>this.game).model.world.triggers.push(new EventTrigger(1.6, new IcebergStoryEvent()));
 
             (<Game>this.game).model.world.triggers.push(new ThingTrigger(1.8, new Thing("fish", "fish", { food: 50 })));
 
@@ -84,18 +83,18 @@
             (<Game>this.game).model.world.triggers.push(new EventTrigger(6.7, new SailingStoryEvent()));
             (<Game>this.game).model.world.triggers.push(new ThingTrigger(7, new Thing("fuel", "can of petrol", { fuel: 50 })));
 
-            (<Game>this.game).model.world.triggers.push(new ThingTrigger(10.4, new Thing("hat", "hat")));
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(10.4, new Thing("hat", "dapper hat")));
 
             (<Game>this.game).model.world.triggers.push(new EventTrigger(11, new WonderStoryEvent()));
 
             (<Game>this.game).model.world.triggers.push(new ThingTrigger(15, new Thing("fuel", "can of petrol", { fuel: 50 })));
-            (<Game>this.game).model.world.triggers.push(new ThingTrigger(17, new Thing("rod", "rod")));
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(17, new Thing("rod", "fishing rod")));
 
             (<Game>this.game).model.world.triggers.push(new EventTrigger(20, new PirateStoryEvent()));
 
             (<Game>this.game).model.world.triggers.push(new ThingTrigger(24, new Thing("fuel", "can of petrol", { fuel: 50 })));
 
-            (<Game>this.game).model.world.triggers.push(new ThingTrigger(27, new Thing("chest", "chest")));
+            (<Game>this.game).model.world.triggers.push(new ThingTrigger(27, new Thing("chest", "chest of loot")));
 
             (<Game>this.game).model.world.triggers.push(new ThingTrigger(36, new Thing("fuel", "can of petrol", { fuel: 50 })));
             (<Game>this.game).model.world.triggers.push(new ThingTrigger(44, new Thing("fuel", "can of petrol", { fuel: 50 })));

@@ -17,6 +17,12 @@ module Waves {
             world.position += this.positionChange;
             world.water += this.waterChange;
             world.food += this.foodChange;
+            if (world.food < 0)
+                world.food = 0;
+            if (world.water < 0)
+                world.water = 0;
+            if (world.health < 0)
+                world.health = 0;
         }
     }
 
@@ -126,7 +132,7 @@ module Waves {
     }
     export class StartEvent extends StoryEvent {
         constructor() {
-            super("You're cast adrift", "You're in boat 48 miles from land. Can you get back to dry land", "Probably not", "", new ChoiceAction(""));
+            super("You're cast adrift", "You're in boat 48 miles from land. Can you get back to dry land?", "Probably not", "", new ChoiceAction(""));
         }
     }
 }
