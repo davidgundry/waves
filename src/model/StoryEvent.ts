@@ -6,6 +6,7 @@ module Waves {
         positionChange: number = 0;
         waterChange: number = 0;
         foodChange: number = 0;
+        endGame: boolean = false;
         callBack: Function;
 
         constructor(newResponse: string) {
@@ -73,12 +74,9 @@ module Waves {
     export class LandStoryEvent extends StoryEvent {
         constructor() {
             super("You've reached land", "You did it, you've reached land and survived.", "Rejoice", "", new ChoiceAction(""));
-            this._onB1.callBack = this.onLand.bind(this);
+            this._onB1.endGame = true;
         }
-        onLand() {
-            alert("Finished");
-            // reset some home
-        }
+       
 
 
     }

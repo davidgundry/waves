@@ -14,6 +14,9 @@
             this.state.add('MainGame', MainGame, false);
             this.state.start('Boot');
         }
+       restart() {
+            this.state.start('MainGame');
+        }
 
     }
 

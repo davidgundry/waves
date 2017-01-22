@@ -40,11 +40,12 @@
             this.sail = new InventoryItem(this.game, this.inventory, 300, 100, this.onDrop.bind(this), new SailThing("sail",5));
 
             
-            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.00032, new SailThing("test", 0.1)));
-            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.0062, new SailThing("sail", 0.5)));
-            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.0248, new RowThing("oar", 1, "Row with an oar")));
-            (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.087, new SailThing("sail", 3)));
-            (<Game>this.game).model.world.triggers.push(new EventTrigger(0.5, new FlyingFishStoryEvent()));
+         //   (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.00032, new SailThing("test", 0.1)));
+       //     (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.0062, new SailThing("sail", 0.5)));
+       //     (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.0248, new RowThing("oar", 1, "Row with an oar")));
+       //     (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.087, new SailThing("sail", 3)));
+            //     (<Game>this.game).model.world.triggers.push(new EventTrigger(0.5, new FlyingFishStoryEvent()));
+            (<Game>this.game).model.world.triggers.push(new EventTrigger(0.5, new LandStoryEvent()));
           
             this.thingsInView = new ThingsInView((<Game>this.game), this.inventory, this.thingFoundCallback.bind(this), this.onDrop.bind(this), new Phaser.Point(this.boat.x + this.boat.width + 30, this.boat.y + this.boat.height/2), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y));
             this.eventBox = new EventPopup(this.game);
@@ -65,15 +66,31 @@
             this.eventBox.show(event.name, event.description, event.button1, event.button2);   
         }
         event1() {
-            this.currentEvent.onB1.changeWorld((<Game>this.game).model.world);
-            this.eventBox.setListeners(this.hideEvent, this.hideEvent, this);
-            this.eventBox.setText(this.currentEvent.name, this.currentEvent.onB1.response, "Ok","");
+            this.doneEvent(this.currentEvent.onB1);
         }
         event2() {
-            this.currentEvent.onB2.changeWorld((<Game>this.game).model.world);
-            this.eventBox.setListeners(this.hideEvent, this.hideEvent, this);
-            this.eventBox.setText(this.currentEvent.name, this.currentEvent.onB2.response, "Ok", "");
+            this.doneEvent(this.currentEvent.onB2);
         }
+        resetGame() {
+
+
+        }
+        doneEvent(choice: ChoiceAction) {
+            choice.changeWorld((<Game>this.game).model.world);
+            if (choice.response != "") {
+                this.eventBox.setListeners(this.hideEvent, this.hideEvent, this);
+                this.eventBox.setText(this.currentEvent.name, this.currentEvent.onB1.response, "Ok", "");
+            } else {
+                this.hideEvent();
+            }
+            if (choice.callBack) {
+                choice.callBack();
+            }
+            if (choice.endGame) {
+                this.game.state.start('MainGame', true, false);
+            }
+        }
+
         hideEvent() {
             this.eventBox.hideMessage();
         }
