@@ -11,6 +11,7 @@ module Waves {
         inventory: Inventory;
 
         private thingsInView: ThingPosition[] = new Array<ThingPosition>();
+        private thingsInViewToRemove: ThingPosition[] = new Array<ThingPosition>();
 
         private get game(): Game {
             return this._game;
@@ -46,7 +47,10 @@ module Waves {
         }
 
         update() {
-            this.thingsInView.forEach((value: ThingPosition, index: number, array: ThingPosition[]) => void this.updateThingInView(value));
+            console.log("things in view count: " + this.thingsInView.length);
+            this.thingsInView.forEach((value: ThingPosition) => void this.updateThingInView(value));
+            this.thingsInViewToRemove.forEach((value: ThingPosition) => void this.removeThingInView(value));
+            this.thingsInViewToRemove = new Array<ThingPosition>();
         }
 
         addThingInView(thing: Thing, position: number) {
@@ -77,26 +81,24 @@ module Waves {
         }
 
         updateThingInView(thingPosition: ThingPosition) {
+            this.updateThingWorldPosition(thingPosition);
+
+            if (this.isAlongside(thingPosition)) {
+                this.itemFoundHandler(thingPosition);
+                this.thingsInViewToRemove.push(thingPosition);
+            }
+        }
+
+        updateThingWorldPosition(thingPosition: ThingPosition) {
             var screenPosition: Phaser.Point = this.screenPosition(thingPosition.position);
             thingPosition.inventoryItem.position.x = screenPosition.x;
             thingPosition.inventoryItem.position.y = screenPosition.y;
             var proportionalDistance: number = this.proportionalDistance(thingPosition.position);
             thingPosition.inventoryItem.scale = new Phaser.Point(1 - proportionalDistance, 1 - proportionalDistance);
-
-            if (this.isAlongside(thingPosition)) {
-                this.itemFoundHandler(thingPosition);
-                /*thingPosition.inventoryItem.setDrag(true);
-                //thingPosition.inventoryItem.position.x = this.boatSide.x;
-                thingPosition.inventoryItem.position.y = this.boatSide.y;*/
-                this.removeThingInView(thingPosition);
-            }
         }
 
         removeThingInView(thingPosition: ThingPosition) {
-            if (this.thingsInView.indexOf(thingPosition) >= 0)
-                this.thingsInView.splice(this.thingsInView.indexOf(thingPosition));
-            else
-                throw new Error("ThingPosition not found");
+            this.thingsInView.splice(this.thingsInView.indexOf(thingPosition), 1);
         }
 
     }

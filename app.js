@@ -367,6 +367,191 @@ var Waves;
 })(Waves || (Waves = {}));
 var Waves;
 (function (Waves) {
+    var MainGame = (function (_super) {
+        __extends(MainGame, _super);
+        function MainGame() {
+            _super.apply(this, arguments);
+        }
+        MainGame.prototype.create = function () {
+            _super.prototype.create.call(this);
+            this.game.model.world.getEventSignal(this.onEvent.bind(this));
+            this.mainButton = new Waves.Button(this.game, "Paddle with your hands");
+            this.mainButton.setButtonText("Paddle with your nose");
+            this.mainButton.pressed.add(this.onPress.bind(this));
+            this.milesDisplay = this.game.add.text(300, 10, "Testing 12 12", { font: "30px Arial", fill: '#00f', align: 'right' });
+            this.healthDisplay = this.game.add.text(10, 50, "Health: 100%", { font: "20px Arial", fill: '#00f', align: 'left' });
+            this.waterDisplay = this.game.add.text(10, 80, "Water", { font: "20px Arial", fill: '#00f', align: 'left' });
+            this.foodDisplay = this.game.add.text(10, 110, "Food", { font: "20px Arial", fill: '#00f', align: 'left' });
+            this.updateMiles();
+            this.sea = new Waves.Sea(this.game, 320, 280);
+            this.boat = new Waves.Boat(this.game, 550, 400);
+            this.inventory = new Waves.Inventory(this.game, 10, 280);
+            this.person = new Waves.InventoryItem(this.game, this.inventory, 100, 100, this.onDrop.bind(this), new Waves.Thing("person"));
+            this.oar = new Waves.InventoryItem(this.game, this.inventory, 200, 100, this.onDrop.bind(this), new Waves.RowThing("oar", 100, "Row with an oar"));
+            this.sail = new Waves.InventoryItem(this.game, this.inventory, 300, 100, this.onDrop.bind(this), new Waves.SailThing("sail", 5));
+            this.game.model.world.triggers.push(new Waves.ThingTrigger(0.1, new Waves.Thing("motor", { speed: 1, fuelChange: -1 })));
+            //   (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.00032, new SailThing("test", 0.1)));
+            //     (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.0062, new SailThing("sail", 0.5)));
+            //     (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.0248, new RowThing("oar", 1, "Row with an oar")));
+            //     (<Game>this.game).model.world.triggers.push(new ThingTrigger(0.087, new SailThing("sail", 3)));
+            //     (<Game>this.game).model.world.triggers.push(new EventTrigger(0.5, new FlyingFishStoryEvent()));
+            this.game.model.world.triggers.push(new Waves.EventTrigger(49.5, new Waves.LandStoryEvent()));
+            this.thingsInView = new Waves.ThingsInView(this.game, this.inventory, this.thingFoundCallback.bind(this), this.onDrop.bind(this), new Phaser.Point(this.boat.x + this.boat.width + 30, this.boat.y + this.boat.height / 2), new Phaser.Point(this.boat.x + this.boat.width, this.boat.y));
+            this.eventBox = new Waves.EventPopup(this.game);
+            //   this.eventBox.setListeners(this.press1, this.press2,this);
+            //  this.eventBox.show("You found god", "Do you want to keep or throw back?", "Keep", "Throw back");
+        };
+        MainGame.prototype.press1 = function () {
+            this.eventBox.hideMessage();
+            alert("Pressed 1");
+        };
+        MainGame.prototype.press2 = function () {
+            this.eventBox.hideMessage();
+            alert("Pressed 2");
+        };
+        MainGame.prototype.onEvent = function (event) {
+            this.currentEvent = event;
+            this.eventBox.setListeners(this.event1.bind(this), this.event2.bind(this), this);
+            this.eventBox.show(event.name, event.description, event.button1, event.button2);
+        };
+        MainGame.prototype.event1 = function () {
+            this.doneEvent(this.currentEvent.onB1);
+        };
+        MainGame.prototype.event2 = function () {
+            this.doneEvent(this.currentEvent.onB2);
+        };
+        MainGame.prototype.resetGame = function () {
+        };
+        MainGame.prototype.doneEvent = function (choice) {
+            choice.changeWorld(this.game.model.world);
+            if (choice.response != "") {
+                this.eventBox.setListeners(this.hideEvent, this.hideEvent, this);
+                this.eventBox.setText(this.currentEvent.name, this.currentEvent.onB1.response, "Ok", "");
+            }
+            else {
+                this.hideEvent();
+            }
+            if (choice.callBack) {
+                choice.callBack();
+            }
+            if (choice.endGame) {
+                this.game.state.start('MainGame', true, false);
+            }
+        };
+        MainGame.prototype.hideEvent = function () {
+            this.eventBox.hideMessage();
+        };
+        MainGame.prototype.onPress = function () {
+            this.rowTheBoat();
+        };
+        MainGame.prototype.onDrop = function (dropData) {
+            var item = dropData["dropItem"];
+            if (!this.inventory.acceptItemFromDrag(item)) {
+                if (this.sea.thrownIntheSea(item)) {
+                    this.inventory.removeItem(item);
+                    item.sink();
+                }
+                else {
+                    item.returnToPlace();
+                }
+            }
+        };
+        MainGame.prototype.update = function () {
+            this.sailTheBoat();
+            if (this.inventory.hasPlayerRowThing()) {
+                this.mainButton.setButtonText(this.inventory.playerRowThing.buttonLabel);
+            }
+            else {
+                this.mainButton.setButtonText("Row with your hands");
+            }
+            this.sea.update();
+            this.updateMiles();
+            this.foodAndHealth();
+            this.updateHealthFoodAndWater();
+            this.thingsInView.update();
+        };
+        MainGame.prototype.rowTheBoat = function () {
+            if (this.inventory.hasPlayerRowThing())
+                this.game.model.world.MoveMeters(this.inventory.playerRowThing.speed);
+            else
+                this.game.model.world.MoveMeters(0.1);
+        };
+        MainGame.prototype.sailTheBoat = function () {
+            this.game.model.world.MoveMeters(this.inventory.thingUsed.constantSpeed);
+            // if (this.inventory.hasSailThing())
+            //   (<Game>this.game).model.world.MoveMeters(this.inventory.sailThing.speed);
+        };
+        MainGame.prototype.foodAndHealth = function () {
+            var world = this.game.model.world;
+            if (world.water > 0) {
+                world.water -= Waves.WorldState.WATER_RATE;
+            }
+            else {
+                world.health -= Waves.WorldState.HEALTH_NO_WATER_RATE;
+            }
+            if (world.food > 0) {
+                world.food -= Waves.WorldState.FOOD_RATE;
+            }
+            else {
+                world.health -= Waves.WorldState.HEALTH_NO_FOOD_RATE;
+            }
+        };
+        MainGame.prototype.updateHealthFoodAndWater = function () {
+            var world = this.game.model.world;
+            this.healthDisplay.text = "Health: " + Math.ceil(world.health) + "%";
+            this.foodDisplay.text = "Food: " + Math.ceil(world.food);
+            this.waterDisplay.text = "Water: " + Math.ceil(world.water);
+        };
+        MainGame.prototype.updateMiles = function () {
+            this.milesDisplay.text = "You are " + this.game.model.world.milesRemaining.toFixed(4) + " miles from land";
+        };
+        MainGame.prototype.getItem = function (item) {
+            this.inventory.acceptItemFromEvent(item);
+            this.eventBox.hideMessage();
+            item.setDrag(true);
+        };
+        MainGame.prototype.tossItem = function (item) {
+            this.eventBox.hideMessage();
+            item.sink();
+        };
+        MainGame.prototype.thingFoundCallback = function (thingPosition) {
+            this.eventBox = new Waves.EventPopup(this.game);
+            if (!this.inventory.full) {
+                this.eventBox.setListeners(this.getItem.bind(this, thingPosition.inventoryItem), this.tossItem.bind(this, thingPosition.inventoryItem), this);
+                this.eventBox.show("You found a " + thingPosition.thing.displayName, "Do you want to keep or throw back?", "Keep", "Throw back");
+            }
+            else {
+                this.eventBox.setListeners(this.tossItem.bind(this, thingPosition.inventoryItem), null, this);
+                this.eventBox.show("You found a " + thingPosition.thing.displayName, "Oh no! You have no space in your boat!", "Throw back", "");
+            }
+        };
+        return MainGame;
+    }(Phaser.State));
+    Waves.MainGame = MainGame;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var Model = (function () {
+        function Model() {
+            this.world = new Waves.WorldState();
+            //inventory: InventoryState = new InventoryState();
+            this.resource = new Waves.ResourceState();
+        }
+        return Model;
+    }());
+    Waves.Model = Model;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
+    var ResourceState = (function () {
+        function ResourceState() {
+        }
+        return ResourceState;
+    }());
+    Waves.ResourceState = ResourceState;
+})(Waves || (Waves = {}));
+var Waves;
+(function (Waves) {
     var ChoiceAction = (function () {
         function ChoiceAction(newResponse) {
             this.healthChange = 0;
@@ -666,6 +851,7 @@ var Waves;
             this._food = 0;
             this._fuel = 0;
             this._triggers = new Array();
+            this._triggersToRemove = new Array();
             this.eventSignal = new Phaser.Signal();
         }
         Object.defineProperty(WorldState.prototype, "milesRemaining", {
@@ -754,26 +940,28 @@ var Waves;
         });
         WorldState.prototype.CheckTriggers = function (position) {
             var _this = this;
-            console.log("check triggers " + this.triggers.length);
+            //console.log("check triggers " + this.triggers.length);
             this.triggers.forEach(function (value, index, array) { return void _this.CheckTrigger(value, position); });
+            this._triggersToRemove.forEach(function (value, index, array) { return _this.RemoveTrigger(value); });
+            this._triggersToRemove = new Array();
         };
         WorldState.prototype.CheckTrigger = function (trigger, position) {
-            console.log("t=" + trigger.position + " " + position);
+            //console.log("t=" + trigger.position + " " + position);
             if (trigger.position <= position) {
                 if (trigger instanceof Waves.EventTrigger) {
                     this.TriggerEvent(trigger);
-                    this.RemoveTrigger(trigger);
+                    this._triggersToRemove.push(trigger);
                 }
             }
             if (trigger.position - WorldState.LEAD_DISTANCE <= position) {
                 if (trigger instanceof Waves.ThingTrigger) {
                     this.TriggerThing(trigger);
-                    this.RemoveTrigger(trigger);
+                    this._triggersToRemove.push(trigger);
                 }
             }
         };
         WorldState.prototype.RemoveTrigger = function (trigger) {
-            this.triggers.splice(this.triggers.indexOf(trigger));
+            this.triggers.splice(this.triggers.indexOf(trigger), 1);
         };
         WorldState.prototype.TriggerEvent = function (trigger) {
             console.log(trigger.event.name + " event triggered");
@@ -1092,6 +1280,7 @@ var Waves;
     var ThingsInView = (function () {
         function ThingsInView(game, inventory, itemFoundHandler, dropHandler, boatSide, boatFrontSide) {
             this.thingsInView = new Array();
+            this.thingsInViewToRemove = new Array();
             this._game = game;
             this._boatSide = boatSide;
             this._boatFrontSide = boatFrontSide;
@@ -1133,7 +1322,10 @@ var Waves;
         };
         ThingsInView.prototype.update = function () {
             var _this = this;
-            this.thingsInView.forEach(function (value, index, array) { return void _this.updateThingInView(value); });
+            console.log("things in view count: " + this.thingsInView.length);
+            this.thingsInView.forEach(function (value) { return void _this.updateThingInView(value); });
+            this.thingsInViewToRemove.forEach(function (value) { return void _this.removeThingInView(value); });
+            this.thingsInViewToRemove = new Array();
         };
         ThingsInView.prototype.addThingInView = function (thing, position) {
             var screenPosition = this.screenPosition(position);
@@ -1158,24 +1350,21 @@ var Waves;
             return (relativePosition <= 0);
         };
         ThingsInView.prototype.updateThingInView = function (thingPosition) {
+            this.updateThingWorldPosition(thingPosition);
+            if (this.isAlongside(thingPosition)) {
+                this.itemFoundHandler(thingPosition);
+                this.thingsInViewToRemove.push(thingPosition);
+            }
+        };
+        ThingsInView.prototype.updateThingWorldPosition = function (thingPosition) {
             var screenPosition = this.screenPosition(thingPosition.position);
             thingPosition.inventoryItem.position.x = screenPosition.x;
             thingPosition.inventoryItem.position.y = screenPosition.y;
             var proportionalDistance = this.proportionalDistance(thingPosition.position);
             thingPosition.inventoryItem.scale = new Phaser.Point(1 - proportionalDistance, 1 - proportionalDistance);
-            if (this.isAlongside(thingPosition)) {
-                this.itemFoundHandler(thingPosition);
-                /*thingPosition.inventoryItem.setDrag(true);
-                //thingPosition.inventoryItem.position.x = this.boatSide.x;
-                thingPosition.inventoryItem.position.y = this.boatSide.y;*/
-                this.removeThingInView(thingPosition);
-            }
         };
         ThingsInView.prototype.removeThingInView = function (thingPosition) {
-            if (this.thingsInView.indexOf(thingPosition) >= 0)
-                this.thingsInView.splice(this.thingsInView.indexOf(thingPosition));
-            else
-                throw new Error("ThingPosition not found");
+            this.thingsInView.splice(this.thingsInView.indexOf(thingPosition), 1);
         };
         ThingsInView.THING_ORIGIIN = new Phaser.Point(800, 300);
         return ThingsInView;

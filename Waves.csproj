@@ -48,7 +48,6 @@
     <TypeScriptCompile Include="src\InventoryItem.ts" />
     <TypeScriptCompile Include="src\model\StoryEvent.ts" />
     <TypeScriptCompile Include="src\model\Model.ts" />
-    <TypeScriptCompile Include="src\model\InventoryState.ts" />
     <TypeScriptCompile Include="src\model\ResourceState.ts" />
     <TypeScriptCompile Include="src\model\Thing.ts" />
     <TypeScriptCompile Include="src\model\ThingPosition.ts" />
