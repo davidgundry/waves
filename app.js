@@ -200,10 +200,14 @@ var Waves;
             _super.prototype.drop.call(this, newCallback);
         };
         EventPopup.prototype.setText = function (titleText, bodyText, button1, button2) {
+            this.button2.visible = false;
             this.title.text = titleText;
             this.bodyText.text = bodyText;
             this.button1.setButtonText(button1);
-            this.button2.setButtonText(button2);
+            if (button2 !== "") {
+                this.button2.visible = true;
+                this.button2.setButtonText(button2);
+            }
         };
         return EventPopup;
     }(Waves.PopupBox));
@@ -335,6 +339,7 @@ var Waves;
         }
         MainGame.prototype.create = function () {
             _super.prototype.create.call(this);
+            this.game.model.world.getEventSignal(this.onEvent.bind(this));
             this.mainButton = new Waves.Button(this.game, "Paddle with your hands");
             this.mainButton.setButtonText("Paddle with your nose");
             this.mainButton.pressed.add(this.onPress.bind(this));
@@ -361,6 +366,11 @@ var Waves;
         MainGame.prototype.press2 = function () {
             this.eventBox.hideMessage();
             alert("Pressed 2");
+        };
+        MainGame.prototype.onEvent = function (event) {
+            this.eventBox.show(event.name, event.description, event.button1, event.button2);
+            this.eventBox.setListeners(this.event1, this.event2, this);
+            alert("Event " + event.name);
         };
         MainGame.prototype.onPress = function () {
             this.rowTheBoat();
@@ -772,8 +782,9 @@ var Waves;
             this._water = 0;
             this._food = 0;
             this._triggers = new Array();
-            this.triggers.push(new Waves.ThingTrigger(0.1, new Waves.Thing("paddle")));
-            this.triggers.push(new Waves.EventTrigger(0.5, new Waves.FlyingFishStoryEvent()));
+            this.eventSignal = new Phaser.Signal();
+            // this.triggers.push(new ThingTrigger(0.1, new Thing("paddle")));
+            this.triggers.push(new Waves.EventTrigger(0.1, new Waves.FlyingFishStoryEvent()));
         }
         Object.defineProperty(WorldState.prototype, "milesRemaining", {
             get: function () {
@@ -832,6 +843,9 @@ var Waves;
             enumerable: true,
             configurable: true
         });
+        WorldState.prototype.getEventSignal = function (onEvent) {
+            this.eventSignal.add(onEvent);
+        };
         WorldState.prototype.MoveDistance = function (miles) {
             this.position += miles;
             this.CheckTriggers(this.position);
@@ -848,18 +862,22 @@ var Waves;
         });
         WorldState.prototype.CheckTriggers = function (position) {
             var _this = this;
+            console.log("check triggers " + this.triggers.length);
             this.triggers.forEach(function (value, index, array) { return void _this.CheckTrigger(value, position); });
         };
         WorldState.prototype.CheckTrigger = function (trigger, position) {
+            console.log("t=" + trigger.position + " " + position);
             if (trigger.position <= position) {
-                if (trigger instanceof Waves.EventTrigger)
+                if (trigger instanceof Waves.EventTrigger) {
                     this.TriggerEvent(trigger);
-                this.RemoveTrigger(trigger);
+                    this.RemoveTrigger(trigger);
+                }
             }
             if (trigger.position - WorldState.LEAD_DISTANCE <= position) {
-                if (trigger instanceof Waves.ThingTrigger)
+                if (trigger instanceof Waves.ThingTrigger) {
                     this.TriggerThing(trigger);
-                this.RemoveTrigger(trigger);
+                    this.RemoveTrigger(trigger);
+                }
             }
         };
         WorldState.prototype.RemoveTrigger = function (trigger) {
@@ -867,6 +885,7 @@ var Waves;
         };
         WorldState.prototype.TriggerEvent = function (trigger) {
             console.log(trigger.event.name + " event triggered");
+            this.eventSignal.dispatch(trigger.event);
         };
         WorldState.prototype.TriggerThing = function (trigger) {
             console.log("Thing Triggered");
