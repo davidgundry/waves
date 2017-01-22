@@ -1,4 +1,4 @@
-﻿When items picked up from sea, they always go in top left inventory slot
+﻿
 
 
 Set a proper list of items and places in the world. Can be useful or useless (depending on graphics). Place them

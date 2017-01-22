@@ -321,7 +321,7 @@ var Waves;
         };
         Inventory.prototype.unsetAllItems = function () {
             for (var i = 0; i < this.slots.length; i++) {
-                if (this.slots[i] != null)
+                if (this.slots[i] !== null)
                     this.slots[i].setInUse(false);
             }
         };
