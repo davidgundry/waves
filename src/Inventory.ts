@@ -28,11 +28,12 @@
 
 
         acceptItemFromDrag(item: InventoryItem): boolean {
+            console.log("accept from drag");
             var x: number = item.position.x;
             var y: number = item.position.y;
             if (this.boundsRect.contains(x, y)) {
                 var slot: number = this.getSlot(item.position.x, item.position.y);
-                if ((this.slots[slot] === null) || (slot === item.inventorySlot)) {
+                if ((this.slots[slot] === null) || (slot !== item.inventorySlot)) {
                     this.putItemInSlot(item, slot);
                     return true;
                 }
@@ -41,6 +42,7 @@
         }
 
         acceptItemFromEvent(item: InventoryItem) {
+            console.log("accept item from event");
             var slot: number = this.getFirstFreeSlot();
             if (slot != undefined)
             {
@@ -66,12 +68,14 @@
         }
 
         putItemInSlot(item: InventoryItem, slot: number) {
+          //  console.log("put item in slot");
             this.setItem(item, slot);
             var centre: Phaser.Point = this.getSlotMiddle(slot);
             this.game.add.tween(item).to({ x: centre.x, y: centre.y }, 100, "Sine.easeIn", true);
         }
 
         setItem(item: InventoryItem, slot: number) {
+          //  console.log("set item");
             this.slots[slot] = item;
             if (item.inventorySlot) {
                 this.slots[item.inventorySlot] = null;
@@ -80,6 +84,7 @@
             
         }
         removeItem(item: InventoryItem) {
+          //  console.log("remove item");
             item.setInUse(false);
             this.slots[item.inventorySlot] = null;
             item.inventorySlot = null;
@@ -98,13 +103,13 @@
         }
 
         public SetInUse(usedThing: Thing) {
-            console.log("set in use " + usedThing.displayName);
-            console.log("before filled slots " + this.filledSlots());
+          //  console.log("set in use " + usedThing.displayName);
+          //  console.log("before filled slots " + this.filledSlots());
             this._thingUsed = usedThing;
             this.unsetAllItems();
             if (usedThing.inventoryItem != null)
                 usedThing.inventoryItem.setInUse(true);
-            console.log("after filled slots " + this.filledSlots());
+          //  console.log("after filled slots " + this.filledSlots());
         }
 
         public filledSlots(): number {
