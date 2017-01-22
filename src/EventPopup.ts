@@ -43,7 +43,7 @@ module Waves {
         createText() {
             this.title = this.game.add.text(this.boxWidth / 2, 30, "Title here", { font: "60px biro_script_reducedregular", fill: '#000', align: 'centre', wordWrap: true, wordWrapWidth: 500}, this);
             this.title.anchor.set(0.5, 0);
-            this.bodyText = this.game.add.text(this.boxWidth / 2, this.boxHeight / 2, "Body text here", { font: "30px biro_script_reducedregular", fill: '#000', align: 'centre', wordWrap: true, wordWrapWidth: 500 }, this);
+            this.bodyText = this.game.add.text(this.boxWidth / 2, this.boxHeight / 3, "Body text here", { font: "30px biro_script_reducedregular", fill: '#000', align: 'centre', wordWrap: true, wordWrapWidth: 500 }, this);
             this.bodyText.anchor.set(0.5, 0);
         }
         show(titleText: string, bodyText: string, button1: string, button2: string, newCallback: Function = null) {

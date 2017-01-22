@@ -13,7 +13,7 @@
         constructor(game: Phaser.Game) {
             super(game);
             this.boxWidth = 600;
-            this.boxHeight = 400;
+            this.boxHeight = 500;
             this.drawBox();
             this.visible = false;
             this.showing = false;
